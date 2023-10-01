@@ -1,0 +1,303 @@
+[
+    {
+        "model": "algofun.topic",
+        "pk": 1,
+        "fields": {
+            "name": "segment tree"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 2,
+        "fields": {
+            "name": "linked list"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 3,
+        "fields": {
+            "name": "sliding window"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 4,
+        "fields": {
+            "name": "binary search"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 5,
+        "fields": {
+            "name": "hash table"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 6,
+        "fields": {
+            "name": "union find"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 7,
+        "fields": {
+            "name": "math"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 8,
+        "fields": {
+            "name": "sort"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 9,
+        "fields": {
+            "name": "ordered map"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 10,
+        "fields": {
+            "name": "bit manipulation"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 11,
+        "fields": {
+            "name": "tree"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 12,
+        "fields": {
+            "name": "trie"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 13,
+        "fields": {
+            "name": "reservoir sampling"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 14,
+        "fields": {
+            "name": "minimax"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 15,
+        "fields": {
+            "name": "backtracking"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 16,
+        "fields": {
+            "name": "line sweep"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 17,
+        "fields": {
+            "name": "binary indexed tree"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 18,
+        "fields": {
+            "name": "binary search tree"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 19,
+        "fields": {
+            "name": "design"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 20,
+        "fields": {
+            "name": "dynamic programming"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 21,
+        "fields": {
+            "name": "rolling hash"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 22,
+        "fields": {
+            "name": "suffix array"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 23,
+        "fields": {
+            "name": "meet in the middle"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 24,
+        "fields": {
+            "name": "queue"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 25,
+        "fields": {
+            "name": "greedy"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 26,
+        "fields": {
+            "name": "heap"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 27,
+        "fields": {
+            "name": "brainteaser"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 28,
+        "fields": {
+            "name": "recursion"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 29,
+        "fields": {
+            "name": "memoization"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 30,
+        "fields": {
+            "name": "rejection sampling"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 31,
+        "fields": {
+            "name": "string"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 32,
+        "fields": {
+            "name": "array"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 33,
+        "fields": {
+            "name": "depth-first search"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 34,
+        "fields": {
+            "name": "graph"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 35,
+        "fields": {
+            "name": "divide and conquer"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 36,
+        "fields": {
+            "name": "breadth-first search"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 37,
+        "fields": {
+            "name": "stack"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 38,
+        "fields": {
+            "name": "two pointers"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 39,
+        "fields": {
+            "name": "oop"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 40,
+        "fields": {
+            "name": "topological sort"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 41,
+        "fields": {
+            "name": "dequeue"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 42,
+        "fields": {
+            "name": "random"
+        }
+    },
+    {
+        "model": "algofun.topic",
+        "pk": 43,
+        "fields": {
+            "name": "geometry"
+        }
+    }
+]

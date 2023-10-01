@@ -1,0 +1,43 @@
+volumes:
+  algofun_data:
+    external: true
+
+services:
+  ghi:
+    image: node:lts-bullseye
+    command: /bin/bash run.sh
+    working_dir: /app
+    volumes:
+      - ./ghi:/app
+    ports:
+      - '3000:3000'
+    environment:
+      # HOST_OS: ${OS}
+      NODE_ENV: development
+      HOST: '0.0.0.0'
+      PUBLIC_URL: http://localhost:3000
+
+  postgres:
+    image: postgres:15-alpine
+    volumes:
+      - algofun_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=algofun
+      - POSTGRES_USER=algofun
+      - POSTGRES_PASSWORD=algofun
+    ports:
+      - 15432:5432
+
+  algofun_service:
+    build:
+      context: ./algofun_service
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./algofun_service:/app
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:algofun@algofun/algofun
+      WAIT_HOSTS: postgres:5432
