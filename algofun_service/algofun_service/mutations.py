@@ -5,7 +5,6 @@ from algofun.models import (
     Submission,
     Method,
     Source,
-    SubmissionPicture,
     Topic,
     ProblemNote,
     SubmissionNote,

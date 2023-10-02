@@ -38,6 +38,9 @@ class ProficiencyLevel(models.TextChoices):
 class Topic(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Source(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -68,7 +71,7 @@ class Problem(models.Model):
         null=True,
     )
     time_complexity_requirement = models.CharField(
-        max_length=5,
+        max_length=20,
         choices=Complexity.choices,
         default=Complexity.O_N,
         db_index=True,
@@ -76,7 +79,7 @@ class Problem(models.Model):
         null=True,
     )
     space_complexity_requirement = models.CharField(
-        max_length=5,
+        max_length=20,
         choices=Complexity.choices,
         default=Complexity.O_N,
         db_index=True,
@@ -99,6 +102,9 @@ class Problem(models.Model):
         max_length=200, blank=True, null=True
     )
 
+    def resources(self):
+        return self.problemresource_set.all()
+
     def best_solutions(self):
         return self.submission_set.filter(is_best=True)
 
@@ -107,11 +113,6 @@ class Problem(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class Resource(models.Model):
-    # TODO: add a resource type field
-    pass
 
 
 class Submission(models.Model):
@@ -129,10 +130,54 @@ class Submission(models.Model):
     is_best = models.BooleanField(default=False)
     is_interview_mode = models.BooleanField(default=False)
     methods = models.ManyToManyField("Topic", blank=True)
-    resources = models.ManyToManyField("Resource", blank=True)
 
     def __str__(self):
         return f"{self.problem.title} - passed: {self.passed}"
+
+
+class ResourceType(models.TextChoices):
+    IMAGE = "image", "image"
+    VIDEO = "video", "video"
+    ARTICLE = "article", "article"
+    SOLUTION_POST = "solution_post", "solution post"
+
+
+class Resource(PolymorphicModel):
+    title = models.CharField(max_length=100, unique=True, db_index=True)
+    url = models.URLField(max_length=200, blank=True, null=True)
+    resource_type = models.CharField(
+        max_length=100,
+        choices=ResourceType.choices,
+        default=ResourceType.SOLUTION_POST,
+        blank=True,
+        null=True,
+    )
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=100, unique=True, db_index=True)
+    resource = models.ForeignKey("Resource", on_delete=models.CASCADE)
+
+
+class ProblemResource(Resource):
+    problem = models.ForeignKey("Problem", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
+
+class SubmissionResource(Resource):
+    submission = models.ForeignKey("Submission", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
+
+class NoteResource(Resource):
+    note = models.ForeignKey("Note", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
 
 
 class NoteTypeChoices(models.TextChoices):
@@ -153,7 +198,6 @@ class Note(PolymorphicModel):
     note_type = models.CharField(
         max_length=100,
         choices=NoteTypeChoices.choices,
-        default=NoteTypeChoices.INTUITION,
         blank=True,
         null=True,
     )

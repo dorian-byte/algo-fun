@@ -5,7 +5,6 @@ from algofun.models import (
     Submission,
     Method,
     Source,
-    SubmissionPicture,
     Topic,
     ProblemNote,
     SubmissionNote,
@@ -21,7 +20,6 @@ from algofun_service.types import (
     SubmissionType,
     MethodType,
     SourceType,
-    SubmissionPictureType,
     TopicType,
     SubmissionNoteType,
 )
@@ -32,7 +30,6 @@ class Query(graphene.ObjectType):
     all_submissions = graphene.List(SubmissionType)
     all_methods = graphene.List(MethodType)
     all_sources = graphene.List(SourceType)
-    all_submission_pictures = graphene.List(SubmissionPictureType)
     all_topics = graphene.List(TopicType)
     all_problem_notes = graphene.List(ProblemNoteType)
     all_submission_notes = graphene.List(SubmissionNoteType)
@@ -60,12 +57,6 @@ class Query(graphene.ObjectType):
 
     def resolve_source_by_id(self, info, id):
         return Source.objects.get(pk=id)
-
-    def resolve_all_submission_pictures(self, info):
-        return SubmissionPicture.objects.all()
-
-    def resolve_submission_picture_by_id(self, info, id):
-        return SubmissionPicture.objects.get(pk=id)
 
     def resolve_all_topics(self, info):
         return Topic.objects.all()
