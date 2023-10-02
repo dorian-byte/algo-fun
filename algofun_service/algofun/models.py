@@ -1,5 +1,6 @@
 from django.db import models
 from polymorphic.models import PolymorphicModel
+from django.utils import timezone
 
 
 class Difficulty(models.TextChoices):
@@ -9,11 +10,15 @@ class Difficulty(models.TextChoices):
 
 
 class Complexity(models.TextChoices):
-    O_N = "n", "n"
+    O_1 = "o1", "o1"
+    O_N_SQUARE_ROOT = "nsqrt", "nsqrt"
     O_LOGN = "logn", "logn"
+    O_N = "n", "n"
     O_NLOGN = "nlogn", "nlogn"
     O_N2 = "n2", "n2"
     O_N3 = "n3", "n3"
+    O_2N = "2n", "2n"
+    O_N_FACTORIAL = "nfactorial", "nfactorial"
 
 
 class ProficiencyLevel(models.TextChoices):
@@ -85,7 +90,7 @@ class Problem(models.Model):
     # source has where this problem comes from, e.g. leetcode, jzoffer, etc.
     # this should be a multiple choice field with multiple values allowed
     source = models.ForeignKey(
-        "Source", on_delete=models.DO_NOTHING, blank=True, null=True
+        "Source", on_delete=models.SET_NULL, blank=True, null=True
     )
 
     url = models.URLField(max_length=200, blank=True, null=True)
@@ -104,31 +109,30 @@ class Problem(models.Model):
         return self.title
 
 
+class Resource(models.Model):
+    # TODO: add a resource type field
+    pass
+
+
 class Submission(models.Model):
+    # NOTE: using string reference (e.g. "Problem") to avoid circular dependency
     problem = models.ForeignKey("Problem", on_delete=models.CASCADE)
-    code = models.TextField()
+    code = models.TextField(blank=True)
     passed = models.BooleanField()
     proficiency_level = models.CharField(
         max_length=100,
         choices=ProficiencyLevel.choices,
         default=ProficiencyLevel.NO_UNDERSTANDING,
     )
-    submitted_at = models.DateTimeField()
-    duration = models.DurationField(blank=True, null=True)
+    submitted_at = models.DateTimeField(default=timezone.now)
+    duration = models.IntegerField(blank=True, null=True)
     is_best = models.BooleanField(default=False)
-    reference_solution_url = models.URLField(blank=True, null=True)
-    # method used to solve the problem; e.g. recursion, iteration, DP, etc.
-    # note that this is similar to the "topic" field in Problem model,
-    # so this can have multiple values as well
-    method = models.ForeignKey("Method", on_delete=models.DO_NOTHING)
+    is_interview_mode = models.BooleanField(default=False)
+    methods = models.ManyToManyField("Topic", blank=True)
+    resources = models.ManyToManyField("Resource", blank=True)
 
     def __str__(self):
         return f"{self.problem.title} - passed: {self.passed}"
-
-
-class SubmissionPicture(models.Model):
-    submission = models.ForeignKey("Submission", on_delete=models.CASCADE)
-    url = models.URLField(max_length=200)
 
 
 class NoteTypeChoices(models.TextChoices):
@@ -136,6 +140,7 @@ class NoteTypeChoices(models.TextChoices):
     STUCK_POINT = "stuck_point", "stuck point"
     QNA = "qna", "qna"
     ERR = "err", "err"
+    MEMO = "memo", "memo"
 
 
 class Note(PolymorphicModel):
@@ -152,6 +157,15 @@ class Note(PolymorphicModel):
         blank=True,
         null=True,
     )
+    start_line_number = models.IntegerField(blank=True, null=True)
+    end_line_number = models.IntegerField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        # NOTE: Before saving the Note object, check if only start_line_number is provided.
+        # If end_line_number is not provided, set end_line_number equal to start_line_number.
+        if self.start_line_number is not None and self.end_line_number is None:
+            self.end_line_number = self.start_line_number
+        super().save(*args, **kwargs)
 
 
 class ProblemNote(Note):
