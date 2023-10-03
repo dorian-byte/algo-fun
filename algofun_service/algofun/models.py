@@ -27,8 +27,8 @@ class ProficiencyLevel(models.TextChoices):
         "conceptual_understanding",
         "conceptual understanding",
     )
-    BORROWED_SOLUTION = "borrowed_solution", "borrowed solution"
-    CODED_NO_PASS = "coded_no_pass", "coded no pass"
+    # BORROWED_SOLUTION = "borrowed_solution", "borrowed solution"
+    NO_PASS = "no_pass", "no pass"
     GUIDED_PASS = "guided_pass", "guided pass"
     UNSTEADY_PASS = "unsteady_pass", "unsteady pass"
     SMOOTH_PASS = "smooth_pass", "smooth pass"
@@ -96,7 +96,7 @@ class Problem(models.Model):
         "Source", on_delete=models.SET_NULL, blank=True, null=True
     )
 
-    url = models.URLField(max_length=200, blank=True, null=True)
+    url = models.URLField(max_length=200, blank=True)
     lintcode_equivalent_problem_number = models.IntegerField(blank=True, null=True)
     lintcode_equivalent_problem_url = models.URLField(
         max_length=200, blank=True, null=True
@@ -112,14 +112,14 @@ class Problem(models.Model):
         return self.problemnote_set.filter(is_starred=True)
 
     def __str__(self):
-        return self.title
+        return str(self.leetcode_number) + " " + self.title
 
 
 class Submission(models.Model):
     # NOTE: using string reference (e.g. "Problem") to avoid circular dependency
     problem = models.ForeignKey("Problem", on_delete=models.CASCADE)
     code = models.TextField(blank=True)
-    passed = models.BooleanField()
+    # passed = models.BooleanField()
     proficiency_level = models.CharField(
         max_length=100,
         choices=ProficiencyLevel.choices,
@@ -127,12 +127,16 @@ class Submission(models.Model):
     )
     submitted_at = models.DateTimeField(default=timezone.now)
     duration = models.IntegerField(blank=True, null=True)
-    is_best = models.BooleanField(default=False)
+    is_solution = models.BooleanField(default=False)
     is_interview_mode = models.BooleanField(default=False)
     methods = models.ManyToManyField("Topic", blank=True)
 
     def __str__(self):
-        return f"{self.problem.title} - passed: {self.passed}"
+        # NOTE: formats date as MM/YY
+        submitted_date = self.submitted_at.strftime("%m/%y")
+        return (
+            f"{submitted_date} {self.problem.leetcode_number} {self.proficiency_level}"
+        )
 
 
 class ResourceType(models.TextChoices):
@@ -143,12 +147,12 @@ class ResourceType(models.TextChoices):
 
 
 class Resource(PolymorphicModel):
-    title = models.CharField(max_length=100, unique=True, db_index=True)
-    url = models.URLField(max_length=200, blank=True, null=True)
+    title = models.CharField(max_length=100, blank=True)
+    url = models.URLField(max_length=200, blank=True)
     resource_type = models.CharField(
         max_length=100,
         choices=ResourceType.choices,
-        default=ResourceType.SOLUTION_POST,
+        # default=ResourceType.SOLUTION_POST,
         blank=True,
         null=True,
     )
@@ -190,7 +194,7 @@ class NoteTypeChoices(models.TextChoices):
 
 class Note(PolymorphicModel):
     # question is optional, answer isn't
-    title = models.TextField(blank=True, null=True)
+    title = models.CharField(max_length=100, blank=True)
     content = models.TextField(null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -1,9 +1,9 @@
 [
-    {
-        "model": "algofun.source",
-        "pk": 1,
-        "fields": {
-            "name": "leetCode"
-        }
+  {
+    "model": "algofun.source",
+    "pk": 1,
+    "fields": {
+      "name": "LeetCode"
     }
+  }
 ]

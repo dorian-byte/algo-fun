@@ -83,7 +83,7 @@ with open("./003sources.json", "w") as jsonFile:
                 {
                     "model": "algofun.source",
                     "pk": 1,
-                    "fields": {"name": "leetCode"},
+                    "fields": {"name": "LeetCode"},
                 }
             ],
             indent=4,
