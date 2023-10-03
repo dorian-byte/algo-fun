@@ -105,8 +105,8 @@ class Problem(models.Model):
     def resources(self):
         return self.problemresource_set.all()
 
-    def best_solutions(self):
-        return self.submission_set.filter(is_best=True)
+    def solutions(self):
+        return self.submission_set.filter(is_solution=True)
 
     def starred_notes(self):
         return self.problemnote_set.filter(is_starred=True)
