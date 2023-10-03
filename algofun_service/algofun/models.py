@@ -155,7 +155,7 @@ class Resource(PolymorphicModel):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=100, unique=True, db_index=True)
+    name = models.CharField(max_length=100)
     resource = models.ForeignKey("Resource", on_delete=models.CASCADE)
 
 

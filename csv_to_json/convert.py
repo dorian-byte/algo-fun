@@ -12,12 +12,12 @@ with open(csvFilePath) as csvFile:
     csvReader = csv.DictReader(csvFile)
     for rows in csvReader:
         id = rows["id"]
-        data[id] = rows
+        data[id] = r
 data = list(data.values())
 res = []
 companies = set()
 topics = set()
-for row in data:
+for idx, row in enumerate(data):
     if not row["companies"]:
         row_companies = []
     else:
@@ -33,10 +33,10 @@ for row in data:
     res.append(
         {
             "model": "algofun.problem",
-            "pk": row["id"],
+            "pk": idx + 1,
             "fields": {
                 "title": row["title"],
-                "leetcode_number": None,
+                "leetcode_number": int(row["id"]),
                 "description": row["description"],
                 "created_at": current_time.isoformat(),
                 "updated_at": current_time.isoformat(),

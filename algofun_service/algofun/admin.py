@@ -14,6 +14,7 @@ from .models import (
     ProblemResource,
     SubmissionResource,
     NoteResource,
+    Tag,
 )
 
 
@@ -91,9 +92,15 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display = ["name"]
 
 
+class NoteResourceTagInline(admin.TabularInline):
+    model = Tag
+    extra = 0
+
+
 @admin.register(ProblemResource)
 class ProblemResourceAdmin(admin.ModelAdmin):
     list_display = ["title"]
+    inlines = [NoteResourceTagInline]
 
 
 @admin.register(SubmissionResource)
