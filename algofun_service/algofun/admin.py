@@ -5,7 +5,6 @@ from django.contrib import admin
 from .models import (
     Problem,
     Submission,
-    Method,
     Source,
     Topic,
     ProblemNote,
@@ -63,11 +62,6 @@ class ProblemAdmin(admin.ModelAdmin):
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ["__str__"]
     inlines = [SubmissionResourceInline, SubmissionNoteInline]
-
-
-@admin.register(Method)
-class MethodAdmin(admin.ModelAdmin):
-    list_display = ["name"]
 
 
 @admin.register(Topic)

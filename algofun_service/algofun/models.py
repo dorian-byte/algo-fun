@@ -49,13 +49,6 @@ class Source(models.Model):
         return self.name
 
 
-class Method(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
 class Problem(models.Model):
     title = models.CharField(max_length=100, unique=True, db_index=True)
     leetcode_number = models.IntegerField(unique=True, blank=True, null=True)
@@ -68,7 +61,6 @@ class Problem(models.Model):
         default=Difficulty.EASY,
         db_index=True,
         blank=True,
-        null=True,
     )
     time_complexity_requirement = models.CharField(
         max_length=20,
@@ -76,7 +68,6 @@ class Problem(models.Model):
         default=Complexity.O_N,
         db_index=True,
         blank=True,
-        null=True,
     )
     space_complexity_requirement = models.CharField(
         max_length=20,
@@ -84,7 +75,6 @@ class Problem(models.Model):
         default=Complexity.O_N,
         db_index=True,
         blank=True,
-        null=True,
     )
 
     companies = models.ManyToManyField("Company", blank=True)
@@ -154,8 +144,10 @@ class Resource(PolymorphicModel):
         choices=ResourceType.choices,
         # default=ResourceType.SOLUTION_POST,
         blank=True,
-        null=True,
     )
+
+    def __str__(self):
+        return self.title
 
 
 class Tag(models.Model):
@@ -166,25 +158,16 @@ class Tag(models.Model):
 class ProblemResource(Resource):
     problem = models.ForeignKey("Problem", on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.title
-
 
 class SubmissionResource(Resource):
     submission = models.ForeignKey("Submission", on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.title
 
 
 class NoteResource(Resource):
     note = models.ForeignKey("Note", on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.title
 
-
-class NoteTypeChoices(models.TextChoices):
+class NoteType(models.TextChoices):
     INTUITION = "intuition", "intuition"
     STUCK_POINT = "stuck_point", "stuck point"
     QNA = "qna", "qna"
@@ -201,9 +184,8 @@ class Note(PolymorphicModel):
     is_starred = models.BooleanField(default=False)
     note_type = models.CharField(
         max_length=100,
-        choices=NoteTypeChoices.choices,
+        choices=NoteType.choices,
         blank=True,
-        null=True,
     )
     start_line_number = models.IntegerField(blank=True, null=True)
     end_line_number = models.IntegerField(blank=True, null=True)
@@ -215,19 +197,16 @@ class Note(PolymorphicModel):
             self.end_line_number = self.start_line_number
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return self.title
+
 
 class ProblemNote(Note):
     problem = models.ForeignKey("Problem", on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.title
-
 
 class SubmissionNote(Note):
     submission = models.ForeignKey("Submission", on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.title
 
 
 class Company(models.Model):
