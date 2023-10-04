@@ -3,16 +3,38 @@ from graphene_django.forms.mutation import DjangoModelFormMutation
 from algofun.models import (
     Problem,
     Submission,
-    Method,
     Source,
-    SubmissionPicture,
     Topic,
     ProblemNote,
     SubmissionNote,
     Company,
+    Tag,
+    ProblemResource,
+    NoteResource,
+    SubmissionResource,
 )
 from graphene_django import DjangoObjectType
 from django import forms
+
+
+class TagType(DjangoObjectType):
+    class Meta:
+        model = Tag
+
+
+class ProblemResourceType(DjangoObjectType):
+    class Meta:
+        model = ProblemResource
+
+
+class NoteResourceType(DjangoObjectType):
+    class Meta:
+        model = NoteResource
+
+
+class SubmissionResourceType(DjangoObjectType):
+    class Meta:
+        model = SubmissionResource
 
 
 class ProblemNoteType(DjangoObjectType):
@@ -48,19 +70,9 @@ class SubmissionType(DjangoObjectType):
         model = Submission
 
 
-class MethodType(DjangoObjectType):
-    class Meta:
-        model = Method
-
-
 class SourceType(DjangoObjectType):
     class Meta:
         model = Source
-
-
-class SubmissionPictureType(DjangoObjectType):
-    class Meta:
-        model = SubmissionPicture
 
 
 class TopicType(DjangoObjectType):
