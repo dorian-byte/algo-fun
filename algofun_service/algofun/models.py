@@ -119,6 +119,7 @@ class Submission(models.Model):
     duration = models.IntegerField(blank=True, null=True)
     is_solution = models.BooleanField(default=False)
     is_interview_mode = models.BooleanField(default=False)
+    is_whiteboard_mode = models.BooleanField(default=False)
     methods = models.ManyToManyField("Topic", blank=True)
 
     def __str__(self):
