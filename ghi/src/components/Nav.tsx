@@ -10,6 +10,9 @@ const Nav = () => {
       <Link to="/submissions" className="nav-link">
         Submissions
       </Link>
+      <Link to="/submissions/new" className="nav-link">
+        New Submission
+      </Link>
       <Link to="/problems" className="nav-link">
         Problems
       </Link>

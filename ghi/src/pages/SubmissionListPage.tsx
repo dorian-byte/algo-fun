@@ -2,22 +2,22 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import { InputBase } from '@mui/material';
+import NewSubmissionPage from './NewSubmissionPage';
 
 const ALL_SUBMISSIONS = gql`
   query AllSubmissions {
     allSubmissions {
       id
       code
-      problem {
-        id
-        title
-        description
-        spaceComplexityRequirement
-        timeComplexityRequirement
-        difficulty
-        createdAt
-        updatedAt
+      duration
+      isSolution
+      isWhiteboardMode
+      isInterviewMode
+      methods {
+        name
       }
+      proficiencyLevel
+      submittedAt
     }
   }
 `;
@@ -38,15 +38,20 @@ const SubmissionListPage = () => {
     <div>
       <div>SubmissionListPage</div>
       {submissions.map((sm: any) => (
-        <div key={sm.id}>
-          <div onClick={() => navigate(`/submissions/${sm.id}`)}>{sm.id}</div>
+        <div key={sm?.id}>
+          <div onClick={() => navigate(`/submissions/${sm?.id}`)}>{sm?.id}</div>
           <div>
             code:
-            <InputBase value={sm.code} disabled={false} maxRows={1000} />
-          </div>
-          <div>
-            problem:
-            {sm.problem.id} {sm.problem.title}
+            <div>
+              <InputBase
+                value={sm.code}
+                maxRows={1000}
+                multiline={true}
+                sx={{
+                  width: 1000,
+                }}
+              />
+            </div>
           </div>
           <div
             style={{
@@ -57,19 +62,11 @@ const SubmissionListPage = () => {
               borderRadius: 20,
             }}
           >
-            <InputBase
-              value={sm.problem.description}
-              disabled={false}
-              maxRows={1000}
-              minRows={10}
-              multiline={true}
-              sx={{ width: 1000 }}
-            />
-          </div>
-          <div>
-            {sm.problem.spaceComplexityRequirement}{' '}
-            {sm.problem.timeComplexityRequirement} {sm.problem.difficulty}{' '}
-            {sm.problem.createdAt} {sm.problem.updatedAt}
+            <div>is white board mode: {sm.isWhiteboardMode ? 'yes' : 'no'}</div>
+            <div>is interview mode: {sm.isInterviewMode ? 'yes' : 'no'}</div>
+            <div>duration: {sm.duration}</div>
+            <div>proficiency level: {sm.proficiencyLevel}</div>
+            <div>submitted at: {sm.submittedAt}</div>
           </div>
         </div>
       ))}

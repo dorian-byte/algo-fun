@@ -17,6 +17,7 @@ from algofun.models import (
 )
 
 from django import forms
+from .types import SubmissionType
 
 
 class SourceForm(forms.ModelForm):
@@ -246,6 +247,18 @@ class SubmissionForm(forms.ModelForm):
         fields = "__all__"
 
 
+class UpdateSubmissionInput(graphene.InputObjectType):
+    id = graphene.ID(required=False)
+    problem = graphene.String(required=False)
+    proficiency_level = graphene.String(required=False)
+    submitted_at = graphene.String(required=False)
+    duration = graphene.String(required=False)
+    is_solution = graphene.String(required=False)
+    is_interview_mode = graphene.String(required=False)
+    is_whiteboard_mode = graphene.String(required=False)
+    mothods = graphene.List(graphene.String, required=False)
+
+
 class SubmissionMutation(DjangoModelFormMutation):
     class Meta:
         form_class = SubmissionForm
@@ -253,15 +266,9 @@ class SubmissionMutation(DjangoModelFormMutation):
         lookup_field = "id"
 
     class Argument:
-        id = graphene.ID(required=False)
-        problem = graphene.String(required=False)
-        proficiency_level = graphene.String(required=False)
-        submitted_at = graphene.String(required=False)
-        duration = graphene.String(required=False)
-        is_solution = graphene.String(required=False)
-        is_interview_mode = graphene.String(required=False)
-        is_whiteboard_mode = graphene.String(required=False)
-        mothods = graphene.List(graphene.String, required=False)
+        input = UpdateSubmissionInput(required=True)
+
+    submission = graphene.Field(SubmissionType)
 
     @classmethod
     def mutate(cls, root, info, input):
