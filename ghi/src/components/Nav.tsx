@@ -17,4 +17,4 @@ const Nav = () => {
   );
 };
 
-export default Nav
+export default Nav;

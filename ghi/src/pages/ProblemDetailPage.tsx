@@ -35,9 +35,10 @@ const PROBLEM_BY_ID = gql`
 
 const ProblemDetailPage = () => {
   const { id } = useParams();
-  const [problem, setProblem] = useState({});
+  const [problem, setProblem] = useState({} as any);
   const { loading, error, data } = useQuery(PROBLEM_BY_ID, {
-    variables: { id: parseInt(id) },
+    // NOTE: cannot just pass id: id, because id is string
+    variables: { id: id ? +id : 0 },
   });
   useEffect(() => {
     if (data) {
