@@ -21,6 +21,7 @@ class Complexity(models.TextChoices):
     O_N_FACTORIAL = "nfactorial", "nfactorial"
 
 
+# NOTE: below uses NAME_OF_CHOICE=DB_VALUE,HUMAN_READABLE_DESCRIPTION format
 class ProficiencyLevel(models.TextChoices):
     NO_UNDERSTANDING = "no_understanding", "no understanding"
     CONCEPTUAL_UNDERSTANDING = (
@@ -107,7 +108,9 @@ class Problem(models.Model):
 
 class Submission(models.Model):
     # NOTE: using string reference (e.g. "Problem") to avoid circular dependency
-    problem = models.ForeignKey("Problem", on_delete=models.CASCADE)
+    problem = models.ForeignKey(
+        "Problem", on_delete=models.CASCADE, related_name="submissions"
+    )
     code = models.TextField(blank=True)
     # passed = models.BooleanField()
     proficiency_level = models.CharField(

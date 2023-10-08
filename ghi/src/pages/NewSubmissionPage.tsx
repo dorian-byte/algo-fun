@@ -39,32 +39,55 @@ const NewSubmissionPage = () => {
   };
 
   return (
-    <div>
-      <div>NewSubmissionPage</div>
-      <div>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '2rem',
+        fontFamily: 'Arial, sans-serif',
+        background: '#f4f4f7',
+        minHeight: '100vh',
+      }}
+    >
+      <h2 style={{ marginBottom: '2rem' }}>New Submission Page</h2>
+      <form
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          maxWidth: '400px',
+          width: '100%',
+          background: '#ffffff',
+          padding: '2rem',
+          borderRadius: '8px',
+          boxShadow: '0 0 15px rgba(0,0,0,0.1)',
+        }}
+      >
         <label>
-          code
+          Code
           <input
+            style={inputStyle}
             type="text"
             onChange={(e) =>
               setData((prev: any) => ({ ...prev, code: e.target.value }))
             }
           />
         </label>
-        <label htmlFor="problem">
-          problem
+        <label>
+          Problem
           <input
+            style={inputStyle}
             type="number"
             onChange={(e) =>
               setData((prev: any) => ({ ...prev, problem: e.target.value }))
             }
           />
         </label>
-      </div>
-      <div>
-        <label htmlFor="proficiencyLevel">
-          proficiencyLevel
+        <label>
+          Proficiency Level
           <input
+            style={inputStyle}
             type="text"
             onChange={(e) =>
               setData((prev: any) => ({
@@ -74,33 +97,30 @@ const NewSubmissionPage = () => {
             }
           />
         </label>
-      </div>
-      <div>
-        <label htmlFor="submittedAt">
-          submittedAt
+        <label>
+          Submitted At
           <input
+            style={inputStyle}
             type="text"
             onChange={(e) =>
               setData((prev: any) => ({ ...prev, submittedAt: e.target.value }))
             }
           />
         </label>
-      </div>
-      <div>
-        <label htmlFor="duration">
-          duration
+        <label>
+          Duration
           <input
+            style={inputStyle}
             type="number"
             onChange={(e) =>
               setData((prev: any) => ({ ...prev, duration: e.target.value }))
             }
           />
         </label>
-      </div>
-      <div>
-        <label htmlFor="isSolution">
-          isSolution
+        <label>
+          Is Solution
           <input
+            style={checkboxStyle}
             type="checkbox"
             onChange={(e) =>
               setData((prev: any) => ({
@@ -110,11 +130,10 @@ const NewSubmissionPage = () => {
             }
           />
         </label>
-      </div>
-      <div>
-        <label htmlFor="isWhiteboardMode">
-          isWhiteboardMode
+        <label>
+          Is Whiteboard Mode
           <input
+            style={checkboxStyle}
             type="checkbox"
             onChange={(e) =>
               setData((prev: any) => ({
@@ -124,11 +143,10 @@ const NewSubmissionPage = () => {
             }
           />
         </label>
-      </div>
-      <div>
-        <label htmlFor="isInterviewMode">
-          isInterviewMode
+        <label>
+          Is Interview Mode
           <input
+            style={checkboxStyle}
             type="checkbox"
             onChange={(e) =>
               setData((prev: any) => ({
@@ -138,21 +156,46 @@ const NewSubmissionPage = () => {
             }
           />
         </label>
-      </div>
-      <div>
-        <label htmlFor="methods">
-          methods
+        <label>
+          Methods
           <input
+            style={inputStyle}
             type="text"
             onChange={(e) =>
               setData((prev: any) => ({ ...prev, methods: e.target.value }))
             }
           />
         </label>
-      </div>
-      <button onClick={handleSubmit}>try</button>
+        <button style={buttonStyle} onClick={handleSubmit}>
+          Submit
+        </button>
+      </form>
     </div>
   );
+};
+
+const inputStyle = {
+  padding: '0.5rem',
+  fontSize: '1rem',
+  borderRadius: '4px',
+  border: '1px solid #ccc',
+  marginTop: '0.5rem',
+};
+
+const checkboxStyle = {
+  marginLeft: '0.5rem',
+};
+
+const buttonStyle = {
+  padding: '0.75rem 1.5rem',
+  fontSize: '1rem',
+  borderRadius: '4px',
+  border: 'none',
+  cursor: 'pointer',
+  background: '#007BFF',
+  color: '#ffffff',
+  transition: 'background 0.3s ease',
+  alignSelf: 'center',
 };
 
 export default NewSubmissionPage;

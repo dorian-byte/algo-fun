@@ -5,6 +5,7 @@ import { ApolloProvider } from '@apollo/client';
 import { client } from './apollo/client';
 import Nav from './components/Nav';
 import LandingPage from './pages/LandingPage';
+import NewProblemPage from './pages/NewProblemPage';
 import NewSubmissionPage from './pages/NewSubmissionPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProblemListPage from './pages/ProblemListPage';
@@ -26,6 +27,7 @@ function App() {
           </Route>
           <Route path="/problems">
             <Route path="" element={<ProblemListPage />} />
+            <Route path="new" element={<NewProblemPage />} />
             <Route path=":id" element={<ProblemDetailPage />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
