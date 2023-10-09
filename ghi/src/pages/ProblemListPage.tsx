@@ -40,20 +40,47 @@ const ALL_PROBLEMS = gql`
 const ProblemListPage = () => {
   const navigate = useNavigate();
   const [problems, setProblems] = useState([]);
+  const [filteredProblems, setFilteredProblems] = useState([]);
+  const [difficultyFilter, setDifficultyFilter] = useState<string | null>(null);
+
   const { loading, error, data } = useQuery(ALL_PROBLEMS);
 
   useEffect(() => {
     if (data) {
-      console.log(data);
+      // console.log(data);
       setProblems(data.allProblems);
+      setFilteredProblems(data.allProblems);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (difficultyFilter) {
+      const result = problems.filter(
+        (pb: any) => pb.difficulty === difficultyFilter
+      );
+      setFilteredProblems(result);
+    } else {
+      setFilteredProblems(problems);
+    }
+  }, [difficultyFilter, problems]);
 
   if (error) return <p>Error :( {error.message}</p>;
   if (loading) return <p>Loading...</p>;
 
   return (
     <div className="container">
+      <div className="mb-4">
+        <select
+          value={difficultyFilter || ''}
+          onChange={(e) => setDifficultyFilter(e.target.value || null)}
+          className="btn btn-outline-primary"
+        >
+          <option value="">All Difficulties</option>
+          <option value="EASY">Easy</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HARD">Hard</option>
+        </select>
+      </div>
       <div className="table-header mb-5">
         <h2 className="mb-4">All Problems</h2>
         <button
@@ -63,7 +90,7 @@ const ProblemListPage = () => {
           New Problem
         </button>
       </div>
-      <ProblemList problems={problems} />
+      <ProblemList problems={filteredProblems} />
     </div>
   );
 };

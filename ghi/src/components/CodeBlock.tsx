@@ -1,6 +1,5 @@
 import MonacoEditor from 'react-monaco-editor';
 import * as monaco from 'monaco-editor';
-import { Padding } from '@mui/icons-material';
 
 const customDarkTheme: monaco.editor.IStandaloneThemeData = {
   base: 'vs-dark',

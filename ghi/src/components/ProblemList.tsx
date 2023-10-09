@@ -9,10 +9,10 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
     <table className="table table-striped table-dark table-hover">
       <thead>
         <tr>
-          <th>Status</th>
-          <th>Title</th>
-          <th>Difficulty</th>
-          <th>Action</th>
+          <th className="text-light-gray">Status</th>
+          <th className="text-light-gray">Title</th>
+          <th className="text-light-gray">Difficulty</th>
+          <th className="text-light-gray">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -35,7 +35,7 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
               {'. '} {pb.title}
             </td>
             <td style={{ color: difficultyColor(pb.difficulty) }}>
-              {pb.difficulty}
+              {pb.difficulty.charAt(0) + pb.difficulty.slice(1).toLowerCase()}
             </td>
             <td>
               <button className="btn btn-outline-primary btn-sm">Notes</button>
