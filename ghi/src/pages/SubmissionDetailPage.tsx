@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
-import { formatTime } from '../utils/timeFormat';
+import { formatTime } from '../utils/timeUtils';
 import CodeBlock from '../components/CodeBlock';
 
 const SUMBISSION_BY_ID = gql`

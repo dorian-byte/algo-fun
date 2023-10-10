@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
-import { formatTime } from '../utils/timeFormat';
+import { formatTime } from '../utils/timeUtils';
 
 const PROBLEM_NOTES = gql`
   query ProblemNotes($id: Int!) {

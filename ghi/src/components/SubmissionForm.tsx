@@ -1,5 +1,5 @@
 import './SubmissionForm.css';
-import { useParams } from 'react-router-dom';
+import { toLocalTime } from '../utils/timeUtils';
 
 export const ProficiencyLevel = {
   NO_UNDERSTANDING: ['no_understanding', 'no understanding'],
@@ -34,18 +34,11 @@ const SubmissionForm: React.FC<Props> = ({
   showFixedProblemTitleInSelection,
   allProblems,
 }) => {
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newDate = e.target.value;
-    const [, timePart] = (data?.submittedAt || '').split('T');
-    const updatedDateTime = `${newDate}T${timePart || ''}`;
-    setData((prev: any) => ({ ...prev, submittedAt: updatedDateTime }));
-  };
-
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTime = e.target.value;
-    const [datePart] = (data?.submittedAt || '').split('T');
-    const updatedDateTime = `${datePart}T${newTime}`;
-    setData((prev: any) => ({ ...prev, submittedAt: updatedDateTime }));
+  const handleDateTimeChange = (type: 'date' | 'time', value: string) => {
+    const [currentDate, currentTime] = data?.submittedAt?.split('T');
+    const newDateTime =
+      type === 'date' ? `${value}T${currentTime}` : `${currentDate}T${value}`;
+    setData((prev: any) => ({ ...prev, submittedAt: newDateTime }));
   };
   console.log('data', data);
   console.log('problemDetails', problemDetails);
@@ -192,14 +185,14 @@ const SubmissionForm: React.FC<Props> = ({
             <input
               className="form-control"
               type="date"
-              value={data?.submittedAt ? data?.submittedAt?.split('T')[0] : ''}
-              onChange={handleDateChange}
+              value={data?.submittedAt.split('T')[0]}
+              onChange={(e) => handleDateTimeChange('date', e.target.value)}
             />
             <input
               className="form-control"
               type="time"
-              value={data?.submittedAt ? data?.submittedAt?.split('T')[1] : ''}
-              onChange={handleTimeChange}
+              value={data?.submittedAt.split('T')[1]}
+              onChange={(e) => handleDateTimeChange('time', e.target.value)}
             />
           </div>
           <div className="form-group col-md-6">

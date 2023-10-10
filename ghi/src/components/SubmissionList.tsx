@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { formatTime } from '../utils/timeFormat';
+import { formatTime } from '../utils/timeUtils';
 
 export interface Submission {
   id: string;
