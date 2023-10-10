@@ -31,7 +31,7 @@ const ALL_PROBLEMS = gql`
       lintcodeEquivalentProblemNumber
       lintcodeEquivalentProblemUrl
       submissions {
-        proficiencyLevel
+        passed
       }
     }
   }

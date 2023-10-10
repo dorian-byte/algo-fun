@@ -39,7 +39,7 @@ p,
 } */
 
 .text-light {
-  color: rgb(200, 5, 96) !important;
+  color: rgb(85, 210, 150) !important;
 }
 
 .text-light-gray {
@@ -54,6 +54,7 @@ p,
   padding: 20px !important;
   backdrop-filter: blur(10px); /* Glass effect */
   border: 1px solid rgba(255, 255, 255, 0.1); /* Light border */
+  z-index: 0 !important;
 }
 
 /* Buttons */
@@ -114,6 +115,7 @@ p,
 .navbar,
 .nav {
   /* background-color: rgba(36, 31, 52, 0.8) !important;  */
+  z-index: 2 !important;
   background-color: rgba(90, 30, 150, 0.8) !important;
   backdrop-filter: blur(10px); /* Glass effect */
 }
@@ -158,4 +160,29 @@ a:hover {
 .icon {
   font-size: 20px !important;
   color: rgb(255, 144, 102) !important;
+}
+
+/* This targets the switch when it's checked */
+.form-switch
+  .form-check-input:checked[type='checkbox']
+  ~ .form-check-label::before {
+  background-color: #ff5733 !important; /* Replace with your custom primary color */
+  border-color: #ff5733 !important; /* Replace with your custom primary color */
+}
+
+/* This targets the circle inside the switch when it's checked */
+.form-switch
+  .form-check-input:checked[type='checkbox']
+  ~ .form-check-label::after {
+  transform: translateX(1.5rem) !important;
+}
+
+/* If you also want to change the color when the switch is focused or active */
+.form-switch
+  .form-check-input:focus:checked[type='checkbox']
+  ~ .form-check-label::before,
+.form-switch
+  .form-check-input:active:checked[type='checkbox']
+  ~ .form-check-label::before {
+  box-shadow: 0 0 0 0.2rem rgba(255, 87, 51, 0.25) !important; /* Replace rgba(255, 87, 51, 0.25) with a lighter or transparent version of your custom primary color */
 }

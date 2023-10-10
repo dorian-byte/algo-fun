@@ -125,6 +125,14 @@ class Submission(models.Model):
     is_whiteboard_mode = models.BooleanField(default=False)
     methods = models.ManyToManyField("Topic", blank=True)
 
+    def passed(self):
+        non_passing_levels = [
+            ProficiencyLevel.NO_UNDERSTANDING,
+            ProficiencyLevel.CONCEPTUAL_UNDERSTANDING,
+            ProficiencyLevel.NO_PASS,
+        ]
+        return self.proficiency_level not in non_passing_levels
+
     def __str__(self):
         # NOTE: formats date as MM/YY
         submitted_date = self.submitted_at.strftime("%m/%y")
@@ -206,11 +214,15 @@ class Note(PolymorphicModel):
 
 
 class ProblemNote(Note):
-    problem = models.ForeignKey("Problem", on_delete=models.CASCADE)
+    problem = models.ForeignKey(
+        "Problem", on_delete=models.CASCADE, related_name="notes"
+    )
 
 
 class SubmissionNote(Note):
-    submission = models.ForeignKey("Submission", on_delete=models.CASCADE)
+    submission = models.ForeignKey(
+        "Submission", on_delete=models.CASCADE, related_name="notes"
+    )
 
 
 class Company(models.Model):

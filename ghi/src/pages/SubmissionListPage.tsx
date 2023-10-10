@@ -19,6 +19,7 @@ const ALL_SUBMISSIONS = gql`
         name
       }
       proficiencyLevel
+      passed
       submittedAt
     }
   }
@@ -30,7 +31,7 @@ const SubmissionListPage = () => {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
+      // console.log(data);
       setSubmissions(data.allSubmissions);
     }
   }, [data]);
@@ -41,7 +42,7 @@ const SubmissionListPage = () => {
   return (
     <div className="container mt-5">
       <h2 className="mb-4 text-light">SubmissionListPage</h2>
-      <SubmissionList submissions={submissions} />
+      <SubmissionList submissions={submissions} showProblem={true} />
     </div>
   );
 };

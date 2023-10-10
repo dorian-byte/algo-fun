@@ -17,16 +17,11 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
       </thead>
       <tbody>
         {problems.map((pb: any) => (
-          <tr
-            key={pb.id}
-            onClick={() => {
-              navigate(`/problems/${pb.id}`);
-            }}
-          >
+          <tr key={pb?.id} onClick={() => navigate(`/problems/${pb?.id}`)}>
             <td>
-              {hasPassed(pb.submissions) ? (
+              {hasPassed(pb?.submissions) ? (
                 <span>✅</span>
-              ) : allFailed(pb.submissions) ? (
+              ) : allFailed(pb?.submissions) ? (
                 <span>❌</span>
               ) : null}
             </td>
@@ -38,7 +33,16 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
               {pb.difficulty.charAt(0) + pb.difficulty.slice(1).toLowerCase()}
             </td>
             <td>
-              <button className="btn btn-outline-primary btn-sm">Notes</button>
+              <button
+                onClick={(e) => {
+                  // this line stops the event from propagating to the parent <tr>
+                  e.stopPropagation();
+                  navigate(`/problems/${pb?.id}/notes`);
+                }}
+                className="btn btn-outline-primary btn-sm"
+              >
+                Notes
+              </button>
             </td>
           </tr>
         ))}

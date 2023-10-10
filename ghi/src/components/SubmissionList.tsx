@@ -5,12 +5,14 @@ export interface Submission {
   id: string;
   problem: { leetcodeNumber: number; title: string };
   code: string;
+  submittedAt: string;
   duration: string;
   isSolution: boolean;
   isWhiteboardMode: boolean;
   isInterviewMode: boolean;
   methods: { name: string }[];
   proficiencyLevel: ProficiencyLevel;
+  passed: boolean;
 }
 
 type ProficiencyLevel =
@@ -32,14 +34,24 @@ const PROFICIENCY_LEVEL_DISPLAY: Record<ProficiencyLevel, string> = {
   SMOOTH_OPTIMAL_PASS: 'Smooth Optimal Pass',
 };
 
-const SubmissionList = ({ submissions }: { submissions: Submission[] }) => {
+const SubmissionList = ({
+  submissions,
+  showProblem,
+}: {
+  submissions: Submission[];
+  showProblem?: boolean;
+}) => {
   const navigate = useNavigate();
+  const sortedSubmissions = submissions.sort(
+    (a: Submission, b: Submission) =>
+      new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+  );
 
   return (
     <table className="table table-dark table-striped">
       <thead>
         <tr>
-          <th>Problem</th>
+          {showProblem && <th>Problem</th>}
           <th>Status</th>
           <th>Submission Time</th>
           <th>Time Used</th>
@@ -47,12 +59,14 @@ const SubmissionList = ({ submissions }: { submissions: Submission[] }) => {
         </tr>
       </thead>
       <tbody>
-        {submissions.map((sm: Submission) => (
+        {sortedSubmissions.map((sm: Submission) => (
           <tr key={sm?.id} onClick={() => navigate(`/submissions/${sm?.id}`)}>
-            <td>
-              {sm?.problem?.leetcodeNumber} {sm?.problem?.title}
-            </td>
-            <td></td>
+            {showProblem && (
+              <td>
+                {sm?.problem?.leetcodeNumber} {sm?.problem?.title}
+              </td>
+            )}
+            <td>{sm.passed ? '✅' : '❌'}</td>
             <td>{formatTime(sm.submittedAt)}</td>
             <td>{sm.duration}</td>
             <td>

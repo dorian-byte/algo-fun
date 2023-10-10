@@ -50,12 +50,12 @@ class Query(graphene.ObjectType):
     tag_by_id = graphene.Field(TagType, id=graphene.Int())
     all_problem_resources = graphene.List(ProblemResourceType)
     problem_resource_by_id = graphene.Field(ProblemResourceType, id=graphene.Int())
-    all_note_resources = graphene.List(NoteResourceType)
-    note_resource_by_id = graphene.Field(NoteResourceType, id=graphene.Int())
     all_submission_resources = graphene.List(SubmissionResourceType)
     submission_resource_by_id = graphene.Field(
         SubmissionResourceType, id=graphene.Int()
     )
+    all_note_resources = graphene.List(NoteResourceType)
+    note_resource_by_id = graphene.Field(NoteResourceType, id=graphene.Int())
 
     def resolve_all_problems(self, info):
         # FIXME: change back after adding pagination
@@ -112,14 +112,14 @@ class Query(graphene.ObjectType):
     def resolve_problem_resource_by_id(self, info, id):
         return ProblemResource.objects.get(pk=id)
 
-    def resolve_all_note_resources(self, info):
-        return NoteResource.objects.all()
-
-    def resolve_note_resource_by_id(self, info, id):
-        return NoteResource.objects.get(pk=id)
-
     def resolve_all_submission_resources(self, info):
         return SubmissionResource.objects.all()
 
     def resolve_submission_resource_by_id(self, info, id):
         return SubmissionResource.objects.get(pk=id)
+
+    def resolve_all_note_resources(self, info):
+        return NoteResource.objects.all()
+
+    def resolve_note_resource_by_id(self, info, id):
+        return NoteResource.objects.get(pk=id)

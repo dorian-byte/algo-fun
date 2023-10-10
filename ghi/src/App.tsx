@@ -1,5 +1,5 @@
-import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 import { client } from './apollo/client';
@@ -13,7 +13,7 @@ import SubmissionListPage from './pages/SubmissionListPage';
 import SubmissionDetailPage from './pages/SubmissionDetailPage';
 import SubmissionCreatePage from './pages/SubmissionCreatePage';
 import SubmissionEditPage from './pages/SubmissionEditPage';
-import ProblemSubmissionsListPage from './pages/ProblemSubmissionsListPage';
+import ProblemSubmissionListPage from './pages/ProblemSubmissionListPage';
 import ProblemNoteListPage from './pages/ProblemNoteListPage';
 import ProblemNoteDetailPage from './pages/ProblemNoteDetailPage';
 import ProblemNoteCreatePage from './pages/ProblemNoteCreatePage';
@@ -62,7 +62,7 @@ function App() {
                 </Route>
               </Route>
               <Route path="submissions">
-                <Route path="" element={<ProblemSubmissionsListPage />} />
+                <Route path="" element={<ProblemSubmissionListPage />} />
                 {/* same page as above but passing in problemId */}
                 <Route path="new" element={<SubmissionCreatePage />} />
               </Route>

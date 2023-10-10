@@ -1,111 +1,244 @@
 import './SubmissionForm.css';
+import { useParams } from 'react-router-dom';
+
+export const ProficiencyLevel = {
+  NO_UNDERSTANDING: ['no_understanding', 'no understanding'],
+  CONCEPTUAL_UNDERSTANDING: [
+    'conceptual_understanding',
+    'conceptual understanding',
+  ],
+  NO_PASS: ['no_pass', 'no pass'],
+  GUIDED_PASS: ['guided_pass', 'guided pass'],
+  UNSTEADY_PASS: ['unsteady_pass', 'unsteady pass'],
+  SMOOTH_PASS: ['smooth_pass', 'smooth pass'],
+  SMOOTH_OPTIMAL_PASS: ['smooth_optimal_pass', 'smooth optimal pass'],
+};
 
 interface Props {
   data: any;
   setData: (data: any) => void;
   handleSubmit: (e: any) => void;
+  problemDetails: {
+    leetcodeNumber: number;
+    title: string;
+  };
+  showFixedProblemTitleInSelection?: boolean;
+  allProblems?: any[];
 }
 
-const SubmissionForm: React.FC<Props> = ({ data, setData, handleSubmit }) => {
+const SubmissionForm: React.FC<Props> = ({
+  data,
+  setData,
+  handleSubmit,
+  problemDetails,
+  showFixedProblemTitleInSelection,
+  allProblems,
+}) => {
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newDate = e.target.value;
+    const [, timePart] = (data?.submittedAt || '').split('T');
+    const updatedDateTime = `${newDate}T${timePart || ''}`;
+    setData((prev: any) => ({ ...prev, submittedAt: updatedDateTime }));
+  };
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = e.target.value;
+    const [datePart] = (data?.submittedAt || '').split('T');
+    const updatedDateTime = `${datePart}T${newTime}`;
+    setData((prev: any) => ({ ...prev, submittedAt: updatedDateTime }));
+  };
+  console.log('data', data);
+  console.log('problemDetails', problemDetails);
+  console.log('all problems', allProblems);
+  console.log(
+    'showFixedProblemTitleInSelection',
+    showFixedProblemTitleInSelection
+  );
+
   return (
-    <div className="submission-container">
-      <h1>New Submission</h1>
-      <form className="submission-form">
-        <label>
-          Code
-          <input
-            type="text"
-            onChange={(e) =>
-              setData((prev: any) => ({ ...prev, code: e.target.value }))
-            }
-          />
-        </label>
-        <label>
-          Problem
-          <input
-            type="number"
-            value={data?.problem?.id}
-            onChange={(e) =>
-              setData((prev: any) => ({ ...prev, problem: e.target.value }))
-            }
-          />
-        </label>
-        <label>
-          Proficiency Level
-          <input
-            type="text"
-            onChange={(e) =>
+    <div className="container mt-5">
+      {problemDetails?.title && (
+        <h1 className="mb-4">
+          New Submission for {problemDetails?.leetcodeNumber}.{' '}
+          {problemDetails?.title}
+        </h1>
+      )}
+      <form className="submission-form" onSubmit={handleSubmit}>
+        <div className="form-row">
+          <div className="form-group col-md-12">
+            <label>Code</label>
+            <textarea
+              className="form-control"
+              rows={10}
+              value={data?.code}
+              onChange={(e) =>
+                setData((prev: any) => ({ ...prev, code: e.target.value }))
+              }
+            />
+          </div>
+          {showFixedProblemTitleInSelection ? (
+            <div className="form-group col-md-12">
+              <label>Problem Full Name</label>
+              <input
+                className="form-control"
+                type="text"
+                value={`${problemDetails?.leetcodeNumber} - ${problemDetails?.title}`}
+                disabled
+              />
+            </div>
+          ) : (
+            <div className="form-group col-md-12">
+              <label>Select Problem</label>
+              <select
+                className="form-control"
+                value={data?.problem || 0}
+                onChange={(e) =>
+                  setData((prev: any) => ({ ...prev, problem: e.target.value }))
+                }
+              >
+                {/* this "Select a problem..." is the default option but is non-selectable, 
+                meaning once a user made a choice they can't go back to this default option. */}
+                <option value={0} disabled>
+                  Select a problem...
+                </option>
+
+                {allProblems?.map((problem) => (
+                  <option key={problem?.id} value={problem?.id}>
+                    {problem?.leetcodeNumber}. {problem?.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label>Proficiency Level</label>
+          <select
+            className="form-control"
+            value={data?.proficiencyLevel}
+            onChange={(e) => {
               setData((prev: any) => ({
                 ...prev,
                 proficiencyLevel: e.target.value,
-              }))
-            }
-          />
-        </label>
-        <label>
-          Submitted At
+              }));
+            }}
+          >
+            {Object.values(ProficiencyLevel).map((level) => (
+              <option key={level[0]} value={level[0]}>
+                {level[1]}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-check form-switch">
           <input
-            type="text"
-            onChange={(e) =>
-              setData((prev: any) => ({ ...prev, submittedAt: e.target.value }))
-            }
-          />
-        </label>
-        <label>
-          Duration
-          <input
-            type="number"
-            onChange={(e) =>
-              setData((prev: any) => ({ ...prev, duration: e.target.value }))
-            }
-          />
-        </label>
-        <label>
-          Is Solution
-          <input
+            className="form-check-input"
             type="checkbox"
+            id="isSolutionSwitch"
+            checked={data?.isSolution}
             onChange={(e) =>
               setData((prev: any) => ({
                 ...prev,
-                isSolution: e.target.value == 'on' ? true : false,
+                isSolution: e.target.checked,
               }))
             }
           />
-        </label>
-        <label>
-          Is Whiteboard Mode
+          <label className="form-check-label" htmlFor="isSolutionSwitch">
+            Best Solution
+          </label>
+        </div>
+
+        <div className="form-check form-switch">
           <input
+            className="form-check-input"
             type="checkbox"
+            id="isWhiteboardModeSwitch"
+            checked={data?.isWhiteboardMode}
             onChange={(e) =>
               setData((prev: any) => ({
                 ...prev,
-                isWhiteboardMode: e.target.value == 'on' ? true : false,
+                isWhiteboardMode: e.target.checked,
               }))
             }
           />
-        </label>
-        <label>
-          Is Interview Mode
+          <label className="form-check-label" htmlFor="isWhiteboardModeSwitch">
+            Whiteboard Mode
+          </label>
+        </div>
+
+        <div className="form-check form-switch">
           <input
+            className="form-check-input"
             type="checkbox"
+            id="isInterviewModeSwitch"
+            checked={data?.isInterviewMode}
             onChange={(e) =>
               setData((prev: any) => ({
                 ...prev,
-                isInterviewMode: e.target.value == 'on' ? true : false,
+                isInterviewMode: e.target.checked,
               }))
             }
           />
-        </label>
-        <label>
-          Methods
-          <input
-            type="text"
-            onChange={(e) =>
-              setData((prev: any) => ({ ...prev, methods: e.target.value }))
-            }
-          />
-        </label>
-        <button className="submit-button" onClick={handleSubmit}>
+          <label className="form-check-label" htmlFor="isInterviewModeSwitch">
+            Interview Mode
+          </label>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group col-md-6">
+            <label>Submitted At</label>
+            <input
+              className="form-control"
+              type="date"
+              value={data?.submittedAt ? data?.submittedAt?.split('T')[0] : ''}
+              onChange={handleDateChange}
+            />
+            <input
+              className="form-control"
+              type="time"
+              value={data?.submittedAt ? data?.submittedAt?.split('T')[1] : ''}
+              onChange={handleTimeChange}
+            />
+          </div>
+          <div className="form-group col-md-6">
+            <label>Duration</label>
+            <input
+              className="form-control"
+              type="number"
+              value={data?.duration}
+              onChange={(e) =>
+                setData((prev: any) => ({ ...prev, duration: e.target.value }))
+              }
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label>Methods</label>
+          <select
+            multiple
+            className="form-control"
+            value={data?.methods}
+            onChange={(e) => {
+              const selectedOptions = Array.from(
+                e.target.selectedOptions,
+                (option) => option.value
+              );
+              setData((prev: any) => ({ ...prev, methods: selectedOptions }));
+            }}
+          >
+            {/* TODO: Fetch these method names dynamically from the backend */}
+            {['method1', 'method2', 'method3'].map((method) => (
+              <option key={method} value={method}>
+                {method}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button className="btn btn-primary" onClick={handleSubmit}>
           Submit
         </button>
       </form>

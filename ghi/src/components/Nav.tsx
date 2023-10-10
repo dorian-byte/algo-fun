@@ -1,23 +1,44 @@
-import { Link } from 'react-router-dom';
-import './Nav.css';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
-const Nav = () => {
+const Navigation = () => {
   return (
-    <nav className="navbar">
-      <Link to="/" className="nav-link">
-        Home
-      </Link>
-      <Link to="/submissions" className="nav-link">
-        Submissions
-      </Link>
-      <Link to="/submissions/new" className="nav-link">
-        New Submission
-      </Link>
-      <Link to="/problems" className="nav-link">
-        Problems
-      </Link>
-    </nav>
+    <Navbar bg="dark" variant="dark" expand="lg">
+      <LinkContainer to="/">
+        <Navbar.Brand>Home</Navbar.Brand>
+      </LinkContainer>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="mr-auto">
+          <NavDropdown title="Submissions" id="submissionDropdown">
+            <LinkContainer to="/submissions">
+              <NavDropdown.Item>All Submissions</NavDropdown.Item>
+            </LinkContainer>
+            <LinkContainer to="/submissions/new">
+              <NavDropdown.Item>New Submission</NavDropdown.Item>
+            </LinkContainer>
+            <NavDropdown.Divider />
+          </NavDropdown>
+
+          <NavDropdown title="Problems" id="problemDropdown">
+            <LinkContainer to="/problems">
+              <NavDropdown.Item>All Problems</NavDropdown.Item>
+            </LinkContainer>
+            <LinkContainer to="/problems/new">
+              <NavDropdown.Item>New Problem</NavDropdown.Item>
+            </LinkContainer>
+            <NavDropdown.Divider />
+            {/* <LinkContainer to="/notes">
+              <NavDropdown.Item>View Notes</NavDropdown.Item>
+            </LinkContainer>
+            <LinkContainer to="/notes/new">
+              <NavDropdown.Item>New Note</NavDropdown.Item>
+            </LinkContainer> */}
+          </NavDropdown>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
   );
 };
 
-export default Nav;
+export default Navigation;

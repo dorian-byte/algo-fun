@@ -13,5 +13,5 @@ export const formatTime = (inputDate: string): string => {
 
   const year = date.getFullYear().toString().substr(-2); 
 
-  return `${month} ${day} '${year} ${hours}${ampm}` ;
+  return `${month} ${day} '${year}, ${hours}${ampm}` ;
 }

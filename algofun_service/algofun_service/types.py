@@ -66,8 +66,13 @@ class ProblemType(DjangoObjectType):
 
 
 class SubmissionType(DjangoObjectType):
+    passed = graphene.Boolean()
+
     class Meta:
         model = Submission
+
+    def resolve_passed(self, info):
+        return self.passed()
 
 
 class SourceType(DjangoObjectType):

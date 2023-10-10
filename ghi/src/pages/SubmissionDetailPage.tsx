@@ -14,6 +14,7 @@ const SUMBISSION_BY_ID = gql`
       }
       code
       proficiencyLevel
+      passed
       submittedAt
       duration
       isSolution
@@ -28,14 +29,14 @@ const SUMBISSION_BY_ID = gql`
 `;
 
 const SubmissionDetailPage = () => {
-  const { id } = useParams();
+  const { submissionId } = useParams();
   const [submission, setSubmission] = useState({
     id: '',
     code: '',
     problem: { title: '' },
   }) as any;
   const { data } = useQuery(SUMBISSION_BY_ID, {
-    variables: { id: id ? +id : 0 },
+    variables: { id: submissionId ? +submissionId : 0 },
   });
   useEffect(() => {
     if (data) {
@@ -71,6 +72,9 @@ const SubmissionDetailPage = () => {
           </div>
           <div className="mb-2">
             <strong>Proficiency Level:</strong> {submission.proficiencyLevel}
+          </div>
+          <div className="mb-2">
+            <strong>Status:</strong> {submission.passed ? '✅' : '❌'}
           </div>
           <div className="mb-2">
             <strong>Submitted At:</strong> {formatTime(submission.submittedAt)}
