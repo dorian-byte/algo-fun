@@ -2,11 +2,10 @@
 
 /* General */
 body {
-  background: linear-gradient(45deg, #121212, #bf5af2) !important;
-  color: #ff1cae !important;
+  background-color: #212121 !important; /* dark background */
+  color: #b0b0b0 !important; /* general text - light gray */
   margin: 0 !important;
   padding: 0 !important;
-  transition: background 0.3s !important;
   height: 100vh !important;
 }
 
@@ -27,111 +26,104 @@ p,
   font-family: 'Lato', sans-serif !important;
 }
 
-.text-light {
-  color: #ff1cae !important;
+.text-special {
+  color: #f38960 !important; /* special text - orange */
 }
 
 .text-light-gray {
-  color: #cc99ff !important;
+  color: #4a4a4a !important; /* medium background */
 }
 
-/* Glassmorphic Container */
+/* Container */
 .container {
-  background-color: rgba(191, 90, 242, 0.75) !important;
+  background-color: #303030 !important; /* darker background */
   border-radius: 10px !important;
   padding: 20px !important;
-  backdrop-filter: blur(10px); /* Glass effect */
-  border: 1px solid rgba(255, 255, 255, 0.1); /* Light border */
   z-index: 0 !important;
 }
 
 /* Buttons */
 .btn-primary {
-  background-color: rgba(255, 28, 174, 0.8) !important; /* Semi-transparent */
-  border-color: rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(4px); /* Glass effect */
+  background-color: #303030 !important; /* darker background */
+  color: #f38960 !important; /* button text - orange */
+  border-color: #51393e !important; /* dark accent */
 }
 
 .btn-primary:hover {
-  background-color: rgba(255, 28, 174, 0.9) !important;
+  background-color: #424242 !important; /* on hover - slightly lighter background */
+  border-color: #51393e !important; /* dark accent */
 }
 
 .btn-outline-primary {
-  color: #ff1cae !important;
-  background-color: transparent !important;
-  border-color: #ff1cae !important;
-  backdrop-filter: blur(4px); /* Glass effect */
+  color: #f38960 !important; /* button text - orange */
+  border-color: #f38960 !important; /* bright accent */
 }
 
 .btn-outline-primary:hover {
-  background-color: rgba(255, 28, 174, 0.1) !important;
-  border-color: #e5009a !important;
-  color: #e5009a !important;
+  background-color: #f38960 !important; /* bright accent */
+  color: #212121 !important; /* dark background */
 }
 
 .btn-outline-primary:focus,
 .btn-outline-primary:active,
 .btn-outline-primary.active {
-  box-shadow: 0 0 0 0.25rem rgba(255, 28, 174, 0.5) !important;
+  box-shadow: 0 0 0 0.25rem rgba(243, 137, 96, 0.5) !important; /* bright accent */
 }
 
 .btn-outline-primary.disabled,
 .btn-outline-primary:disabled {
-  color: rgba(255, 28, 174, 0.5) !important;
-  border-color: rgba(255, 28, 174, 0.5) !important;
+  color: #f38960 !important; /* button text - orange */
+  border-color: #f38960 !important; /* bright accent */
 }
 
 .navbar,
 .nav {
+  background-color: #303030 !important; /* darker background */
   z-index: 2 !important;
-  background-color: rgba(18, 18, 18, 0.8) !important;
-  backdrop-filter: blur(10px); /* Glass effect */
   padding: 10px !important;
 }
 
 .card {
-  background-color: rgba(18, 18, 18, 0.8) !important;
-  color: #ff1cae !important;
+  background-color: #303030 !important; /* darker background */
+  color: #b0b0b0 !important; /* general text - light gray */
   border-radius: 10px !important;
-  backdrop-filter: blur(10px); /* Glass effect */
-  border: 1px solid rgba(255, 255, 255, 0.1); /* Light border */
 }
 
 a {
-  color: #ff1cae !important;
+  color: #f38960 !important; /* links - orange */
   transition: color 0.3s !important;
 }
 
 a:hover {
-  color: #e5009a !important;
+  color: #f38960 !important; /* links - orange */
 }
 
 /* Form */
 .form-control {
-  background-color: rgba(18, 18, 18, 0.6) !important;
-  border: 1px solid #ff1cae !important;
+  background-color: #212121 !important; /* dark background */
+  border: 1px solid #f38960 !important; /* bright accent */
   border-radius: 5px !important;
-  color: #ff1cae !important;
-  backdrop-filter: blur(4px); /* Glass effect */
+  color: #b0b0b0 !important; /* input text - light gray */
 }
 
 .form-label {
   font-weight: bold !important;
   margin-bottom: 5px !important;
+  color: #b0b0b0 !important; /* label text - light gray */
 }
 
 /* Icons */
 .icon {
   font-size: 20px !important;
-  color: #ff1cae !important;
+  color: #f38960 !important; /* icons - orange */
 }
 
 /* Switch */
 .form-switch
   .form-check-input:checked[type='checkbox']
   ~ .form-check-label::before {
-  background-color: #ff1cae !important;
-  border-color: #ff1cae !important;
+  background-color: #f38960 !important; /* switch - orange */
+  border-color: #f38960 !important; /* switch border - orange */
 }
 
 .form-switch
@@ -146,5 +138,5 @@ a:hover {
 .form-switch
   .form-check-input:active:checked[type='checkbox']
   ~ .form-check-label::before {
-  box-shadow: 0 0 0 0.2rem rgba(255, 28, 174, 0.25) !important;
+  box-shadow: 0 0 0 0.2rem rgba(243, 137, 96, 0.25) !important; /* switch focus - orange */
 }
