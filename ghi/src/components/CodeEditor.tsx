@@ -29,22 +29,30 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   showLineNumbers,
   theme,
 }) => {
+  const padding = 20;
   const options: monaco.editor.IStandaloneEditorConstructionOptions = {
-    selectOnLineNumbers: showLineNumbers,
     roundedSelection: false,
     readOnly: true,
     cursorStyle: 'line',
     automaticLayout: true,
     padding: {
-      top: 20,
-      bottom: 20,
+      top: padding,
+      bottom: padding,
     },
     scrollBeyondLastLine: false,
+    lineNumbers: showLineNumbers ? 'on' : 'off',
+    wordWrapOverride1: 'on',
+    wrappingIndent: 'none',
   };
+
+  const calculatedHeight = Math.max(
+    text?.split('\n').length * 19 + padding * 2,
+    300
+  );
 
   return (
     <MonacoEditor
-      height="400"
+      height={calculatedHeight + 'px'}
       language={language}
       value={text}
       options={options}

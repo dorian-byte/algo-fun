@@ -118,6 +118,7 @@ p,
   z-index: 2 !important;
   background-color: rgba(90, 30, 150, 0.8) !important;
   backdrop-filter: blur(10px); /* Glass effect */
+  padding: 10px !important;
 }
 
 .card {
