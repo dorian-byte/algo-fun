@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import { formatTime } from '../utils/timeUtils';
-import CodeBlock from '../components/CodeBlock';
+import CodeEditor from '../components/CodeEditor';
 
 const SUMBISSION_BY_ID = gql`
   query SubmissionById($id: Int!) {
@@ -53,7 +53,7 @@ const SubmissionDetailPage = () => {
       >
         <h4 className="card-title">Submission ID: {submission?.id}</h4>
         <div className="card-text">
-          <CodeBlock
+          <CodeEditor
             text={submission.code}
             language="python"
             showLineNumbers={true}

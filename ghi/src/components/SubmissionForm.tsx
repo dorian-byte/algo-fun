@@ -1,5 +1,4 @@
 import './SubmissionForm.css';
-import { toLocalTime } from '../utils/timeUtils';
 
 export const ProficiencyLevel = {
   NO_UNDERSTANDING: ['no_understanding', 'no understanding'],

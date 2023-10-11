@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
+import CodeEditor from '../components/CodeEditor';
 
 const PROBLEM_BY_ID = gql`
   query ProblemById($id: Int!) {
@@ -50,10 +51,15 @@ const ProblemDetailPage = () => {
   if (loading) return <p>Loading...</p>;
   return (
     <div>
-      <div>ProblemDetailPage</div>
-      <div>{problem.leetcodeNumber} </div>
-      <div>{problem.title}</div>
-      <div>{problem.description}</div>
+      <h1>
+        Problem Detail for {problem.leetcodeNumber}. {problem.title}
+      </h1>
+      <CodeEditor
+        text={problem.description}
+        language="markdown"
+        showLineNumbers={false}
+        theme="vs-dark"
+      />
     </div>
   );
 };

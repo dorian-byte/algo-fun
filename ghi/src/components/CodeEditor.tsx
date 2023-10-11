@@ -16,14 +16,14 @@ const customDarkTheme: monaco.editor.IStandaloneThemeData = {
 
 monaco.editor.defineTheme('customDark', customDarkTheme);
 
-interface CodeBlockProps {
+interface CodeEditorProps {
   text: string;
   language: string;
   showLineNumbers: boolean;
   theme: string;
 }
 
-const CodeBlock: React.FC<CodeBlockProps> = ({
+const CodeEditor: React.FC<CodeEditorProps> = ({
   text,
   language,
   showLineNumbers,
@@ -53,4 +53,4 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
   );
 };
 
-export default CodeBlock;
+export default CodeEditor;
