@@ -2,13 +2,8 @@
 
 /* General */
 body {
-  background: linear-gradient(
-    45deg,
-    /* rgb(42, 36, 61), */ /* rgb(36, 31, 52) */ rgb(90, 30, 150),
-    rgb(240, 50, 130)
-  ) !important;
-  /* color: rgb(217, 210, 239) !important; */
-  color: rgb(231, 112, 157) !important;
+  background: linear-gradient(45deg, #121212, #bf5af2) !important;
+  color: #ff1cae !important;
   margin: 0 !important;
   padding: 0 !important;
   transition: background 0.3s !important;
@@ -32,24 +27,17 @@ p,
   font-family: 'Lato', sans-serif !important;
 }
 
-/* *,
-*::before,
-*::after {
-  color: inherit !important;
-} */
-
 .text-light {
-  color: rgb(85, 210, 150) !important;
+  color: #ff1cae !important;
 }
 
 .text-light-gray {
-  color: #888 !important;
+  color: #cc99ff !important;
 }
 
 /* Glassmorphic Container */
 .container {
-  /* background-color: rgba(42, 36, 61, 0.75) !important; */
-  background-color: rgba(240, 50, 130, 0.75) !important;
+  background-color: rgba(191, 90, 242, 0.75) !important;
   border-radius: 10px !important;
   padding: 20px !important;
   backdrop-filter: blur(10px); /* Glass effect */
@@ -59,96 +47,71 @@ p,
 
 /* Buttons */
 .btn-primary {
-  background-color: rgba(255, 144, 102, 0.8) !important; /* Semi-transparent */
+  background-color: rgba(255, 28, 174, 0.8) !important; /* Semi-transparent */
   border-color: rgba(255, 255, 255, 0.1) !important;
   backdrop-filter: blur(4px); /* Glass effect */
 }
 
 .btn-primary:hover {
-  background-color: rgba(225, 114, 72, 0.8) !important;
+  background-color: rgba(255, 28, 174, 0.9) !important;
 }
 
 .btn-outline-primary {
-  color: rgb(255, 144, 102) !important; /* Custom orange text */
+  color: #ff1cae !important;
   background-color: transparent !important;
-  border-color: rgb(255, 144, 102) !important; /* Custom orange border */
+  border-color: #ff1cae !important;
   backdrop-filter: blur(4px); /* Glass effect */
 }
 
 .btn-outline-primary:hover {
-  background-color: rgba(
-    255,
-    144,
-    102,
-    0.2
-  ) !important; /* Slightly tinted orange on hover */
-  border-color: rgb(
-    225,
-    114,
-    72
-  ) !important; /* Darker orange for hover border */
-  color: rgb(225, 114, 72) !important; /* Darker orange text on hover */
+  background-color: rgba(255, 28, 174, 0.1) !important;
+  border-color: #e5009a !important;
+  color: #e5009a !important;
 }
 
 .btn-outline-primary:focus,
 .btn-outline-primary:active,
 .btn-outline-primary.active {
-  box-shadow: 0 0 0 0.25rem rgba(255, 144, 102, 0.5) !important; /* Orange focus and active state glow */
+  box-shadow: 0 0 0 0.25rem rgba(255, 28, 174, 0.5) !important;
 }
 
 .btn-outline-primary.disabled,
 .btn-outline-primary:disabled {
-  color: rgba(
-    255,
-    144,
-    102,
-    0.5
-  ) !important; /* Slightly faded text for disabled state */
-  border-color: rgba(
-    255,
-    144,
-    102,
-    0.5
-  ) !important; /* Slightly faded border for disabled state */
+  color: rgba(255, 28, 174, 0.5) !important;
+  border-color: rgba(255, 28, 174, 0.5) !important;
 }
 
 .navbar,
 .nav {
-  /* background-color: rgba(36, 31, 52, 0.8) !important;  */
   z-index: 2 !important;
-  background-color: rgba(90, 30, 150, 0.8) !important;
+  background-color: rgba(18, 18, 18, 0.8) !important;
   backdrop-filter: blur(10px); /* Glass effect */
   padding: 10px !important;
 }
 
 .card {
-  /* background-color: rgba(36, 31, 52, 0.8) !important; */
-  background-color: rgba(90, 30, 150, 0.8) !important;
-  /* color: rgb(129, 123, 150) !important; */
-  color: rgb(68, 23, 216) !important;
+  background-color: rgba(18, 18, 18, 0.8) !important;
+  color: #ff1cae !important;
   border-radius: 10px !important;
   backdrop-filter: blur(10px); /* Glass effect */
   border: 1px solid rgba(255, 255, 255, 0.1); /* Light border */
 }
 
 a {
-  color: rgb(255, 144, 102) !important;
+  color: #ff1cae !important;
   transition: color 0.3s !important;
 }
 
 a:hover {
-  color: rgb(225, 114, 72) !important;
+  color: #e5009a !important;
 }
 
 /* Form */
 .form-control {
-  /* background-color: rgba(36, 31, 52, 0.6) !important; */
-  background-color: rgba(90, 30, 150, 0.6) !important;
-  /* border: 1px solid rgb(129, 123, 150) !important; */
-  border: 1px solid rgb(68, 23, 216) !important;
+  background-color: rgba(18, 18, 18, 0.6) !important;
+  border: 1px solid #ff1cae !important;
   border-radius: 5px !important;
-  /* color: rgb(217, 210, 239) !important; */
-  color: rgb(231, 112, 157) !important;
+  color: #ff1cae !important;
   backdrop-filter: blur(4px); /* Glass effect */
 }
 
@@ -160,30 +123,28 @@ a:hover {
 /* Icons */
 .icon {
   font-size: 20px !important;
-  color: rgb(255, 144, 102) !important;
+  color: #ff1cae !important;
 }
 
-/* This targets the switch when it's checked */
+/* Switch */
 .form-switch
   .form-check-input:checked[type='checkbox']
   ~ .form-check-label::before {
-  background-color: #ff5733 !important; /* Replace with your custom primary color */
-  border-color: #ff5733 !important; /* Replace with your custom primary color */
+  background-color: #ff1cae !important;
+  border-color: #ff1cae !important;
 }
 
-/* This targets the circle inside the switch when it's checked */
 .form-switch
   .form-check-input:checked[type='checkbox']
   ~ .form-check-label::after {
   transform: translateX(1.5rem) !important;
 }
 
-/* If you also want to change the color when the switch is focused or active */
 .form-switch
   .form-check-input:focus:checked[type='checkbox']
   ~ .form-check-label::before,
 .form-switch
   .form-check-input:active:checked[type='checkbox']
   ~ .form-check-label::before {
-  box-shadow: 0 0 0 0.2rem rgba(255, 87, 51, 0.25) !important; /* Replace rgba(255, 87, 51, 0.25) with a lighter or transparent version of your custom primary color */
+  box-shadow: 0 0 0 0.2rem rgba(255, 28, 174, 0.25) !important;
 }
