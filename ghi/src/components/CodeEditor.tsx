@@ -1,5 +1,6 @@
 import MonacoEditor from 'react-monaco-editor';
 import * as monaco from 'monaco-editor';
+import React from 'react';
 
 const customDarkTheme: monaco.editor.IStandaloneThemeData = {
   base: 'vs-dark',
@@ -17,22 +18,32 @@ const customDarkTheme: monaco.editor.IStandaloneThemeData = {
 monaco.editor.defineTheme('customDark', customDarkTheme);
 
 interface CodeEditorProps {
-  text: string;
+  readOnly: boolean;
+  value: string;
   language: string;
-  showLineNumbers: boolean;
-  theme: string;
+  showLineNumbers?: boolean;
+  theme?: string;
+  onChange?: (value: string) => void;
+  width?: string;
+  height?: string;
+  placeholder?: string;
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({
-  text,
+  readOnly = true,
+  value,
   language,
-  showLineNumbers,
-  theme,
+  showLineNumbers = true,
+  theme = 'vs-dark',
+  onChange,
+  width = '100%',
+  height = '',
+  placeholder = 'please enter your code here...',
 }) => {
   const padding = 20;
   const options: monaco.editor.IStandaloneEditorConstructionOptions = {
     roundedSelection: false,
-    readOnly: true,
+    readOnly: readOnly,
     cursorStyle: 'line',
     automaticLayout: true,
     padding: {
@@ -46,17 +57,20 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   };
 
   const calculatedHeight = Math.max(
-    text?.split('\n').length * 19 + padding * 2,
+    value?.split('\n').length * 19 + padding * 2,
     300
   );
 
   return (
     <MonacoEditor
-      height={calculatedHeight + 'px'}
+      width={width}
+      height={height || calculatedHeight + 'px'}
       language={language}
-      value={text}
+      value={value}
       options={options}
       theme={theme}
+      onChange={onChange}
+      placeholder={placeholder}
     />
   );
 };

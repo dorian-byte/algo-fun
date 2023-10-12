@@ -55,10 +55,11 @@ const ProblemDetailPage = () => {
         Problem Detail for {problem.leetcodeNumber}. {problem.title}
       </h1>
       <CodeEditor
-        text={problem.description}
+        value={problem.description}
         language="markdown"
         showLineNumbers={false}
         theme="vs-dark"
+        readOnly={true}
       />
     </div>
   );

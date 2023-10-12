@@ -68,29 +68,36 @@ const ProblemListPage = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="container">
-      <div className="mb-4">
-        <select
-          value={difficultyFilter || ''}
-          onChange={(e) => setDifficultyFilter(e.target.value || null)}
-          className="btn btn-outline-primary"
-        >
-          <option value="">All Difficulties</option>
-          <option value="EASY">Easy</option>
-          <option value="MEDIUM">Medium</option>
-          <option value="HARD">Hard</option>
-        </select>
+    <div>
+      <div
+        id="problemlist-header"
+        className="container d-flex flex-row justify-content-between gap-3 align-items-center"
+      >
+        <h2 className="headline">PROBLEMS</h2>
+
+        <div className="d-flex flex-row align-items-center gap-3">
+          <select
+            value={difficultyFilter || ''}
+            onChange={(e) => setDifficultyFilter(e.target.value || null)}
+            className="btn btn-outline-primary"
+          >
+            <option value="">All Difficulties</option>
+            <option value="EASY">Easy</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="HARD">Hard</option>
+          </select>
+          <button
+            className="btn btn-outline-primary btn-sm"
+            style={{ height: 30, width: 30 }}
+            onClick={() => navigate('/problems/new')}
+          >
+            +
+          </button>
+        </div>
       </div>
-      <div className="table-header mb-5">
-        <h2 className="mb-4">All Problems</h2>
-        <button
-          className="btn btn-outline-primary btn-sm"
-          onClick={() => navigate('/problems/new')}
-        >
-          New Problem
-        </button>
+      <div className="main container" id="problemlist">
+        <ProblemList problems={filteredProblems} />
       </div>
-      <ProblemList problems={filteredProblems} />
     </div>
   );
 };

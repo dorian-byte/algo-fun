@@ -29,6 +29,7 @@ function App() {
     <ApolloProvider client={client}>
       <BrowserRouter>
         <Nav />
+        <div style={{ height: 60 }}></div>
         <Routes>
           <Route path="/" element={<ProblemSearchPage />} />
           <Route path="/submissions">

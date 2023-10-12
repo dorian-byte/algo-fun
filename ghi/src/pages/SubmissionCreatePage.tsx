@@ -9,6 +9,7 @@ import { toLocalTime, toUTC } from '../utils/timeUtils';
 const FETCH_PROBLEM = gql`
   query FetchProblem($id: Int!) {
     problemById(id: $id) {
+      id
       title
       leetcodeNumber
     }
@@ -105,7 +106,7 @@ const SubmissionCreatePage = () => {
   if (allProblemsError) return <p>Error: {allProblemsError.message}</p>;
 
   return (
-    <div>
+    <div className="main">
       <SubmissionForm
         data={data}
         setData={setData}

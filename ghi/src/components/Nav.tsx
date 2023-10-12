@@ -1,11 +1,19 @@
 import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import Logo from '../../public/journal-bookmark-icon-c9701d.svg';
 
 const Navigation = () => {
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
       <LinkContainer to="/">
-        <Navbar.Brand>Home</Navbar.Brand>
+        <Navbar.Brand>
+          <img
+            src={Logo}
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+          />
+        </Navbar.Brand>
       </LinkContainer>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
@@ -17,7 +25,6 @@ const Navigation = () => {
             <LinkContainer to="/submissions/new">
               <NavDropdown.Item>New Submission</NavDropdown.Item>
             </LinkContainer>
-            <NavDropdown.Divider />
           </NavDropdown>
 
           <NavDropdown title="Problems" id="problemDropdown">
@@ -28,12 +35,12 @@ const Navigation = () => {
               <NavDropdown.Item>New Problem</NavDropdown.Item>
             </LinkContainer>
             <NavDropdown.Divider />
-            {/* <LinkContainer to="/notes">
+            <LinkContainer to="/notes">
               <NavDropdown.Item>View Notes</NavDropdown.Item>
             </LinkContainer>
             <LinkContainer to="/notes/new">
               <NavDropdown.Item>New Note</NavDropdown.Item>
-            </LinkContainer> */}
+            </LinkContainer>
           </NavDropdown>
         </Nav>
       </Navbar.Collapse>

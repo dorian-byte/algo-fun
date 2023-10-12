@@ -1,0 +1,141 @@
+/* Palette: Rustic Charm (Orange) */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap');
+
+/* General */
+body {
+  background-color: #212121 !important; /* dark background */
+  color: #f38960 !important; /* bright accent */
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100vh !important;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: 'Lato', sans-serif !important;
+}
+
+.text-light {
+  color: #f38960 !important; /* bright accent */
+}
+
+.text-light-gray {
+  color: #4a4a4a !important; /* medium background */
+}
+
+/* Container */
+.container {
+  background-color: #303030 !important; /* darker background */
+  border-radius: 10px !important;
+  padding: 20px !important;
+  z-index: 0 !important;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #f38960 !important; /* bright accent */
+  border-color: #51393e !important; /* dark accent */
+}
+
+.btn-primary:hover {
+  background-color: #f38960 !important; /* bright accent */
+  border-color: #51393e !important; /* dark accent */
+}
+
+.btn-outline-primary {
+  color: #f38960 !important; /* bright accent */
+  border-color: #f38960 !important; /* bright accent */
+}
+
+.btn-outline-primary:hover {
+  background-color: #f38960 !important; /* bright accent */
+  color: #212121 !important; /* dark background */
+}
+
+.btn-outline-primary:focus,
+.btn-outline-primary:active,
+.btn-outline-primary.active {
+  box-shadow: 0 0 0 0.25rem rgba(243, 137, 96, 0.5) !important; /* bright accent */
+}
+
+.btn-outline-primary.disabled,
+.btn-outline-primary:disabled {
+  color: #f38960 !important; /* bright accent */
+  border-color: #f38960 !important; /* bright accent */
+}
+
+.navbar,
+.nav {
+  background-color: #303030 !important; /* darker background */
+  z-index: 2 !important;
+  padding: 10px !important;
+}
+
+.card {
+  background-color: #303030 !important; /* darker background */
+  color: #f38960 !important; /* bright accent */
+  border-radius: 10px !important;
+}
+
+a {
+  color: #f38960 !important; /* bright accent */
+  transition: color 0.3s !important;
+}
+
+a:hover {
+  color: #f38960 !important; /* bright accent */
+}
+
+/* Form */
+.form-control {
+  background-color: #212121 !important; /* dark background */
+  border: 1px solid #f38960 !important; /* bright accent */
+  border-radius: 5px !important;
+  color: #f38960 !important; /* bright accent */
+}
+
+.form-label {
+  font-weight: bold !important;
+  margin-bottom: 5px !important;
+}
+
+/* Icons */
+.icon {
+  font-size: 20px !important;
+  color: #f38960 !important; /* bright accent */
+}
+
+/* Switch */
+.form-switch
+  .form-check-input:checked[type='checkbox']
+  ~ .form-check-label::before {
+  background-color: #f38960 !important; /* bright accent */
+  border-color: #f38960 !important; /* bright accent */
+}
+
+.form-switch
+  .form-check-input:checked[type='checkbox']
+  ~ .form-check-label::after {
+  transform: translateX(1.5rem) !important;
+}
+
+.form-switch
+  .form-check-input:focus:checked[type='checkbox']
+  ~ .form-check-label::before,
+.form-switch
+  .form-check-input:active:checked[type='checkbox']
+  ~ .form-check-label::before {
+  box-shadow: 0 0 0 0.2rem rgba(243, 137, 96, 0.25) !important; /* bright accent */
+}

@@ -54,10 +54,11 @@ const SubmissionDetailPage = () => {
         <h4 className="card-title">Submission ID: {submission?.id}</h4>
         <div className="card-text">
           <CodeEditor
-            text={submission.code}
+            value={submission.code}
             language="python"
             showLineNumbers={true}
             theme="vs-dark"
+            readOnly={true}
           />
           <div className="mb-2">
             <strong>Is White Board Mode:</strong>{' '}

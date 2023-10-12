@@ -1,4 +1,4 @@
-.submission-container {
+/* .submission-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,4 +42,40 @@ input[type='checkbox'] {
   color: #ffffff;
   transition: background 0.3s ease;
   align-self: center;
+} */
+
+.unstyled-input {
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: auto !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  color: inherit !important;
+}
+
+.unstyled-input:hover,
+.unstyled-input:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove the clear button in IE */
+.unstyled-input::-ms-clear {
+  display: none !important;
+}
+
+/* Remove the spinner in number inputs */
+.unstyled-input[type='number']::-webkit-outer-spin-button,
+.unstyled-input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+.unstyled-input[type='number'] {
+  -moz-appearance: textfield !important;
 }
