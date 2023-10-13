@@ -3,7 +3,7 @@ import { formatTime } from '../utils/timeUtils';
 
 export interface Submission {
   id: string;
-  problem: { leetcodeNumber: number; title: string };
+  problem: { id: string; leetcodeNumber: number; title: string };
   code: string;
   submittedAt: string;
   duration: string;
@@ -56,6 +56,7 @@ const SubmissionList = ({
           <th>Submission Time</th>
           <th>Time Used</th>
           <th>Proficiency Level</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -71,6 +72,27 @@ const SubmissionList = ({
             <td>{sm.duration}</td>
             <td>
               {PROFICIENCY_LEVEL_DISPLAY[sm.proficiencyLevel] || 'Unknown'}
+            </td>
+            <td>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/submissions/${sm?.id}/notes`);
+                }}
+                className="btn btn-outline-primary btn-sm me-2"
+              >
+                Notes
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/submissions/${sm?.id}/notes/new`);
+                }}
+                className="btn btn-outline-primary btn-sm"
+                style={{ height: 30, width: 30 }}
+              >
+                +
+              </button>
             </td>
           </tr>
         ))}

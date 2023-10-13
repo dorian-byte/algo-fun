@@ -12,7 +12,8 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
           <th className="text-light-gray">Status</th>
           <th className="text-light-gray">Title</th>
           <th className="text-light-gray">Difficulty</th>
-          <th className="text-light-gray">Action</th>
+          <th className="text-light-gray"></th>
+          <th className="text-light-gray"></th>
         </tr>
       </thead>
       <tbody>
@@ -31,6 +32,27 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
             </td>
             <td style={{ color: difficultyColor(pb.difficulty) }}>
               {pb.difficulty.charAt(0) + pb.difficulty.slice(1).toLowerCase()}
+            </td>
+            <td>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/problems/${pb?.id}/submissions`);
+                }}
+                className="btn btn-outline-success btn-sm me-2"
+              >
+                Submissions
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/problems/${pb?.id}/submissions/new`);
+                }}
+                className="btn btn-outline-success btn-sm"
+                style={{ height: 30, width: 30 }}
+              >
+                +
+              </button>
             </td>
             <td>
               <button

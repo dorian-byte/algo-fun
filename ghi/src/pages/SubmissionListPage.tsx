@@ -7,6 +7,7 @@ const ALL_SUBMISSIONS = gql`
     allSubmissions {
       id
       problem {
+        id
         leetcodeNumber
         title
       }
