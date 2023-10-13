@@ -74,10 +74,13 @@ p,
   left: 0 !important;
 }
 
-nav .dropdown-menu,
+nav .dropdown-menu {
+  background-color: rgba(48, 48, 48, 0.8) !important;
+  padding-top: 15px !important ;
+}
+
 nav .dropdown-item {
   /* padding: 0 !important; */
-  background-color: #653906 !important;
 }
 
 nav hr {
@@ -97,10 +100,14 @@ nav hr {
 .container {
   background-color: #303030 !important;
   border-radius: 10px !important;
-  padding: 20px !important;
+  padding: 30px !important;
   z-index: 0 !important;
   opacity: 0.9 !important;
   max-height: 80vh;
+}
+
+#problemlist-bottom.container {
+  padding-top: 0 !important;
 }
 
 #problemlist-header {
@@ -281,4 +288,16 @@ input[type='time']::-webkit-calendar-picker-indicator {
 .icon {
   font-size: 20px !important;
   color: #f38960 !important;
+}
+
+/* Table */
+/* .table thead {
+  position: relative;
+} */
+
+table thead tr {
+  position: sticky;
+  top: 0;
+  background: white;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
 }

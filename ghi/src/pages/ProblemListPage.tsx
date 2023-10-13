@@ -71,7 +71,7 @@ const ProblemListPage = () => {
     <div id="problemlist">
       <div
         id="problemlist-header"
-        className="container d-flex flex-row justify-content-between gap-3 align-items-center"
+        className="container d-flex flex-row justify-content-between align-items-center"
       >
         <h2 className="headline">PROBLEMS</h2>
 
