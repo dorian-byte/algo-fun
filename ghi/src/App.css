@@ -238,7 +238,16 @@ input[type='time']::-webkit-calendar-picker-indicator {
 
 /* Form: Typeahead */
 
-.rbt-menu.dropdown-menu {
+#select-problem-typeahead.rbt-menu.dropdown-menu {
+  background-color: #303030 !important;
+  color: #b0b0b0 !important;
+}
+
+#select-problem-typeahead.rbt-menu.dropdown-menu.show {
+  top: 37px !important;
+}
+
+#select-problem-typeahead.dropdown-item {
   background-color: #303030 !important;
   color: #b0b0b0 !important;
 }
@@ -252,18 +261,16 @@ input[type='time']::-webkit-calendar-picker-indicator {
   top: 0px !important;
 }
 
-#select-problem-typeahead.rbt-menu.dropdown-menu.show {
-  top: 37px !important;
-}
-
-.dropdown-item {
-  background-color: #303030 !important;
-  color: #b0b0b0 !important;
+#problem-search-typeahead.rbt-menu.dropdown-menu {
+  background-color: rgba(48, 48, 48, 0.75) !important;
 }
 
 .dropdown-item:hover,
 .dropdown-item:focus {
   background-color: #212121 !important;
+}
+.dropdown-item.active {
+  background-color: #653906 !important;
 }
 
 .required-asterisk {
