@@ -14,6 +14,7 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
           <th className="text-light-gray">Difficulty</th>
           <th className="text-light-gray"></th>
           <th className="text-light-gray"></th>
+          <th className="text-light-gray"></th>
         </tr>
       </thead>
       <tbody>
@@ -70,6 +71,27 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
                   navigate(`/problems/${pb?.id}/notes/new`);
                 }}
                 className="btn btn-outline-primary btn-sm"
+                style={{ height: 30, width: 30 }}
+              >
+                +
+              </button>
+            </td>
+            <td>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/problems/${pb?.id}/resources`);
+                }}
+                className="btn btn-outline-info btn-sm me-2"
+              >
+                Resources
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/problems/${pb?.id}/resources/new`);
+                }}
+                className="btn btn-outline-info btn-sm"
                 style={{ height: 30, width: 30 }}
               >
                 +

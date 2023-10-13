@@ -1,7 +1,6 @@
 from django.db import models
 from polymorphic.models import PolymorphicModel
 from django.utils import timezone
-from django.core.validators import MinValueValidator
 
 
 class Difficulty(models.TextChoices):
@@ -53,7 +52,7 @@ class Source(models.Model):
 
 class Problem(models.Model):
     title = models.CharField(max_length=100, unique=True, db_index=True)
-    leetcode_number = models.IntegerField(unique=True, blank=True, null=True)
+    leetcode_number = models.PositiveIntegerField(unique=True, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -89,7 +88,9 @@ class Problem(models.Model):
     )
 
     url = models.URLField(max_length=200, blank=True)
-    lintcode_equivalent_problem_number = models.IntegerField(blank=True, null=True)
+    lintcode_equivalent_problem_number = models.PositiveIntegerField(
+        blank=True, null=True
+    )
     lintcode_equivalent_problem_url = models.URLField(
         max_length=200, blank=True, null=True
     )
@@ -120,9 +121,7 @@ class Submission(models.Model):
         default=ProficiencyLevel.NO_UNDERSTANDING,
     )
     submitted_at = models.DateTimeField(default=timezone.now)
-    duration = models.IntegerField(
-        blank=True, null=True, validators=[MinValueValidator(0)]
-    )
+    duration = models.PositiveIntegerField(blank=True, null=True)
     is_solution = models.BooleanField(default=False)
     is_interview_mode = models.BooleanField(default=False)
     is_whiteboard_mode = models.BooleanField(default=False)
@@ -203,8 +202,8 @@ class Note(PolymorphicModel):
         choices=NoteType.choices,
         blank=True,
     )
-    start_line_number = models.IntegerField(blank=True, null=True)
-    end_line_number = models.IntegerField(blank=True, null=True)
+    start_line_number = models.PositiveIntegerField(blank=True, null=True)
+    end_line_number = models.PositiveIntegerField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # NOTE: Before saving the Note object, check if only start_line_number is provided.

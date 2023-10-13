@@ -58,7 +58,7 @@ p,
 }
 
 .text-light-gray {
-  color: #4a4a4a !important;
+  color: #766666 !important;
 }
 
 /* Nav */
@@ -141,6 +141,8 @@ a:hover {
 }
 
 /* Buttons */
+
+/* Button Primary */
 .btn-primary {
   background-color: #303030 !important;
   color: #f38960 !important;
@@ -172,6 +174,40 @@ a:hover {
 .btn-outline-primary:disabled {
   color: #f38960 !important;
   border-color: #f38960 !important;
+}
+
+/* Button Info */
+.btn-info {
+  background-color: #7a9bae !important;
+  color: #f8f9fa !important;
+  border-color: #6b8c9a !important;
+}
+
+.btn-info:hover {
+  background-color: #6b8c9a !important;
+  border-color: #5a7b89 !important;
+}
+
+.btn-outline-info {
+  color: #7a9bae !important;
+  border-color: #7a9bae !important;
+}
+
+.btn-outline-info:hover {
+  background-color: #7a9bae !important;
+  color: #f8f9fa !important;
+}
+
+.btn-outline-info:focus,
+.btn-outline-info:active,
+.btn-outline-info.active {
+  box-shadow: 0 0 0 0.25rem rgba(122, 155, 174, 0.5) !important;
+}
+
+.btn-outline-info.disabled,
+.btn-outline-info:disabled {
+  color: #7a9bae !important;
+  border-color: #7a9bae !important;
 }
 
 /* Form */

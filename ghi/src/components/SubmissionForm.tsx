@@ -228,7 +228,7 @@ const SubmissionForm: React.FC<Props> = ({
               />
             </div>
             <div className="form-group col-md-6 mt-3">
-              <label className="mb-2">Duration</label>
+              <label className="mb-2">Time Used (mins)</label>
               <input
                 className="form-control"
                 type="number"

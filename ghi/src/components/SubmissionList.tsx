@@ -51,12 +51,13 @@ const SubmissionList = ({
     <table className="table table-dark table-striped">
       <thead>
         <tr>
-          {showProblem && <th>Problem</th>}
-          <th>Status</th>
-          <th>Submission Time</th>
-          <th>Time Used</th>
-          <th>Proficiency Level</th>
-          <th></th>
+          {showProblem && <th className="text-light-gray">Problem</th>}
+          <th className="text-light-gray">Status</th>
+          <th className="text-light-gray">Submission Time</th>
+          <th className="text-light-gray">Time Used</th>
+          <th className="text-light-gray">Proficiency Level</th>
+          <th className="text-light-gray"></th>
+          <th className="text-light-gray"></th>
         </tr>
       </thead>
       <tbody>
@@ -69,7 +70,7 @@ const SubmissionList = ({
             )}
             <td>{sm.passed ? '✅' : '❌'}</td>
             <td>{formatTime(sm.submittedAt)}</td>
-            <td>{sm.duration}</td>
+            <td>{sm.duration ? sm.duration + 'm' : ''}</td>
             <td>
               {PROFICIENCY_LEVEL_DISPLAY[sm.proficiencyLevel] || 'Unknown'}
             </td>
@@ -89,6 +90,27 @@ const SubmissionList = ({
                   navigate(`/submissions/${sm?.id}/notes/new`);
                 }}
                 className="btn btn-outline-primary btn-sm"
+                style={{ height: 30, width: 30 }}
+              >
+                +
+              </button>
+            </td>
+            <td>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/submissions/${sm?.id}/resources`);
+                }}
+                className="btn btn-outline-info btn-sm me-2"
+              >
+                Resources
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/submissions/${sm?.id}/resources/new`);
+                }}
+                className="btn btn-outline-info btn-sm"
                 style={{ height: 30, width: 30 }}
               >
                 +
