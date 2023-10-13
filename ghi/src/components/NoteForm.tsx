@@ -72,7 +72,7 @@ const NoteForm: React.FC<Props> = ({
   }, [allProblems, problemDetails]);
 
   return (
-    <div className="container mt-5" ref={parentRef} id="note-form">
+    <div className="container mt-5 overflow-y-auto" ref={parentRef}>
       <form className="d-flex flex-row gap-5" onSubmit={handleSubmit}>
         <div className="d-flex flex-column gap-2 flex-fill">
           <h3 className="headline mb-2">New Note</h3>
@@ -223,7 +223,7 @@ const NoteForm: React.FC<Props> = ({
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-outline-primary mt-3 mb-5">
             Submit
           </button>
         </div>

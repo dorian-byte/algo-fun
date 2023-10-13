@@ -111,16 +111,14 @@ const SubmissionCreatePage = () => {
   if (allProblemsError) return <p>Error: {allProblemsError.message}</p>;
 
   return (
-    <div className="main">
-      <SubmissionForm
-        data={data}
-        setData={setData}
-        handleSubmit={handleSubmit}
-        problemDetails={problemData?.problemById}
-        allProblems={allProblemsData?.allProblems}
-        showFixedProblemTitleInSelection={showFixedProblemTitleInSelection}
-      />
-    </div>
+    <SubmissionForm
+      data={data}
+      setData={setData}
+      handleSubmit={handleSubmit}
+      problemDetails={problemData?.problemById}
+      allProblems={allProblemsData?.allProblems}
+      showFixedProblemTitleInSelection={showFixedProblemTitleInSelection}
+    />
   );
 };
 

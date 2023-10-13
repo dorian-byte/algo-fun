@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import SubmissionList, { Submission } from '../components/SubmissionList';
+import { useParams } from 'react-router-dom';
 
 const PROBLEM_SUBMISSIONS = gql`
-  query ProblemSubmissions($problemId: ID!) {
-    problemSubmissions(problemId: $problemId) {
+  query submissionsByProblemId($problemId: Int!) {
+    submissionsByProblemId(problemId: $problemId) {
       id
       problem {
         leetcodeNumber
@@ -29,18 +30,20 @@ const PROBLEM_SUBMISSIONS = gql`
 // otherwise, we have to use useParams() to get the problemId
 // Also NOTE that the question mark in the type definition is a must-add; it means that the prop is optional
 // otherwise in App.tsx, the compiler will complain that the prop is not present
-const ProblemSubmissionListPage = ({ problemId }: { problemId?: string }) => {
+const ProblemSubmissionListPage = () => {
+  const { problemId } = useParams<{ problemId?: string }>();
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const { loading, error, data } = useQuery(PROBLEM_SUBMISSIONS, {
-    variables: { id: problemId ? +problemId : 0 },
+    variables: { problemId: problemId ? +problemId : 0 },
   });
 
   useEffect(() => {
-    if (data) {
+    if (data?.submissionsByProblemId) {
+      console.log('pid', problemId);
       console.log('dta', data);
-      setSubmissions(data.problemSubmissions);
+      setSubmissions(data.submissionsByProblemId);
     }
-  }, [data]);
+  }, [data, problemId]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :( {error.message}</p>;

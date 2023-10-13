@@ -68,7 +68,7 @@ const ProblemListPage = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div>
+    <div id="problemlist">
       <div
         id="problemlist-header"
         className="container d-flex flex-row justify-content-between gap-3 align-items-center"
@@ -95,7 +95,7 @@ const ProblemListPage = () => {
           </button>
         </div>
       </div>
-      <div className="main container" id="problemlist">
+      <div className="main container" id="problemlist-bottom">
         <ProblemList problems={filteredProblems} />
       </div>
     </div>

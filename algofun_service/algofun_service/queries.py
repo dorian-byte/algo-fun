@@ -32,6 +32,7 @@ from algofun_service.types import (
 
 
 class Query(graphene.ObjectType):
+    # basic queries
     all_problems = graphene.List(ProblemType)
     problem_by_id = graphene.Field(ProblemType, id=graphene.Int())
     all_submissions = graphene.List(SubmissionType)
@@ -56,14 +57,14 @@ class Query(graphene.ObjectType):
     )
     all_note_resources = graphene.List(NoteResourceType)
     note_resource_by_id = graphene.Field(NoteResourceType, id=graphene.Int())
-    submissions_by_problem_id = graphene.List(SubmissionType, id=graphene.Int())
+    # more queries
+    submissions_by_problem_id = graphene.List(SubmissionType, problem_id=graphene.Int())
+
+    # basic queries
 
     def resolve_all_problems(self, info):
         # FIXME: change back after adding pagination
         return Problem.objects.all()[:50]
-
-    def resolve_submissions_by_problem_id(self, info, problem_id):
-        return Submission.objects.filter(problem=problem_id)
 
     def resolve_problem_by_id(self, info, id):
         return Problem.objects.get(pk=id)
@@ -127,3 +128,8 @@ class Query(graphene.ObjectType):
 
     def resolve_note_resource_by_id(self, info, id):
         return NoteResource.objects.get(pk=id)
+
+    # more queries
+
+    def resolve_submissions_by_problem_id(self, info, problem_id):
+        return Submission.objects.filter(problem=problem_id)

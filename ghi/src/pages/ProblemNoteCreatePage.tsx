@@ -105,8 +105,6 @@ const ProblemNoteCreatePage = () => {
   if (allProblemsError) return <p>Error: {allProblemsError.message}</p>;
 
   return (
-    // <div className="container mt-5">
-    // ProblemNoteCreatePage
     <NoteForm
       data={data}
       setData={setData}
@@ -115,7 +113,6 @@ const ProblemNoteCreatePage = () => {
       allProblems={allProblemsData?.allProblems}
       showFixedProblemTitleInSelection={showFixedProblemTitleInSelection}
     />
-    // </div>
   );
 };
 
