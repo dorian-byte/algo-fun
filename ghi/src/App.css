@@ -74,6 +74,16 @@ p,
   left: 0 !important;
 }
 
+nav .dropdown-menu,
+nav .dropdown-item {
+  /* padding: 0 !important; */
+  background-color: #653906 !important;
+}
+
+nav hr {
+  background-color: #f38960 !important;
+}
+
 /* Hero */
 .headline {
   font-family: 'Arvo', serif;

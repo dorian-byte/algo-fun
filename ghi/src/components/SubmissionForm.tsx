@@ -229,6 +229,11 @@ const SubmissionForm: React.FC<Props> = ({
                     duration: e.target.value,
                   }))
                 }
+                min="0"
+                onInput={(e) => {
+                  const input = e.target as HTMLInputElement;
+                  if (Number(input.value) < 0) input.value = '0';
+                }}
               />
             </div>
           </div>

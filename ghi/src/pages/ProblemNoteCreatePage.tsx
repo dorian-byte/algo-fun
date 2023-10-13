@@ -34,10 +34,10 @@ const CREATE_NOTE = gql`
         title
         content
         submittedAt
-        is_starred
-        note_type
-        start_line_number
-        end_line_number
+        isStarred
+        noteType
+        startLineNumber
+        endLineNumber
       }
     }
   }
@@ -84,7 +84,8 @@ const ProblemNoteCreatePage = () => {
     variables: {
       input: {
         ...data,
-        duration: +data?.duration,
+        startLineNumber: +data?.startLineNumber,
+        endLineNumber: +data?.endLineNumber,
         submittedAt: toUTC(new Date(data?.submittedAt + ':00')).toISOString(),
       },
     },

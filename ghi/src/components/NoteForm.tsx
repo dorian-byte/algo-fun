@@ -90,10 +90,11 @@ const NoteForm: React.FC<Props> = ({
               options={options}
               disabled={showFixedProblemTitleInSelection}
               renderInput={(props) => {
+                const { inputRef, referenceElementRef, ...inputProps } = props;
                 return (
                   <input
                     id="select-problem-inside-typeahead"
-                    {...props}
+                    {...inputProps}
                     style={{
                       backgroundColor: 'transparent !important',
                     }}
@@ -198,13 +199,18 @@ const NoteForm: React.FC<Props> = ({
               <input
                 className="form-control"
                 type="number"
-                value={data?.start_line_number}
+                value={data?.startLineNumber}
                 onChange={(e) =>
                   setData((prev: any) => ({
                     ...prev,
-                    duration: e.target.value,
+                    startLineNumber: e.target.value,
                   }))
                 }
+                min="0"
+                onInput={(e) => {
+                  const input = e.target as HTMLInputElement;
+                  if (Number(input.value) < 0) input.value = '0';
+                }}
               />
             </div>
             <div className="form-group col-md-6">
@@ -212,13 +218,18 @@ const NoteForm: React.FC<Props> = ({
               <input
                 className="form-control"
                 type="number"
-                value={data?.end_line_number}
+                value={data?.endLineNumber}
                 onChange={(e) =>
                   setData((prev: any) => ({
                     ...prev,
-                    duration: e.target.value,
+                    endLineNumber: e.target.value,
                   }))
                 }
+                min="0"
+                onInput={(e) => {
+                  const input = e.target as HTMLInputElement;
+                  if (Number(input.value) < 0) input.value = '0';
+                }}
               />
             </div>
           </div>

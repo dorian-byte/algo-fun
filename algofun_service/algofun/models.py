@@ -1,6 +1,7 @@
 from django.db import models
 from polymorphic.models import PolymorphicModel
 from django.utils import timezone
+from django.core.validators import MinValueValidator
 
 
 class Difficulty(models.TextChoices):
@@ -119,7 +120,9 @@ class Submission(models.Model):
         default=ProficiencyLevel.NO_UNDERSTANDING,
     )
     submitted_at = models.DateTimeField(default=timezone.now)
-    duration = models.IntegerField(blank=True, null=True)
+    duration = models.IntegerField(
+        blank=True, null=True, validators=[MinValueValidator(0)]
+    )
     is_solution = models.BooleanField(default=False)
     is_interview_mode = models.BooleanField(default=False)
     is_whiteboard_mode = models.BooleanField(default=False)
