@@ -243,6 +243,11 @@ input[type='time']::-webkit-calendar-picker-indicator {
   color: #b0b0b0 !important;
 }
 
+.rbt-input-hint {
+  /* border-radius: 100px !important; */
+  background-color: transparent !important;
+}
+
 #problem-search-typeahead.rbt-menu.dropdown-menu.show {
   top: 0px !important;
 }
