@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import SubmissionForm, { ProficiencyLevel } from '../components/SubmissionForm';
 import { toLocalTime, toUTC } from '../utils/timeUtils';
@@ -50,6 +50,7 @@ const CREATE_SUBMISSION = gql`
 
 const SubmissionCreatePage = () => {
   const { problemId } = useParams() as any;
+  const navigate = useNavigate();
 
   const problemQueryResult = useQuery(FETCH_PROBLEM, {
     skip: !problemId,
@@ -100,7 +101,11 @@ const SubmissionCreatePage = () => {
     createSubmission().then((res) => {
       console.log('res', res);
     });
+    showFixedProblemTitleInSelection
+      ? navigate(`/problems/${problemId}/submissions`)
+      : navigate(`/submissions`);
   };
+
   if (singleProblemLoading || allProblemsLoading) return <p>Loading...</p>;
   if (singleProblemError) return <p>Error: {singleProblemError.message}</p>;
   if (allProblemsError) return <p>Error: {allProblemsError.message}</p>;

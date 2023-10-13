@@ -8,7 +8,7 @@ body {
       rgb(24, 199, 44, 0.75),
       rgba(255, 140, 0, 1)
     ),
-    url('assets/images/duotone_effect_hero_image1.png');
+    url('assets/images/duotone_effect_hero2.png');
   background-blend-mode: multiply;
   background-size: cover;
   background-repeat: no-repeat;
@@ -124,12 +124,12 @@ a:hover {
 .btn-primary {
   background-color: #303030 !important;
   color: #f38960 !important;
-  border-color: #51393e !important; /* dark accent */
+  border-color: #51393e !important;
 }
 
 .btn-primary:hover {
-  background-color: #424242 !important; /* on hover - slightly lighter background */
-  border-color: #51393e !important; /* dark accent */
+  background-color: #424242 !important; /* on hover - slightly lighter  */
+  border-color: #51393e !important;
 }
 
 .btn-outline-primary {
@@ -189,19 +189,19 @@ textarea {
   color: #b0b0b0 !important;
 }
 
-#select-problem-in-new-submission {
+#select-problem-inside-typeahead {
   background-color: transparent !important;
   border: none !important;
   width: 100%;
 }
-#select-problem-in-new-submission:focus {
+#select-problem-inside-typeahead:focus {
   outline: none !important;
   box-shadow: none !important;
 }
 
 .form-check-input:checked {
-  background-color: #c4740b !important; /* Bright pink color */
-  border-color: #c4740b !important; /* Same as background to blend */
+  background-color: #c4740b !important;
+  border-color: #c4740b !important;
 }
 
 .form-check-input:focus {
@@ -230,8 +230,12 @@ input[type='time']::-webkit-calendar-picker-indicator {
   color: #b0b0b0 !important;
 }
 
-.rbt-menu.dropdown-menu.show {
-  top: 39px !important;
+#problem-search-typeahead.rbt-menu.dropdown-menu.show {
+  top: 0px !important;
+}
+
+#select-problem-typeahead.rbt-menu.dropdown-menu.show {
+  top: 37px !important;
 }
 
 .dropdown-item {
@@ -242,6 +246,14 @@ input[type='time']::-webkit-calendar-picker-indicator {
 .dropdown-item:hover,
 .dropdown-item:focus {
   background-color: #212121 !important;
+}
+
+#note-form {
+  overflow-y: scroll !important;
+}
+
+.required-asterisk {
+  color: red;
 }
 
 /* Icons */

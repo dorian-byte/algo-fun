@@ -35,13 +35,22 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
             <td>
               <button
                 onClick={(e) => {
-                  // this line stops the event from propagating to the parent <tr>
                   e.stopPropagation();
                   navigate(`/problems/${pb?.id}/notes`);
                 }}
-                className="btn btn-outline-primary btn-sm"
+                className="btn btn-outline-primary btn-sm me-2"
               >
                 Notes
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/problems/${pb?.id}/notes/new`);
+                }}
+                className="btn btn-outline-primary btn-sm"
+                style={{ height: 30, width: 30 }}
+              >
+                +
               </button>
             </td>
           </tr>

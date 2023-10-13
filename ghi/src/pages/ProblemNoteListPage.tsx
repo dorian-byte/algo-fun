@@ -82,14 +82,14 @@ const ProblemNoteListPage = () => {
 
   return (
     <>
-      <h2 className="mb-4 text-light">
+      <h2 className="mt-4 mb-4 text-light headline">
         {data.problemById.leetcodeNumber}
         {'. '}
         {data.problemById.title}
       </h2>
       {problemNotes.length > 0 && (
         <>
-          <h3 className="mb-4 text-light">Problem Notes</h3>
+          <h3 className="mb-4 text-light text-center">Problem Notes</h3>
           <div className="container">
             {problemNotes.map((nt: any) => (
               <div className="card mb-3" key={nt.id}>
@@ -105,7 +105,7 @@ const ProblemNoteListPage = () => {
               </div>
             ))}
           </div>
-          <h3 className="m-4 text-light">Submission Notes</h3>
+          <h3 className="m-4 text-light text-center">Submission Notes</h3>
           <div className="container">
             {submissionNotes.map((nt: any) => (
               <div className="card mb-3" key={nt.id}>

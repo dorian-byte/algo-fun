@@ -2,17 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import CodeEditor from './CodeEditor';
 import { Typeahead } from 'react-bootstrap-typeahead';
 
-export const ProficiencyLevel = {
-  NO_UNDERSTANDING: ['no_understanding', 'no understanding'],
-  CONCEPTUAL_UNDERSTANDING: [
-    'conceptual_understanding',
-    'conceptual understanding',
-  ],
-  NO_PASS: ['no_pass', 'no pass'],
-  GUIDED_PASS: ['guided_pass', 'guided pass'],
-  UNSTEADY_PASS: ['unsteady_pass', 'unsteady pass'],
-  SMOOTH_PASS: ['smooth_pass', 'smooth pass'],
-  SMOOTH_OPTIMAL_PASS: ['smooth_optimal_pass', 'smooth optimal pass'],
+export const NoteType = {
+  INTUITION: ['intuition', 'intuition'],
+  STUCK_POINT: ['stuck_point', 'stuck point'],
+  QNA: ['qna', 'Q&A'],
+  ERR: ['err', 'error'],
+  MEMO: ['memo', 'memo'],
 };
 
 interface Props {
@@ -28,7 +23,7 @@ interface Props {
   allProblems?: any[];
 }
 
-const SubmissionForm: React.FC<Props> = ({
+const NoteForm: React.FC<Props> = ({
   data,
   setData,
   handleSubmit,
@@ -42,16 +37,6 @@ const SubmissionForm: React.FC<Props> = ({
       type === 'date' ? `${value}T${currentTime}` : `${currentDate}T${value}`;
     setData((prev: any) => ({ ...prev, submittedAt: newDateTime }));
   };
-  // console.log('data', data);
-  // console.log('problemDetails', problemDetails);
-  // console.log('all problems', allProblems);
-  // console.log(
-  //   'showFixedProblemTitleInSelection',
-  //   showFixedProblemTitleInSelection
-  // );
-  // useEffect(() => {
-  //   console.log('data changed', data);
-  // }, [data]);
 
   const [codeBlockHeight, setCodeBlockHeight] = useState(0);
   const parentRef = useRef<HTMLDivElement>(null);
@@ -75,7 +60,7 @@ const SubmissionForm: React.FC<Props> = ({
       ...prev,
       problem: selectedId,
     }));
-    setSelected(selectedProblem || []); // Ensures 'selected' is always an array
+    setSelected(selectedProblem || []);
   }, []);
   useEffect(() => {
     if (allProblems && Array.isArray(allProblems)) {
@@ -87,10 +72,10 @@ const SubmissionForm: React.FC<Props> = ({
   }, [allProblems, problemDetails]);
 
   return (
-    <div className="container mt-5" ref={parentRef}>
+    <div className="container mt-5" ref={parentRef} id="note-form">
       <form className="d-flex flex-row gap-5" onSubmit={handleSubmit}>
         <div className="d-flex flex-column gap-2 flex-fill">
-          <h3 className="headline mb-2">New Submission</h3>
+          <h3 className="headline mb-2">New Note</h3>
           <div className="form-group col-md-12 mb-2">
             <label className="mb-2">
               {showFixedProblemTitleInSelection ? 'Problem' : 'Select Problem'}
@@ -124,19 +109,48 @@ const SubmissionForm: React.FC<Props> = ({
               )}
             />
           </div>
+
           <div className="form-group mb-2">
-            <label className="mb-2">Proficiency Level</label>
+            <label className="mb-2">Title</label>
+            <input
+              className="form-control"
+              type="text"
+              value={data?.title}
+              onChange={(e) =>
+                setData((prev: any) => ({ ...prev, title: e.target.value }))
+              }
+            />
+          </div>
+
+          <div className="form-group mb-2">
+            <label className="mb-2">Content</label>
+            <span className="required-asterisk" aria-hidden="true">
+              {' '}
+              *
+            </span>
+            <textarea
+              className="form-control"
+              value={data?.content}
+              onChange={(e) =>
+                setData((prev: any) => ({ ...prev, content: e.target.value }))
+              }
+              required
+            />
+          </div>
+
+          <div className="form-group mb-2">
+            <label className="mb-2">Note Type</label>
             <select
               className="form-control"
-              value={data?.proficiencyLevel}
+              value={data?.noteType}
               onChange={(e) => {
                 setData((prev: any) => ({
                   ...prev,
-                  proficiencyLevel: e.target.value,
+                  noteType: e.target.value,
                 }));
               }}
             >
-              {Object.values(ProficiencyLevel).map((level) => (
+              {Object.values(NoteType).map((level) => (
                 <option key={level[0]} value={level[0]}>
                   {level[1]}
                 </option>
@@ -148,81 +162,57 @@ const SubmissionForm: React.FC<Props> = ({
             <input
               className="form-check-input"
               type="checkbox"
-              id="isSolutionSwitch"
-              checked={data?.isSolution}
+              id="isStarred"
+              checked={data?.isStarred}
               onChange={(e) =>
                 setData((prev: any) => ({
                   ...prev,
-                  isSolution: e.target.checked,
+                  isStarred: e.target.checked,
                 }))
               }
             />
-            <label className="form-check-label" htmlFor="isSolutionSwitch">
-              Best Solution
+            <label className="form-check-label" htmlFor="isStarred">
+              Star this note
             </label>
           </div>
 
-          <div className="form-check form-switch">
+          <div className="form-group col-md-6">
+            <label className="mb-2">Submitted At</label>
             <input
-              className="form-check-input"
-              type="checkbox"
-              id="isWhiteboardModeSwitch"
-              checked={data?.isWhiteboardMode}
-              onChange={(e) =>
-                setData((prev: any) => ({
-                  ...prev,
-                  isWhiteboardMode: e.target.checked,
-                }))
-              }
+              className="form-control mb-2"
+              type="date"
+              value={data?.submittedAt.split('T')[0]}
+              onChange={(e) => handleDateTimeChange('date', e.target.value)}
             />
-            <label
-              className="form-check-label"
-              htmlFor="isWhiteboardModeSwitch"
-            >
-              Whiteboard Mode
-            </label>
-          </div>
-
-          <div className="form-check form-switch">
             <input
-              className="form-check-input"
-              type="checkbox"
-              id="isInterviewModeSwitch"
-              checked={data?.isInterviewMode}
-              onChange={(e) =>
-                setData((prev: any) => ({
-                  ...prev,
-                  isInterviewMode: e.target.checked,
-                }))
-              }
+              className="form-control"
+              type="time"
+              value={data?.submittedAt.split('T')[1]}
+              onChange={(e) => handleDateTimeChange('time', e.target.value)}
             />
-            <label className="form-check-label" htmlFor="isInterviewModeSwitch">
-              Interview Mode
-            </label>
           </div>
 
           <div className="form-row mt-2 mb-2">
             <div className="form-group col-md-6">
-              <label className="mb-2">Submitted At</label>
-              <input
-                className="form-control mb-2"
-                type="date"
-                value={data?.submittedAt.split('T')[0]}
-                onChange={(e) => handleDateTimeChange('date', e.target.value)}
-              />
-              <input
-                className="form-control"
-                type="time"
-                value={data?.submittedAt.split('T')[1]}
-                onChange={(e) => handleDateTimeChange('time', e.target.value)}
-              />
-            </div>
-            <div className="form-group col-md-6 mt-3">
-              <label className="mb-2">Duration</label>
+              <label className="mb-2">Line start:</label>
               <input
                 className="form-control"
                 type="number"
-                value={data?.duration}
+                value={data?.start_line_number}
+                onChange={(e) =>
+                  setData((prev: any) => ({
+                    ...prev,
+                    duration: e.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div className="form-group col-md-6">
+              <label className="mb-2">end:</label>
+              <input
+                className="form-control"
+                type="number"
+                value={data?.end_line_number}
                 onChange={(e) =>
                   setData((prev: any) => ({
                     ...prev,
@@ -233,33 +223,7 @@ const SubmissionForm: React.FC<Props> = ({
             </div>
           </div>
 
-          <div className="form-group">
-            <label className="mb-2">Methods</label>
-            <select
-              multiple
-              className="form-control"
-              value={data?.methods}
-              onChange={(e) => {
-                const selectedOptions = Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value
-                );
-                setData((prev: any) => ({
-                  ...prev,
-                  methods: selectedOptions,
-                }));
-              }}
-            >
-              {/* TODO: Fetch these method names dynamically from the backend */}
-              {['method1', 'method2', 'method3'].map((method) => (
-                <option key={method} value={method}>
-                  {method}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <button className="btn btn-primary" onClick={handleSubmit}>
+          <button type="submit" className="btn btn-primary">
             Submit
           </button>
         </div>
@@ -282,4 +246,4 @@ const SubmissionForm: React.FC<Props> = ({
   );
 };
 
-export default SubmissionForm;
+export default NoteForm;

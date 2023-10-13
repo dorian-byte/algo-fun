@@ -56,10 +56,14 @@ class Query(graphene.ObjectType):
     )
     all_note_resources = graphene.List(NoteResourceType)
     note_resource_by_id = graphene.Field(NoteResourceType, id=graphene.Int())
+    submissions_by_problem_id = graphene.List(SubmissionType, id=graphene.Int())
 
     def resolve_all_problems(self, info):
         # FIXME: change back after adding pagination
         return Problem.objects.all()[:50]
+
+    def resolve_submissions_by_problem_id(self, info, problem_id):
+        return Submission.objects.filter(problem=problem_id)
 
     def resolve_problem_by_id(self, info, id):
         return Problem.objects.get(pk=id)

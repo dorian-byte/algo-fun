@@ -33,10 +33,10 @@ const ProblemSearchPage: React.FC = () => {
   return (
     <div className="position-relative main">
       <div className="position-absolute top-50 start-50 translate-middle w-50 d-flex flex-column justify-content-center align-items-center">
-        <h1 className="mb-5 text-center headline">Algo Journal</h1>
+        <h1 className="mb-4 text-center headline">Algo Journal</h1>
         <div className="w-50">
           <Typeahead
-            id="problemTypeahead"
+            id="problem-search-typeahead"
             labelKey={(option: any) =>
               `${option.leetcodeNumber} ${option.title}`
             }

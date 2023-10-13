@@ -191,6 +191,7 @@ class Note(PolymorphicModel):
     # question is optional, answer isn't
     title = models.CharField(max_length=100, blank=True)
     content = models.TextField(null=False)
+    submitted_at = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_starred = models.BooleanField(default=False)
