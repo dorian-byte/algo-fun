@@ -79,6 +79,12 @@ const NoteForm: React.FC<Props> = ({
           <div className="form-group col-md-12 mb-2">
             <label className="mb-2">
               {showFixedProblemTitleInSelection ? 'Problem' : 'Select Problem'}
+              {!showFixedProblemTitleInSelection && (
+                <span className="required-asterisk" aria-hidden="true">
+                  {' '}
+                  *
+                </span>
+              )}
             </label>
             <Typeahead
               className="form-control"

@@ -94,6 +94,12 @@ const SubmissionForm: React.FC<Props> = ({
           <div className="form-group col-md-12 mb-2">
             <label className="mb-2">
               {showFixedProblemTitleInSelection ? 'Problem' : 'Select Problem'}
+              {!showFixedProblemTitleInSelection && (
+                <span className="required-asterisk" aria-hidden="true">
+                  {' '}
+                  *
+                </span>
+              )}
             </label>
             <Typeahead
               className="form-control"
@@ -126,6 +132,10 @@ const SubmissionForm: React.FC<Props> = ({
           </div>
           <div className="form-group mb-2">
             <label className="mb-2">Proficiency Level</label>
+            <span className="required-asterisk" aria-hidden="true">
+              {' '}
+              *
+            </span>
             <select
               className="form-control"
               value={data?.proficiencyLevel}
