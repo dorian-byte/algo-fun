@@ -1,6 +1,8 @@
 from django.db import models
 from polymorphic.models import PolymorphicModel
 from django.utils import timezone
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 
 class Difficulty(models.TextChoices):
@@ -95,6 +97,13 @@ class Problem(models.Model):
         max_length=200, blank=True, null=True
     )
 
+    def tags(self):
+        content_type = ContentType.objects.get_for_model(self)
+        tagged_items = TaggedItem.objects.filter(
+            content_type=content_type, object_id=self.id
+        )
+        return [item.tag for item in tagged_items]
+
     def resources(self):
         return self.problemresource_set.all()
 
@@ -160,13 +169,32 @@ class Resource(PolymorphicModel):
         blank=True,
     )
 
+    def tags(self):
+        content_type = ContentType.objects.get_for_model(self)
+        tagged_items = TaggedItem.objects.filter(
+            content_type=content_type, object_id=self.id
+        )
+        return [item.tag for item in tagged_items]
+
     def __str__(self):
         return self.title
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=100)
-    resource = models.ForeignKey("Resource", on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class TaggedItem(models.Model):
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="tagged_items")
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+
+    def __str__(self):
+        return f"{self.content_object} - {self.tag.name}"
 
 
 class ProblemResource(Resource):

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.contenttypes.admin import GenericTabularInline
 
 # Register your models here.
 
@@ -14,6 +15,9 @@ from .models import (
     SubmissionResource,
     NoteResource,
     Tag,
+    TaggedItem,
+    # Resource,
+    Note,
 )
 
 
@@ -47,6 +51,11 @@ class NoteResourceInline(admin.TabularInline):
     extra = 0
 
 
+class TaggedItemInline(GenericTabularInline):
+    model = TaggedItem
+    extra = 1  # the number of empty new forms to display on the admin page
+
+
 @admin.register(Source)
 class SourceAdmin(admin.ModelAdmin):
     list_display = ["name"]
@@ -55,7 +64,12 @@ class SourceAdmin(admin.ModelAdmin):
 @admin.register(Problem)
 class ProblemAdmin(admin.ModelAdmin):
     list_display = ["title"]
-    inlines = [ProblemSubmissionInline, ProblemResourceInline, ProblemNoteInline]
+    inlines = [
+        ProblemSubmissionInline,
+        ProblemResourceInline,
+        ProblemNoteInline,
+        TaggedItemInline,
+    ]
 
 
 @admin.register(Submission)
@@ -86,22 +100,25 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display = ["name"]
 
 
-class NoteResourceTagInline(admin.TabularInline):
-    model = Tag
-    extra = 0
-
-
 @admin.register(ProblemResource)
 class ProblemResourceAdmin(admin.ModelAdmin):
     list_display = ["title"]
-    inlines = [NoteResourceTagInline]
+    inlines = [TaggedItemInline]
 
 
 @admin.register(SubmissionResource)
 class SubmissionResourceAdmin(admin.ModelAdmin):
     list_display = ["title"]
+    inlines = [TaggedItemInline]
 
 
 @admin.register(NoteResource)
 class NoteResourceAdmin(admin.ModelAdmin):
     list_display = ["title"]
+    inlines = [TaggedItemInline]
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    search_fields = ["name"]  # optional, for easy searching in the admin
