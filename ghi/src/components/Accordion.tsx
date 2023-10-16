@@ -11,7 +11,7 @@ const Accordion: React.FC<AccordionProps> = ({ note }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className={`card mb-3 ${open ? 'accordion-toggle' : ''}`}>
+    <div className={` mb-3 ${open ? 'accordion-toggle' : ''}`}>
       <div
         className="card-header accordion-header"
         onClick={() => setOpen(!open)}
@@ -24,32 +24,27 @@ const Accordion: React.FC<AccordionProps> = ({ note }) => {
       </div>
       {open && (
         <div className="card-body">
-          {/* have to add "as string" here even if the type specified either string or Date */}
           <p>{note.content}</p>
-          <div>
-            <div className="container" id="resource-container">
-              <h5 className="mb-2 text-primary">Videos</h5>
-              <div className="row">
-                {note.resources
-                  .filter((r) => r.resourceType === 'VIDEO')
-                  .map((resource) => (
-                    <VideoCard videoURL={resource.url} />
-                  ))}
-              </div>
-            </div>
+          {note?.resources?.some((r) => r.resourceType === 'VIDEO') && (
+            <h6 className="mb-2 text-primary">Videos</h6>
+          )}
+          <div className="row">
+            {note.resources
+              .filter((r) => r.resourceType === 'VIDEO')
+              .map((resource) => (
+                <VideoCard videoURL={resource.url} />
+              ))}
           </div>
 
-          <div>
-            <div className="container" id="resource-container">
-              <h5 className="mb-2 text-primary">Images</h5>
-              <div className="row">
-                {note.resources
-                  .filter((r) => r.resourceType === 'IMAGE')
-                  .map((resource) => (
-                    <ImageCard imageURL={resource.url} />
-                  ))}
-              </div>
-            </div>
+          {note?.resources.some((r) => r.resourceType === 'IMAGE') && (
+            <h6 className="mb-2 text-primary">Images</h6>
+          )}
+          <div className="row">
+            {note.resources
+              .filter((r) => r.resourceType === 'IMAGE')
+              .map((resource) => (
+                <ImageCard imageURL={resource.url} />
+              ))}
           </div>
         </div>
       )}

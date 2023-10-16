@@ -86,7 +86,7 @@ const ProblemNoteListPage = () => {
         {'. '}
         {data.problemById.title}
       </h2>
-      <div className="accordion mb-4" id="notesAccordion">
+      <div className="accordion mb-4">
         {problemNotes.length > 0 && (
           <>
             <h3 className="mb-4 text-light text-center">Problem Notes</h3>
@@ -99,7 +99,7 @@ const ProblemNoteListPage = () => {
         )}
         {submissionNotes.length > 0 && (
           <>
-            <h3 className="m-4 text-light text-center">Submission Notes</h3>
+            <h3 className="mb-4 text-light text-center">Submission Notes</h3>
             <div className="container">
               {submissionNotes.map((note: any) => (
                 <Accordion key={note.id} note={note} />
