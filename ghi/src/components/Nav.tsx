@@ -18,7 +18,7 @@ const Navigation = () => {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-          <NavDropdown title="Submissions" id="submissionDropdown">
+          {/* <NavDropdown title="Submissions" id="submissionDropdown">
             <LinkContainer to="/submissions">
               <NavDropdown.Item>All Submissions</NavDropdown.Item>
             </LinkContainer>
@@ -41,7 +41,13 @@ const Navigation = () => {
             <LinkContainer to="/notes/new">
               <NavDropdown.Item>New Note</NavDropdown.Item>
             </LinkContainer>
-          </NavDropdown>
+          </NavDropdown> */}
+          <LinkContainer to="/submissions">
+            <Nav.Link>All Submissions</Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/problems">
+            <Nav.Link>All Problems</Nav.Link>
+          </LinkContainer>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

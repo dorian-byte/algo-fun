@@ -88,6 +88,26 @@ nav hr {
   color: #b0b0b0 !important;
 }
 
+.page-header {
+  font-family: 'Arvo', serif !important;
+  /* font-family: 'Montserrat', sans-serif !important; */
+  /* font-family: 'EB Garamond', serif !important; */
+  font-weight: 400 !important;
+  font-size: 36px !important;
+  line-height: 1.2 !important;
+  color: #b0b0b0 !important;
+}
+
+.section-heading {
+  font-family: 'Arvo', serif !important;
+  /* font-family: 'Montserrat', sans-serif !important; */
+  /* font-family: 'EB Garamond', serif !important; */
+  font-weight: 400 !important;
+  font-size: 24px !important;
+  line-height: 1.2 !important;
+  color: #b0b0b0 !important;
+}
+
 .text-primary {
   color: #f38960 !important;
 }

@@ -75,7 +75,7 @@ const NoteForm: React.FC<Props> = ({
     <div className="container mt-5 overflow-y-auto" ref={parentRef}>
       <form className="d-flex flex-row gap-5" onSubmit={handleSubmit}>
         <div className="d-flex flex-column gap-2 flex-fill">
-          <h3 className="headline mb-2">New Note</h3>
+          <h3 className="page-header mb-2">New Note</h3>
           <div className="form-group col-md-12 mb-2">
             <label className="mb-2">
               {showFixedProblemTitleInSelection ? 'Problem' : 'Select Problem'}

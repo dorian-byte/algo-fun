@@ -78,7 +78,7 @@ const ProblemListPage = () => {
         id="problemlist-header"
         className="container d-flex flex-row justify-content-between align-items-center"
       >
-        <h2 className="headline">PROBLEMS</h2>
+        <h2 className="page-header">Problems</h2>
 
         <div className="d-flex flex-row align-items-center gap-3">
           <select

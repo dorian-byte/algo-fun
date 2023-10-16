@@ -42,7 +42,7 @@ const SubmissionListPage = () => {
 
   return (
     <div className="container mt-5 overflow-y-auto">
-      <h2 className="mb-4 text-light">SubmissionListPage</h2>
+      <h2 className="page-header">Submissions</h2>
       <SubmissionList submissions={submissions} showProblem={true} />
     </div>
   );

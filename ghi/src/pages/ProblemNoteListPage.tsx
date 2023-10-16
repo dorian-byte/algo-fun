@@ -81,7 +81,7 @@ const ProblemNoteListPage = () => {
 
   return (
     <>
-      <h2 className="mt-4 mb-4 text-light headline">
+      <h2 className="mt-4 mb-4 page-header">
         {data.problemById.leetcodeNumber}
         {'. '}
         {data.problemById.title}
@@ -89,7 +89,7 @@ const ProblemNoteListPage = () => {
       <div className="accordion mb-4">
         {problemNotes.length > 0 && (
           <>
-            <h3 className="mb-4 text-light text-center">Problem Notes</h3>
+            <h3 className="mb-4 text-center section-heading">Problem Notes</h3>
             <div className="container">
               {problemNotes.map((note: any) => (
                 <Accordion key={note.id} note={note} />
@@ -99,7 +99,9 @@ const ProblemNoteListPage = () => {
         )}
         {submissionNotes.length > 0 && (
           <>
-            <h3 className="mb-4 text-light text-center">Submission Notes</h3>
+            <h3 className="mb-4 text-center section-heading">
+              Submission Notes
+            </h3>
             <div className="container">
               {submissionNotes.map((note: any) => (
                 <Accordion key={note.id} note={note} />
