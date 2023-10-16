@@ -40,7 +40,11 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
                   e.stopPropagation();
                   navigate(`/problems/${pb?.id}/submissions`);
                 }}
-                className="btn btn-outline-success btn-sm me-2"
+                className={`btn ${
+                  pb?.submissions?.length > 0
+                    ? 'btn-outline-success'
+                    : 'btn-success disabled'
+                } btn-sm me-2`}
               >
                 Submissions
               </button>
@@ -61,7 +65,11 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
                   e.stopPropagation();
                   navigate(`/problems/${pb?.id}/notes`);
                 }}
-                className="btn btn-outline-primary btn-sm me-2"
+                className={`btn ${
+                  pb?.notes?.length > 0
+                    ? 'btn-outline-primary'
+                    : 'btn-primary disabled'
+                } btn-sm me-2`}
               >
                 Notes
               </button>
@@ -82,7 +90,11 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
                   e.stopPropagation();
                   navigate(`/problems/${pb?.id}/resources`);
                 }}
-                className="btn btn-outline-info btn-sm me-2"
+                className={`btn ${
+                  pb?.resources?.length > 0
+                    ? 'btn-outline-info'
+                    : 'btn-info disabled'
+                } btn-sm me-2`}
               >
                 Resources
               </button>

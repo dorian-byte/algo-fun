@@ -15,15 +15,20 @@ const ALL_PROBLEMS = gql`
       difficulty
       timeComplexityRequirement
       spaceComplexityRequirement
+      submissions {
+        id
+      }
+      notes {
+        id
+      }
+      resources {
+        id
+      }
       companies {
         id
         name
       }
       topics {
-        id
-        name
-      }
-      source {
         id
         name
       }
