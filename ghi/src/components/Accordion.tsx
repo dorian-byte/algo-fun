@@ -17,16 +17,40 @@ const Accordion: React.FC<AccordionProps> = ({ note }) => {
         onClick={() => setOpen(!open)}
       >
         {note.title || note.content.split('\n')[0]}
+        <span className="text-gray">
+          <small>... {formatTime(note.createdAt as string)}</small>
+        </span>
         <span className="accordion-arrow" />
       </div>
       {open && (
         <div className="card-body">
           {/* have to add "as string" here even if the type specified either string or Date */}
-          <p className="text-muted">{formatTime(note.createdAt as string)}</p>
           <p>{note.content}</p>
-          <VideoCard videoURL={undefined} />
-          <ImageCard imageURL={undefined} />
-          <div></div>
+          <div>
+            <div className="container" id="resource-container">
+              <h5 className="mb-2 text-primary">Videos</h5>
+              <div className="row">
+                {note.resources
+                  .filter((r) => r.resourceType === 'VIDEO')
+                  .map((resource) => (
+                    <VideoCard videoURL={resource.url} />
+                  ))}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div className="container" id="resource-container">
+              <h5 className="mb-2 text-primary">Images</h5>
+              <div className="row">
+                {note.resources
+                  .filter((r) => r.resourceType === 'IMAGE')
+                  .map((resource) => (
+                    <ImageCard imageURL={resource.url} />
+                  ))}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

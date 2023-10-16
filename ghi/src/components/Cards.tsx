@@ -20,43 +20,9 @@ export const VideoCard: React.FC<VideoCardProps> = ({
   };
 
   return (
-    <div>
-      <div className="container" id="resource-container">
-        <h5 className="mb-2 text-primary">Videos</h5>
-        <div className="row">
-          <div className="col">
-            <div className="resource-card">
-              <iframe
-                src={translateToEmbedURL(videoURL)}
-                allowFullScreen
-              ></iframe>
-            </div>
-          </div>
-          <div className="col">
-            <div className="resource-card">
-              <iframe
-                src={translateToEmbedURL(videoURL)}
-                allowFullScreen
-              ></iframe>
-            </div>
-          </div>
-          <div className="col">
-            <div className="resource-card">
-              <iframe
-                src={translateToEmbedURL(videoURL)}
-                allowFullScreen
-              ></iframe>
-            </div>
-          </div>
-          <div className="col">
-            <div className="resource-card">
-              <iframe
-                src={translateToEmbedURL(videoURL)}
-                allowFullScreen
-              ></iframe>
-            </div>
-          </div>
-        </div>
+    <div className="col-3">
+      <div className="resource-card">
+        <iframe src={translateToEmbedURL(videoURL)} allowFullScreen></iframe>
       </div>
     </div>
   );
@@ -70,31 +36,9 @@ export const ImageCard: React.FC<ImageCardProps> = ({
   imageURL = 'https://cdn.dribbble.com/userupload/10723140/file/original-7615d466262d072471dc897b199cc05f.png?resize=752x',
 }) => {
   return (
-    <div>
-      <div className="container" id="resource-container">
-        <h5 className="mb-2 text-primary">Images</h5>
-        <div className="row">
-          <div className="col">
-            <div className="resource-card">
-              <img src={imageURL} alt="Resource" />
-            </div>
-          </div>
-          <div className="col">
-            <div className="resource-card">
-              <img src={imageURL} alt="Resource" />
-            </div>
-          </div>
-          <div className="col">
-            <div className="resource-card">
-              <img src={imageURL} alt="Resource" />
-            </div>
-          </div>
-          <div className="col">
-            <div className="resource-card">
-              <img src={imageURL} alt="Resource" />
-            </div>
-          </div>
-        </div>
+    <div className="col-3">
+      <div className="resource-card">
+        <img src={imageURL} alt="Resource" />
       </div>
     </div>
   );

@@ -19,6 +19,12 @@ const PROBLEM_NOTES = gql`
         noteType
         startLineNumber
         endLineNumber
+        resources {
+          id
+          title
+          url
+          resourceType
+        }
       }
       submissions {
         id
@@ -33,6 +39,12 @@ const PROBLEM_NOTES = gql`
           noteType
           startLineNumber
           endLineNumber
+          resources {
+            id
+            title
+            url
+            resourceType
+          }
         }
       }
     }

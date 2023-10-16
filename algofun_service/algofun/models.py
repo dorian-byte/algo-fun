@@ -86,7 +86,11 @@ class Problem(models.Model):
     # source has where this problem comes from, e.g. leetcode, jzoffer, etc.
     # this should be a multiple choice field with multiple values allowed
     source = models.ForeignKey(
-        "Source", on_delete=models.SET_NULL, blank=True, null=True
+        "Source",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="problems",
     )
 
     url = models.URLField(max_length=200, blank=True)
@@ -198,15 +202,19 @@ class TaggedItem(models.Model):
 
 
 class ProblemResource(Resource):
-    problem = models.ForeignKey("Problem", on_delete=models.CASCADE)
+    problem = models.ForeignKey(
+        "Problem", on_delete=models.CASCADE, related_name="resources"
+    )
 
 
 class SubmissionResource(Resource):
-    submission = models.ForeignKey("Submission", on_delete=models.CASCADE)
+    submission = models.ForeignKey(
+        "Submission", on_delete=models.CASCADE, related_name="resources"
+    )
 
 
 class NoteResource(Resource):
-    note = models.ForeignKey("Note", on_delete=models.CASCADE)
+    note = models.ForeignKey("Note", on_delete=models.CASCADE, related_name="resources")
 
 
 class NoteType(models.TextChoices):
