@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
-import { formatTime } from '../utils/timeUtils';
+import Accordion from '../components/Accordion';
 
 const PROBLEM_NOTES = gql`
   query ProblemNotes($id: Int!) {
@@ -49,33 +49,20 @@ const ProblemNoteListPage = () => {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
-      setProblemNotes(() => {
-        const pNotes = data.problemById.notes;
-        return pNotes.map((note: any) => ({
-          ...note,
-          isProblemNote: true,
-          problemId: data.problemById.id,
-        }));
-      });
+      // console.log(data);
+      setProblemNotes(data.problemById.notes);
       setSubmissionNotes(
         data.problemById.submissions.reduce((acc: any, cur: any) => {
-          const parsedNotes = cur.notes.map((note: any) => ({
-            ...note,
-            isSubmissionNote: true,
-            submissionId: cur.id,
-          }));
-          acc = acc.concat(parsedNotes);
-          return acc;
+          return [...acc, ...cur.notes];
         }, [])
       );
     }
   }, [data]);
 
-  useEffect(() => {
-    console.log('pnotes', problemNotes);
-    console.log('snotes', submissionNotes);
-  }, [problemNotes, submissionNotes]);
+  // useEffect(() => {
+  //   console.log('pnotes', problemNotes);
+  //   console.log('snotes', submissionNotes);
+  // }, [problemNotes, submissionNotes]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
@@ -87,42 +74,28 @@ const ProblemNoteListPage = () => {
         {'. '}
         {data.problemById.title}
       </h2>
-      {problemNotes.length > 0 && (
-        <>
-          <h3 className="mb-4 text-light text-center">Problem Notes</h3>
-          <div className="container">
-            {problemNotes.map((nt: any) => (
-              <div className="card mb-3" key={nt.id}>
-                <div className="card-body">
-                  <h5 className="card-title">{nt.title}</h5>
-                  <p className="card-text">{nt.content}</p>
-                  <p className="card-text">
-                    <small className="text-muted">
-                      Created at {formatTime(nt.createdAt)}
-                    </small>
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <h3 className="m-4 text-light text-center">Submission Notes</h3>
-          <div className="container">
-            {submissionNotes.map((nt: any) => (
-              <div className="card mb-3" key={nt.id}>
-                <div className="card-body">
-                  <h5 className="card-title">{nt.title}</h5>
-                  <p className="card-text">{nt.content}</p>
-                  <p className="card-text">
-                    <small className="text-muted">
-                      Created at {formatTime(nt.createdAt)}
-                    </small>
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+      <div className="accordion mb-4" id="notesAccordion">
+        {problemNotes.length > 0 && (
+          <>
+            <h3 className="mb-4 text-light text-center">Problem Notes</h3>
+            <div className="container">
+              {problemNotes.map((note: any) => (
+                <Accordion key={note.id} note={note} />
+              ))}
+            </div>
+          </>
+        )}
+        {submissionNotes.length > 0 && (
+          <>
+            <h3 className="m-4 text-light text-center">Submission Notes</h3>
+            <div className="container">
+              {submissionNotes.map((note: any) => (
+                <Accordion key={note.id} note={note} />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </>
   );
 };

@@ -24,6 +24,14 @@ import SubmissionNoteCreatePage from './pages/SubmissionNoteCreatePage';
 import SubmissionNoteEditPage from './pages/SubmissionNoteEditPage';
 import NotFoundPage from './pages/NotFoundPage';
 
+import ResourceList from './components/ResourceList';
+import ResourceForm from './components/ResourceForm';
+import ResourceDetail from './components/ResourceDetail';
+import ResourceEditForm from './components/ResourceEditForm';
+import ProblemResourceList from './components/ProblemResourceList';
+
+import TestPage from './pages/TestPage';
+
 function App() {
   return (
     <ApolloProvider client={client}>
@@ -32,6 +40,15 @@ function App() {
         <div style={{ height: 60 }}></div>
         <Routes>
           <Route path="/" element={<ProblemSearchPage />} />
+          {/* FIXME: only for testing. Delete later. */}
+          <Route path="/resources">
+            <Route path="" element={<ResourceList />} />
+            <Route path="new" element={<ResourceForm />} />
+            <Route path=":resourceId">
+              <Route path="" element={<ResourceDetail />} />
+              <Route path="edit" element={<ResourceEditForm />} />
+            </Route>
+          </Route>
           <Route path="/submissions">
             <Route path="" element={<SubmissionListPage />} />
             <Route path="new" element={<SubmissionCreatePage />} />
@@ -67,8 +84,11 @@ function App() {
                 {/* same page as above but passing in problemId */}
                 <Route path="new" element={<SubmissionCreatePage />} />
               </Route>
+              {/* FIXME: only for testing. Delete later. */}
+              <Route path="resources" element={<ProblemResourceList />} />
             </Route>
           </Route>
+          <Route path="test" element={<TestPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>

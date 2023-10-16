@@ -51,13 +51,13 @@ const SubmissionList = ({
     <table className="table table-dark table-striped">
       <thead>
         <tr>
-          {showProblem && <th className="text-light-gray">Problem</th>}
-          <th className="text-light-gray">Status</th>
-          <th className="text-light-gray">Submission Time</th>
-          <th className="text-light-gray">Time Used</th>
-          <th className="text-light-gray">Proficiency Level</th>
-          <th className="text-light-gray"></th>
-          <th className="text-light-gray"></th>
+          {showProblem && <th className="text-gray">Problem</th>}
+          <th className="text-gray">Status</th>
+          <th className="text-gray">Submission Time</th>
+          <th className="text-gray">Time Used</th>
+          <th className="text-gray">Proficiency Level</th>
+          <th className="text-gray"></th>
+          <th className="text-gray"></th>
         </tr>
       </thead>
       <tbody>

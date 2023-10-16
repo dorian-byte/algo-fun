@@ -9,12 +9,12 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
     <table className="table table-striped table-dark table-hover">
       <thead>
         <tr>
-          <th className="text-light-gray">Status</th>
-          <th className="text-light-gray">Title</th>
-          <th className="text-light-gray">Difficulty</th>
-          <th className="text-light-gray"></th>
-          <th className="text-light-gray"></th>
-          <th className="text-light-gray"></th>
+          <th className="text-gray">Status</th>
+          <th className="text-gray">Title</th>
+          <th className="text-gray">Difficulty</th>
+          <th className="text-gray"></th>
+          <th className="text-gray"></th>
+          <th className="text-gray"></th>
         </tr>
       </thead>
       <tbody>

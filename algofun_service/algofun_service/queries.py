@@ -57,8 +57,8 @@ class Query(graphene.ObjectType):
     )
     all_note_resources = graphene.List(NoteResourceType)
     note_resource_by_id = graphene.Field(NoteResourceType, id=graphene.Int())
-    # more queries
-    submissions_by_problem_id = graphene.List(SubmissionType, problem_id=graphene.Int())
+    # more queries like this isn't necessary because can just use problem_by_id and then get submissions
+    # submissions_by_problem_id = graphene.List(SubmissionType, problem_id=graphene.Int())
 
     # basic queries
 
@@ -129,7 +129,6 @@ class Query(graphene.ObjectType):
     def resolve_note_resource_by_id(self, info, id):
         return NoteResource.objects.get(pk=id)
 
-    # more queries
-
-    def resolve_submissions_by_problem_id(self, info, problem_id):
-        return Submission.objects.filter(problem=problem_id)
+    # more queries like this isn't necessary
+    # def resolve_submissions_by_problem_id(self, info, problem_id):
+    #     return Submission.objects.filter(problem=problem_id)
