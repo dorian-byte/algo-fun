@@ -1,14 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Note } from '../types';
 import { formatTime } from '../utils/timeUtils';
 import { VideoCard, ImageCard } from './Cards';
 
-interface AccordionProps {
+interface NoteAccordionProps {
   note: Note;
+  allOpen: boolean;
 }
 
-const Accordion: React.FC<AccordionProps> = ({ note }) => {
-  const [open, setOpen] = useState(false);
+const NoteAccordion: React.FC<NoteAccordionProps> = ({ note, allOpen }) => {
+  const [open, setOpen] = useState(allOpen);
+
+  useEffect(() => {
+    setOpen(allOpen);
+  }, [allOpen]);
 
   return (
     <div className={` mb-3 ${open ? 'accordion-toggle' : ''}`}>
@@ -52,4 +57,4 @@ const Accordion: React.FC<AccordionProps> = ({ note }) => {
   );
 };
 
-export default Accordion;
+export default NoteAccordion;

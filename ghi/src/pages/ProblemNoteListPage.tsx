@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
-import Accordion from '../components/NoteListAccordion';
+import NoteAccordion from '../components/NoteAccordion';
 
 const PROBLEM_NOTES = gql`
   query ProblemNotes($id: Int!) {
@@ -54,6 +54,7 @@ const PROBLEM_NOTES = gql`
 const ProblemNoteListPage = () => {
   const { problemId } = useParams();
   const [problemNotes, setProblemNotes] = useState([]);
+  const [allOpen, setAllOpen] = useState(true);
   const [submissionNotes, setSubmissionNotes] = useState([]);
   const { loading, error, data } = useQuery(PROBLEM_NOTES, {
     variables: { id: problemId ? +problemId : 0 },
@@ -76,23 +77,33 @@ const ProblemNoteListPage = () => {
   //   console.log('snotes', submissionNotes);
   // }, [problemNotes, submissionNotes]);
 
+  const toggleAll = () => {
+    setAllOpen((prevState) => !prevState);
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
   return (
     <>
-      <div className="m-4 page-header">
-        {data.problemById.leetcodeNumber}
-        {'. '}
-        {data.problemById.title}
+      <div className="d-flex justify-content-between">
+        <div className="m-4 page-header">
+          {data.problemById.leetcodeNumber}
+          {'. '}
+          {data.problemById.title}
+        </div>
+        <button onClick={toggleAll} className="btn btn-primary py-0 px-2">
+          {allOpen ? 'Collapse All' : 'Expand All'}
+        </button>
       </div>
+
       <div className="accordion mb-4">
         {problemNotes.length > 0 && (
           <>
             <h3 className="mb-3 text-center section-heading">Problem Notes</h3>
             <div className="container">
               {problemNotes.map((note: any) => (
-                <Accordion key={note.id} note={note} />
+                <NoteAccordion key={note.id} note={note} allOpen={allOpen} />
               ))}
             </div>
           </>
@@ -104,7 +115,7 @@ const ProblemNoteListPage = () => {
             </h3>
             <div className="container">
               {submissionNotes.map((note: any) => (
-                <Accordion key={note.id} note={note} />
+                <NoteAccordion key={note.id} note={note} allOpen={allOpen} />
               ))}
             </div>
           </>
