@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
-import NoteAccordion from '../components/NoteAccordion';
+import NoteDetailAccordion from '../components/NoteDetailAccordion';
 
 const PROBLEM_NOTES = gql`
   query ProblemNotes($id: Int!) {
@@ -103,7 +103,11 @@ const ProblemNoteListPage = () => {
             <h3 className="mb-3 text-center section-heading">Problem Notes</h3>
             <div className="container">
               {problemNotes.map((note: any) => (
-                <NoteAccordion key={note.id} note={note} allOpen={allOpen} />
+                <NoteDetailAccordion
+                  key={note.id}
+                  note={note}
+                  allOpen={allOpen}
+                />
               ))}
             </div>
           </>
@@ -115,7 +119,11 @@ const ProblemNoteListPage = () => {
             </h3>
             <div className="container">
               {submissionNotes.map((note: any) => (
-                <NoteAccordion key={note.id} note={note} allOpen={allOpen} />
+                <NoteDetailAccordion
+                  key={note.id}
+                  note={note}
+                  allOpen={allOpen}
+                />
               ))}
             </div>
           </>

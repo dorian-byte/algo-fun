@@ -3,12 +3,15 @@ import { Note } from '../types';
 import { formatTime } from '../utils/timeUtils';
 import { VideoCard, ImageCard } from './Cards';
 
-interface NoteAccordionProps {
+interface NoteDetailAccordionProps {
   note: Note;
   allOpen: boolean;
 }
 
-const NoteAccordion: React.FC<NoteAccordionProps> = ({ note, allOpen }) => {
+const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
+  note,
+  allOpen,
+}) => {
   const [open, setOpen] = useState(allOpen);
 
   useEffect(() => {
@@ -57,4 +60,4 @@ const NoteAccordion: React.FC<NoteAccordionProps> = ({ note, allOpen }) => {
   );
 };
 
-export default NoteAccordion;
+export default NoteDetailAccordion;
