@@ -42,11 +42,17 @@ const Navigation = () => {
               <NavDropdown.Item>New Note</NavDropdown.Item>
             </LinkContainer>
           </NavDropdown> */}
-          <LinkContainer to="/submissions">
-            <Nav.Link>All Submissions</Nav.Link>
-          </LinkContainer>
           <LinkContainer to="/problems">
-            <Nav.Link>All Problems</Nav.Link>
+            <Nav.Link>Problems</Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/submissions">
+            <Nav.Link>Submissions</Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/submissions/new">
+            <Nav.Link>New Submission</Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/notes/new">
+            <Nav.Link>New Note</Nav.Link>
           </LinkContainer>
         </Nav>
       </Navbar.Collapse>

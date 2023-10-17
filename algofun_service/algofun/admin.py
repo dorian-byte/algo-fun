@@ -58,12 +58,12 @@ class TaggedItemInline(GenericTabularInline):
 
 @admin.register(Source)
 class SourceAdmin(admin.ModelAdmin):
-    list_display = ["name"]
+    list_display = ["__str__"]
 
 
 @admin.register(Problem)
 class ProblemAdmin(admin.ModelAdmin):
-    list_display = ["title"]
+    list_display = ["__str__"]
     inlines = [
         ProblemSubmissionInline,
         ProblemResourceInline,
@@ -80,45 +80,45 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 @admin.register(Topic)
 class TopicAdmin(admin.ModelAdmin):
-    list_display = ["name"]
+    list_display = ["__str__"]
 
 
 @admin.register(ProblemNote)
 class ProblemNoteAdmin(admin.ModelAdmin):
-    list_display = ["title", "content"]
+    list_display = ["__str__"]
     inlines = [NoteResourceInline]
 
 
 @admin.register(SubmissionNote)
 class SubmissionNoteAdmin(admin.ModelAdmin):
-    list_display = ["submission", "title", "content"]
+    list_display = ["__str__"]
     inlines = [NoteResourceInline]
 
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ["name"]
+    list_display = ["__str__"]
 
 
 @admin.register(ProblemResource)
 class ProblemResourceAdmin(admin.ModelAdmin):
-    list_display = ["title"]
+    list_display = ["__str__"]
     inlines = [TaggedItemInline]
 
 
 @admin.register(SubmissionResource)
 class SubmissionResourceAdmin(admin.ModelAdmin):
-    list_display = ["title"]
+    list_display = ["__str__"]
     inlines = [TaggedItemInline]
 
 
 @admin.register(NoteResource)
 class NoteResourceAdmin(admin.ModelAdmin):
-    list_display = ["title"]
+    list_display = ["__str__"]
     inlines = [TaggedItemInline]
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = ["name"]
+    list_display = ["__str__"]
     search_fields = ["name"]  # optional, for easy searching in the admin

@@ -1,4 +1,3 @@
-import './NotFoundPage.css';
 import Image404 from '../assets/images/404.jpeg';
 
 const NotFoundPage = () => {

@@ -149,11 +149,8 @@ class Submission(models.Model):
         return self.proficiency_level not in non_passing_levels
 
     def __str__(self):
-        # NOTE: formats date as MM/YY
         submitted_date = self.submitted_at.strftime("%m/%y")
-        return (
-            f"{submitted_date} {self.problem.leetcode_number} {self.proficiency_level}"
-        )
+        return f"id:{self.id} {submitted_date} #{self.problem.leetcode_number} {self.proficiency_level}"
 
 
 class ResourceType(models.TextChoices):
@@ -248,20 +245,23 @@ class Note(PolymorphicModel):
             self.end_line_number = self.start_line_number
         super().save(*args, **kwargs)
 
-    def __str__(self):
-        return self.title
-
 
 class ProblemNote(Note):
     problem = models.ForeignKey(
         "Problem", on_delete=models.CASCADE, related_name="notes"
     )
 
+    def __str__(self):
+        return f"Note ID: {self.id}, Problem ID: {self.problem.id}, Title: {self.title}"
+
 
 class SubmissionNote(Note):
     submission = models.ForeignKey(
         "Submission", on_delete=models.CASCADE, related_name="notes"
     )
+
+    def __str__(self):
+        return f"Note ID: {self.id}, Submission ID: {self.submission.id}, Problem ID: {self.submission.problem.id}, Title: {self.title}"
 
 
 class Company(models.Model):
