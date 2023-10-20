@@ -105,16 +105,7 @@ const ProblemNoteCreatePage = () => {
   if (singleProblemError) return <p>Error: {singleProblemError.message}</p>;
   if (allProblemsError) return <p>Error: {allProblemsError.message}</p>;
 
-  return (
-    <NoteForm
-      data={data}
-      setData={setData}
-      handleSubmit={handleSubmit}
-      problemDetails={problemData?.problemById}
-      allProblems={allProblemsData?.allProblems}
-      showFixedProblemTitleInSelection={showFixedProblemTitleInSelection}
-    />
-  );
+  return <NoteForm />;
 };
 
 export default ProblemNoteCreatePage;

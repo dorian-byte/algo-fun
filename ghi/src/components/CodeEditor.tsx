@@ -70,7 +70,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       options={options}
       theme={theme}
       onChange={onChange}
-      placeholder={placeholder}
     />
   );
 };

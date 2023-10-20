@@ -3,6 +3,8 @@ import { gql, useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import { formatTime } from '../utils/timeUtils';
 import CodeEditor from '../components/CodeEditor';
+import Drawer from '../components/DrawerWrapper';
+import NoteForm from '../components/NoteForm';
 
 const SUMBISSION_BY_ID = gql`
   query SubmissionById($id: Int!) {
@@ -46,12 +48,12 @@ const SubmissionDetailPage = () => {
 
   return (
     <div className="container mt-5">
-      <h2 className="mb-4">SubmissionListPage</h2>
-      <div
-        key={submission?.id}
-        className="card bg-secondary text-light mb-4 p-3"
-      >
-        <h4 className="card-title">Submission ID: {submission?.id}</h4>
+      <div className="card bg-secondary text-light mb-4 p-3">
+        <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+          <Drawer buttonText="new note">
+            <NoteForm inDrawer={true} />
+          </Drawer>
+        </div>
         <div className="card-text">
           <CodeEditor
             value={submission.code}

@@ -83,7 +83,7 @@ class SubmissionNoteMutation(DjangoModelFormMutation):
 
     class Argument:
         id = graphene.ID(required=False)
-        problem = graphene.String(required=False)
+        submission = graphene.String(required=False)
         title = graphene.String(required=False)
         content = graphene.String(required=False)
         created_at = graphene.String(required=False)

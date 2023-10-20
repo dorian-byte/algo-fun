@@ -31,7 +31,7 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
         <span className="accordion-arrow" />
       </div>
       {open && (
-        <div className="card-body">
+        <div className="card-body ps-3 pt-2 pb-2">
           <p className="pt-2">{note.content}</p>
           {note?.resources?.some((r) => r.resourceType === 'VIDEO') && (
             <h6 className="mb-2 text-gray">Videos</h6>
@@ -45,7 +45,7 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
           </div>
 
           {note?.resources.some((r) => r.resourceType === 'IMAGE') && (
-            <h6 className="mb-2 text-gray">Images</h6>
+            <h6 className="text-gray my-2">Images</h6>
           )}
           <div className="row">
             {note.resources
