@@ -2,6 +2,14 @@ import csv
 import json
 import datetime
 import pytz
+import re
+
+pattern = re.compile(r"\[(.+?), \/")
+
+
+def parse_title_to_ids(name_arr, name_id_hash):
+    return [name_id_hash[name] or 0 for name in name_arr]
+
 
 csvFilePath = "./data.csv"
 california = pytz.timezone("America/Los_Angeles")
@@ -12,11 +20,13 @@ with open(csvFilePath) as csvFile:
     csvReader = csv.DictReader(csvFile)
     for rows in csvReader:
         id = rows["id"]
-        data[id] = r
+        data[id] = rows
 data = list(data.values())
 res = []
 companies = set()
 topics = set()
+parsed_sim_prob_hash = {}
+name_id_hash = {}
 for idx, row in enumerate(data):
     if not row["companies"]:
         row_companies = []
@@ -29,6 +39,11 @@ for idx, row in enumerate(data):
 
     companies.update(row_companies)
     topics.update(row_topics)
+
+    matches = pattern.findall(row["similar_questions"])
+    parsed_row_similar_problems = [name.strip() for name in matches]
+    parsed_sim_prob_hash[row["title"]] = parsed_row_similar_problems
+    name_id_hash[row["title"]] = idx + 1
 
     res.append(
         {
@@ -49,12 +64,23 @@ for idx, row in enumerate(data):
                 "difficulty": row["difficulty"].lower(),
                 "lintcode_equivalent_problem_number": None,
                 "lintcode_equivalent_problem_url": None,
+                "acceptance_rate": row["acceptance_rate"],
+                "frequency": row["frequency"],
+                "asked_by_faang": row["asked_by_faang"] == "1",
+                "similar_problems": [],
             },
         }
     )
 
 companies = list(companies)
 topics = list(topics)
+
+
+for idx, row in enumerate(res):
+    row["fields"]["similar_problems"] = parse_title_to_ids(
+        parsed_sim_prob_hash[row["fields"]["title"]], name_id_hash
+    )
+
 
 companies_res = []
 for i, company in enumerate(companies):

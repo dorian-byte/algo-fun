@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import CodeEditor from '../components/CodeEditor';
 
@@ -30,11 +30,20 @@ const PROBLEM_BY_ID = gql`
       url
       lintcodeEquivalentProblemNumber
       lintcodeEquivalentProblemUrl
+      askedByFaang
+      acceptanceRate
+      frequency
+      similarProblems {
+        id
+        title
+        url
+      }
     }
   }
 `;
 
 const ProblemDetailPage = () => {
+  const navigate = useNavigate();
   const { problemId } = useParams();
   const [problem, setProblem] = useState({} as any);
   const { loading, error, data } = useQuery(PROBLEM_BY_ID, {
@@ -61,6 +70,25 @@ const ProblemDetailPage = () => {
         theme="vs-dark"
         readOnly={true}
       />
+      <ul>
+        <li>{problem?.askedByFaang}</li>
+        <li>{problem?.frequency}</li>
+        <li>{problem?.acceptanceRate}</li>
+        <li>SIMILAR PROBLEMS</li>
+        {problem?.similarProblems?.map((p: any) => (
+          <ul>
+            <li>
+              <button
+                onClick={() => {
+                  navigate(`/problems/${p.id}`);
+                }}
+              >
+                {p.title}
+              </button>
+            </li>
+          </ul>
+        ))}
+      </ul>
     </div>
   );
 };

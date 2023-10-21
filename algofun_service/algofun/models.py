@@ -58,25 +58,28 @@ class Problem(models.Model):
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    asked_by_faang = models.BooleanField(default=False)
+    acceptance_rate = models.FloatField(blank=True, null=True)
+    frequency = models.FloatField(blank=True, null=True)
     difficulty = models.CharField(
         max_length=6,
         choices=Difficulty.choices,
         default=Difficulty.EASY,
-        db_index=True,
+        null=True,
         blank=True,
     )
     time_complexity_requirement = models.CharField(
         max_length=20,
         choices=Complexity.choices,
         default=Complexity.O_N,
-        db_index=True,
+        null=True,
         blank=True,
     )
     space_complexity_requirement = models.CharField(
         max_length=20,
         choices=Complexity.choices,
         default=Complexity.O_N,
-        db_index=True,
+        null=True,
         blank=True,
     )
 
@@ -99,6 +102,10 @@ class Problem(models.Model):
     )
     lintcode_equivalent_problem_url = models.URLField(
         max_length=200, blank=True, null=True
+    )
+
+    similar_problems = models.ManyToManyField(
+        "self", symmetrical=False, blank=True, related_name="reverse_similar_problems"
     )
 
     def tags(self):

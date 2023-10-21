@@ -16,6 +16,7 @@ services:
       NODE_ENV: development
       HOST: '0.0.0.0'
       PUBLIC_URL: http://localhost:3000
+      REACT_APP_OPENAI_API_KEY: ${REACT_APP_OPENAI_API_KEY}
 
   postgres:
     image: postgres:15-alpine
