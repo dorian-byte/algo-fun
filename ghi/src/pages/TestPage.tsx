@@ -33,7 +33,11 @@ const TestPage = () => {
   return (
     <div className="container">
       <h1>Test Page</h1>
-      <InputBase value={query} onChange={(e) => setQuery(e.target.value)} />
+      <InputBase
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        sx={{ width: '100%' }}
+      />
       <button
         onClick={async () => {
           getGptResponse();

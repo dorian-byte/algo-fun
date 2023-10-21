@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { hasPassed, allFailed } from '../utils/submissionStatusHelper';
 import { difficultyColor } from '../utils/difficultyColorHelper';
+import leetcode from '../assets/images/leetcode_icon.webp';
 
 const ProblemList = ({ problems }: { problems: any[] }) => {
   const navigate = useNavigate();
+  const [hovered, setHovered] = useState(0);
 
   return (
     <table className="table table-striped table-dark table-hover">
@@ -19,7 +22,12 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
       </thead>
       <tbody>
         {problems.map((pb: any) => (
-          <tr key={pb?.id} onClick={() => navigate(`/problems/${pb?.id}`)}>
+          <tr
+            key={pb?.id}
+            onClick={() => navigate(`/problems/${pb?.id}`)}
+            onMouseEnter={() => setHovered(pb?.id)}
+            onMouseLeave={() => setHovered(0)}
+          >
             <td>
               {hasPassed(pb?.submissions) ? (
                 <span>✅</span>
@@ -30,6 +38,11 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
             <td>
               {pb.leetcodeNumber}
               {'. '} {pb.title}
+              {hovered == pb?.id && (
+                <a href={pb?.url} target="blank" className="ms-2">
+                  <img src={leetcode} alt="leetcode" height="20px" />
+                </a>
+              )}
             </td>
             <td style={{ color: difficultyColor(pb.difficulty) }}>
               {pb.difficulty.charAt(0) + pb.difficulty.slice(1).toLowerCase()}
