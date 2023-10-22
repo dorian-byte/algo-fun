@@ -15,6 +15,8 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
           <th className="text-gray">Status</th>
           <th className="text-gray">Title</th>
           <th className="text-gray">Difficulty</th>
+          <th className="text-gray">Pass %</th>
+          <th className="text-gray">Freq %</th>
           <th className="text-gray"></th>
           <th className="text-gray"></th>
           <th className="text-gray"></th>
@@ -37,7 +39,7 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
             </td>
             <td>
               {pb.leetcodeNumber}
-              {'. '} {pb.title}
+              {'. '} {pb.title}{' '}
               {hovered == pb?.id && (
                 <a href={pb?.url} target="blank" className="ms-2">
                   <img src={leetcode} alt="leetcode" height="20px" />
@@ -47,6 +49,8 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
             <td style={{ color: difficultyColor(pb.difficulty) }}>
               {pb.difficulty.charAt(0) + pb.difficulty.slice(1).toLowerCase()}
             </td>
+            <td className="text-light">{Math.round(pb?.acceptanceRate)}</td>
+            <td className="text-light">{Math.round(pb?.frequency)}</td>
             <td>
               <button
                 onClick={(e) => {

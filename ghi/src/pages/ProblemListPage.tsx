@@ -12,6 +12,9 @@ const ALL_PROBLEMS = gql`
       description
       createdAt
       updatedAt
+      askedByFaang
+      acceptanceRate
+      frequency
       difficulty
       timeComplexityRequirement
       spaceComplexityRequirement
