@@ -177,7 +177,8 @@ const ProblemListPage = () => {
                 ? itemsToShow(
                     topics.filter((t: any) => t.name.includes(searchTerm))
                   ).map((topic: any) => (
-                    <div
+                    <span
+                      className="badge bg-secondary"
                       key={topic.id}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -189,12 +190,13 @@ const ProblemListPage = () => {
                       ) : (
                         <span className="text-light">{topic.name}</span>
                       )}
-                    </div>
+                    </span>
                   ))
                 : itemsToShow(
                     companies.filter((c: any) => c.name.includes(searchTerm))
                   ).map((company: any) => (
-                    <div
+                    <span
+                      className="badge bg-secondary"
                       key={company.id}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -206,9 +208,15 @@ const ProblemListPage = () => {
                       ) : (
                         <span className="text-light">{company.name}</span>
                       )}
-                    </div>
+                    </span>
                   ))}
-              <button onClick={() => setIsExpanded(!isExpanded)}>
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsExpanded(!isExpanded);
+                }}
+              >
                 {isExpanded ? 'Collapse' : 'Expand'}
               </button>
             </div>
