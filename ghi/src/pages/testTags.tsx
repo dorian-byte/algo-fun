@@ -69,6 +69,7 @@ const ProblemListPage = () => {
   const [difficultyFilter, setDifficultyFilter] = useState<string | null>(null);
   const [tagFilters, setTagFilters] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<'Topics' | 'Companies'>('Topics');
+  const [showDropdown, setShowDropdown] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const [topics, setTopics] = useState([]);
@@ -133,61 +134,33 @@ const ProblemListPage = () => {
       >
         <h2 className="page-header">Problems</h2>
         <div className="d-flex flex-row align-items-center gap-3">
-          <div className="dropdown">
-            <button
-              className="btn btn-outline-primary dropdown-toggle"
-              id="dropdownMenuButton1"
-              data-bs-toggle="dropdown"
-            >
-              Tags
-            </button>
-            <div className="dropdown-menu">
+          <button
+            className="btn btn-outline-primary"
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
+            All Tags
+          </button>
+          {showDropdown && (
+            <div className="dropdown">
               <input
-                className="dropdown-item"
                 type="text"
                 placeholder="Search..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <div className="d-flex dropdown-item nav-tabs">
-                <div
-                  className={`dropdown-item nav-item text-light ${
-                    activeTab === 'Topics' ? 'active' : ''
-                  }`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveTab('Topics');
-                  }}
-                >
-                  Topics
-                </div>
-                <div
-                  className={`dropdown-item nav-item text-light ${
-                    activeTab === 'Companies' ? 'active' : ''
-                  }`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveTab('Companies');
-                  }}
-                >
-                  Companies
-                </div>
-              </div>
+              <button onClick={() => setActiveTab('Topics')}>Topics</button>
+              <button onClick={() => setActiveTab('Companies')}>
+                Companies
+              </button>
               {activeTab === 'Topics'
                 ? itemsToShow(
                     topics.filter((t: any) => t.name.includes(searchTerm))
                   ).map((topic: any) => (
-                    <div
-                      key={topic.id}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleTag(topic.name);
-                      }}
-                    >
+                    <div key={topic.id} onClick={() => toggleTag(topic.name)}>
                       {tagFilters.includes(topic.name) ? (
-                        <strong className="text-primary">{topic.name}</strong>
+                        <strong>{topic.name}</strong>
                       ) : (
-                        <span className="text-light">{topic.name}</span>
+                        topic.name
                       )}
                     </div>
                   ))
@@ -196,15 +169,12 @@ const ProblemListPage = () => {
                   ).map((company: any) => (
                     <div
                       key={company.id}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleTag(company.name);
-                      }}
+                      onClick={() => toggleTag(company.name)}
                     >
                       {tagFilters.includes(company.name) ? (
-                        <strong className="text-primary">{company.name}</strong>
+                        <strong>{company.name}</strong>
                       ) : (
-                        <span className="text-light">{company.name}</span>
+                        company.name
                       )}
                     </div>
                   ))}
@@ -212,7 +182,7 @@ const ProblemListPage = () => {
                 {isExpanded ? 'Collapse' : 'Expand'}
               </button>
             </div>
-          </div>
+          )}
           <select
             value={difficultyFilter || ''}
             onChange={(e) => setDifficultyFilter(e.target.value || null)}

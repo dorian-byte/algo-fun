@@ -33,6 +33,7 @@ p,
 .h5,
 .h6 {
   font-family: 'Lato', sans-serif !important;
+  /* color: #b0b0b0 !important; */
 }
 
 .main {
@@ -147,7 +148,7 @@ nav hr {
   border-radius: 10px !important;
   padding: 30px !important;
   z-index: 0 !important;
-  opacity: 0.9 !important;
+  /* opacity: 0.9 !important; */
   max-height: 80vh;
 }
 
@@ -375,7 +376,10 @@ input[type='time']::-webkit-calendar-picker-indicator {
   top: 0px !important;
 }
 
-#problem-search-typeahead.rbt-menu.dropdown-menu {
+/* #problem-search-typeahead.rbt-menu.dropdown-menu {
+  background-color: rgba(48, 48, 48, 0.75) !important;
+} */
+.dropdown-menu {
   background-color: rgba(48, 48, 48, 0.75) !important;
 }
 
@@ -497,4 +501,12 @@ table thead tr {
 .not-found-image {
   max-width: 300px;
   border-radius: 5%;
+}
+
+/* Filter */
+/* removes filter button's blue background on select */
+#dropdownMenuButton1.btn.btn-outline-primary.dropdown-toggle.show {
+  background-color: transparent !important;
+  color: #f38960 !important;
+  border-color: #f38960 !important;
 }
