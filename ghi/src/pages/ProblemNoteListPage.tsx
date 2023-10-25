@@ -15,6 +15,7 @@ const PROBLEM_NOTES = gql`
         content
         createdAt
         updatedAt
+        submittedAt
         isStarred
         noteType
         startLineNumber
@@ -35,6 +36,7 @@ const PROBLEM_NOTES = gql`
           content
           createdAt
           updatedAt
+          submittedAt
           isStarred
           noteType
           startLineNumber

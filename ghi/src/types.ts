@@ -11,6 +11,7 @@ export interface Note {
   content: string;
   createdAt: Date | string; 
   updatedAt: Date | string;
+  submittedAt: Date | string;
   isStarred: boolean;
   noteType: string; 
   startLineNumber: number;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
-import { formatTime } from '../utils/timeUtils';
+import { dtStrToLocalShortStr } from '../utils/timeUtils';
 import CodeEditor from '../components/CodeEditor';
 import Drawer from '../components/DrawerWrapper';
 import NoteForm from '../components/NoteForm';
@@ -80,7 +80,8 @@ const SubmissionDetailPage = () => {
             <strong>Status:</strong> {submission.passed ? '✅' : '❌'}
           </div>
           <div className="mb-2">
-            <strong>Submitted At:</strong> {formatTime(submission.submittedAt)}
+            <strong>Submitted At:</strong>{' '}
+            {dtStrToLocalShortStr(submission.submittedAt)}
           </div>
         </div>
       </div>

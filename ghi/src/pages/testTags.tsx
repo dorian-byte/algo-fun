@@ -12,6 +12,7 @@ const ALL_PROBLEMS = gql`
       description
       createdAt
       updatedAt
+      submittedAt
       askedByFaang
       acceptanceRate
       frequency

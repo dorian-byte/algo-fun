@@ -14,6 +14,7 @@ const SUBMISSION_NOTES = gql`
         content
         createdAt
         updatedAt
+        submittedAt
         isStarred
         noteType
         startLineNumber

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Note } from '../types';
-import { formatTime } from '../utils/timeUtils';
+import { dtStrToLocalShortStr } from '../utils/timeUtils';
 import { VideoCard, ImageCard } from './Cards';
 
 interface NoteDetailAccordionProps {
@@ -26,7 +26,7 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
       >
         <h5>{note.title || note.content.split('\n')[0]}</h5>
         <span className="text-gray">
-          <small>{formatTime(note.createdAt as string)}</small>
+          <small>{dtStrToLocalShortStr(note.submittedAt as string)}</small>
         </span>
         <span className="accordion-arrow" />
       </div>

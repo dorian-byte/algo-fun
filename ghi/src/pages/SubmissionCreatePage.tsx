@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { gql, useMutation, useQuery } from '@apollo/client';
-import SubmissionForm, { ProficiencyLevel } from '../components/SubmissionForm';
-import { toLocalTime, toUTC } from '../utils/timeUtils';
+import SubmissionForm from '../components/SubmissionForm';
+import { dtToLocalISO16 } from '../utils/timeUtils';
 
 // NOTE: Despite our GraphQL schema defining the query as 'problem_by_id',
 // the server expects it in camelCase as 'problemById'.
@@ -79,7 +79,7 @@ const SubmissionCreatePage = () => {
   const [data, setData] = useState<any>({
     code: '',
     proficiencyLevel: '',
-    submittedAt: toLocalTime(new Date()),
+    submittedAt: dtToLocalISO16(new Date()),
     duration: '',
     isSolution: false,
     isWhiteboardMode: false,
@@ -95,7 +95,7 @@ const SubmissionCreatePage = () => {
       input: {
         ...data,
         duration: +data?.duration,
-        submittedAt: toUTC(new Date(data?.submittedAt + ':00')).toISOString(),
+        submittedAt: new Date(data?.submittedAt + ':00'),
         timeComplexity: data?.timeComplexity,
         spaceComplexity: data?.spaceComplexity,
       },

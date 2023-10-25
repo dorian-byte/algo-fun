@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import NoteForm, { NoteType } from '../components/NoteForm';
-import { toLocalTime, toUTC } from '../utils/timeUtils';
+import { dtToLocalISO16 } from '../utils/timeUtils';
 
 const FETCH_PROBLEM = gql`
   query FetchProblem($id: Int!) {
@@ -73,7 +73,7 @@ const ProblemNoteCreatePage = () => {
     problem: problemId,
     title: '',
     content: '',
-    submittedAt: toLocalTime(new Date()),
+    submittedAt: dtToLocalISO16(new Date()),
     isStarred: false,
     noteType: NoteType.ERR[0],
     startLineNumber: 0,
@@ -86,7 +86,7 @@ const ProblemNoteCreatePage = () => {
         ...data,
         startLineNumber: +data?.startLineNumber,
         endLineNumber: +data?.endLineNumber,
-        submittedAt: toUTC(new Date(data?.submittedAt + ':00')).toISOString(),
+        submittedAt: new Date(data?.submittedAt + ':00'),
       },
     },
   });

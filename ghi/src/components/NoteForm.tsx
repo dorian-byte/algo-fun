@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import CodeEditor from './CodeEditor';
-import { toLocalTime, toUTC } from '../utils/timeUtils';
+import { dtToLocalISO16 } from '../utils/timeUtils';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   FETCH_PROBLEM,
@@ -24,7 +24,7 @@ const NoteForm = ({ inDrawer = false }) => {
   const [data, setData] = useState<any>({
     title: '',
     content: '',
-    submittedAt: toLocalTime(new Date()),
+    submittedAt: dtToLocalISO16(new Date()),
     isStarred: false,
     noteType: NoteType.ERR[0],
     startLineNumber: 0,
@@ -63,7 +63,7 @@ const NoteForm = ({ inDrawer = false }) => {
         ...data,
         startLineNumber: +data?.startLineNumber,
         endLineNumber: +data?.endLineNumber,
-        submittedAt: toUTC(new Date(data?.submittedAt + ':00')).toISOString(),
+        submittedAt: new Date(data?.submittedAt + ':00'),
         problem: +data.problem || (problemId ? (+problemId as number) : 0),
       },
     },
@@ -75,7 +75,7 @@ const NoteForm = ({ inDrawer = false }) => {
         ...data,
         startLineNumber: +data?.startLineNumber,
         endLineNumber: +data?.endLineNumber,
-        submittedAt: toUTC(new Date(data?.submittedAt + ':00')).toISOString(),
+        submittedAt: new Date(data?.submittedAt + ':00'),
         submission: submissionId ? +submissionId : 0,
       },
     },

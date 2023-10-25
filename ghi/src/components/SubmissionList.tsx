@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { formatTime } from '../utils/timeUtils';
+import { dtStrToLocalShortStr, dtToLocalISO16 } from '../utils/timeUtils';
 
 export interface Submission {
   id: string;
@@ -69,7 +69,7 @@ const SubmissionList = ({
               </td>
             )}
             <td>{sm.passed ? '✅' : '❌'}</td>
-            <td>{formatTime(sm.submittedAt)}</td>
+            <td>{dtStrToLocalShortStr(sm.submittedAt)}</td>
             <td>{sm.duration ? sm.duration + 'm' : ''}</td>
             <td>
               {PROFICIENCY_LEVEL_DISPLAY[sm.proficiencyLevel] || 'Unknown'}
