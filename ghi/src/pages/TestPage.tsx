@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import OpenAI from 'openai';
-import { InputBase, LinearProgress } from '@mui/material';
+import { LinearProgress } from '@mui/material';
 import CodeEditor from '../components/CodeEditor';
 import { OPEN_AI_API_KEY } from '../utils/keys';
 
@@ -18,7 +18,7 @@ const TestPage = () => {
     const completion = await openai.chat.completions.create({
       messages: [
         {
-          role: 'system',
+          role: 'user',
           content: query,
         },
       ],
@@ -33,10 +33,14 @@ const TestPage = () => {
   return (
     <div className="container">
       <h1>Test Page</h1>
-      <InputBase
+      <CodeEditor
+        height="300px"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        sx={{ width: '100%' }}
+        language="markdown"
+        showLineNumbers={false}
+        theme="vs-dark"
+        onChange={(value) => setQuery(value)}
+        readOnly={false}
       />
       <button
         onClick={async () => {
@@ -63,3 +67,49 @@ const TestPage = () => {
 };
 
 export default TestPage;
+
+// const topics = [
+//   'rolling hash',
+//   'trie',
+//   'rejection sampling',
+//   'hash table',
+//   'breadth-first search',
+//   'linked list',
+//   'random',
+//   'recursion',
+//   'two pointers',
+//   'queue',
+//   'binary indexed tree',
+//   'dynamic programming',
+//   'oop',
+//   'depth-first search',
+//   'tree',
+//   'union find',
+//   'memoization',
+//   'graph',
+//   'stack',
+//   'ordered map',
+//   'minimax',
+//   'suffix array',
+//   'sliding window',
+//   'string',
+//   'heap',
+//   'math',
+//   'sort',
+//   'geometry',
+//   'greedy',
+//   'bit manipulation',
+//   'topological sort',
+//   'reservoir sampling',
+//   'binary search tree',
+//   'meet in the middle',
+//   'dequeue',
+//   'design',
+//   'array',
+//   'backtracking',
+//   'line sweep',
+//   'brainteaser',
+//   'binary search',
+//   'divide and conquer',
+//   'segment tree',
+// ];

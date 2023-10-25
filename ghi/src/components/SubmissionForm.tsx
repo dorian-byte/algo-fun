@@ -2,18 +2,38 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import CodeEditor from './CodeEditor';
 import { Typeahead } from 'react-bootstrap-typeahead';
 
-export const ProficiencyLevel = {
-  NO_UNDERSTANDING: ['no_understanding', 'no understanding'],
-  CONCEPTUAL_UNDERSTANDING: [
-    'conceptual_understanding',
-    'conceptual understanding',
-  ],
-  NO_PASS: ['no_pass', 'no pass'],
-  GUIDED_PASS: ['guided_pass', 'guided pass'],
-  UNSTEADY_PASS: ['unsteady_pass', 'unsteady pass'],
-  SMOOTH_PASS: ['smooth_pass', 'smooth pass'],
-  SMOOTH_OPTIMAL_PASS: ['smooth_optimal_pass', 'smooth optimal pass'],
-};
+export const PROFICIENCY_LEVEL = {
+  no_understanding: 'No Understanding',
+  conceptual_understanding: 'Conceptual Understanding',
+  no_pass: 'No Pass',
+  guided_pass: 'Guided Pass',
+  unsteady_pass: 'Unsteady Pass',
+  smooth_pass: 'Smooth Pass',
+  smooth_optimal_pass: 'Smooth Optimal Pass',
+} as { [key: string]: string };
+
+// class Complexity(models.TextChoices):
+//     O_1 = "o1", "o1"
+//     O_N_SQUARE_ROOT = "nsqrt", "nsqrt"
+//     O_LOGN = "logn", "logn"
+//     O_N = "n", "n"
+//     O_NLOGN = "nlogn", "nlogn"
+//     O_N2 = "n2", "n2"
+//     O_N3 = "n3", "n3"
+//     O_2N = "2n", "2n"
+//     O_N_FACTORIAL = "nfactorial", "nfactorial"
+
+export const BIG_O_COMPLEXITY = {
+  o1: 'O(1)',
+  nsqrt: 'O(N^1/2)',
+  logn: 'O(logN)',
+  n: 'O(N)',
+  nlogn: 'O(NlogN)',
+  n2: 'O(N^2)',
+  n3: 'O(N^3)',
+  '2n': 'O(2^N)',
+  nfactorial: 'O(N!)',
+} as { [key: string]: string };
 
 interface Props {
   data: any;
@@ -86,19 +106,20 @@ const SubmissionForm: React.FC<Props> = ({
     }
   }, [allProblems, problemDetails]);
 
+  // useEffect(() => {
+  //   console.log('data', data);
+  // }, [data]);
+
   return (
     <div className="container mt-5 overflow-y-auto" ref={parentRef}>
       <form className="d-flex flex-row gap-5" onSubmit={handleSubmit}>
         <div className="d-flex flex-column gap-2 flex-fill">
-          <h3 className="page-header mb-2">New Submission</h3>
-          <div className="form-group col-md-12 mb-2">
+          <h3 className="page-header">New Submission</h3>
+          <div className="form-group mt-3">
             <label className="mb-2">
               {showFixedProblemTitleInSelection ? 'Problem' : 'Select Problem'}
               {!showFixedProblemTitleInSelection && (
-                <span className="required-asterisk" aria-hidden="true">
-                  {' '}
-                  *
-                </span>
+                <span className="required-asterisk"> *</span>
               )}
             </label>
             <Typeahead
@@ -130,12 +151,10 @@ const SubmissionForm: React.FC<Props> = ({
               )}
             />
           </div>
-          <div className="form-group mb-2">
+
+          <div className="form-group mt-3">
             <label className="mb-2">Proficiency Level</label>
-            <span className="required-asterisk" aria-hidden="true">
-              {' '}
-              *
-            </span>
+            <span className="required-asterisk"> *</span>
             <select
               className="form-control"
               value={data?.proficiencyLevel}
@@ -146,88 +165,146 @@ const SubmissionForm: React.FC<Props> = ({
                 }));
               }}
             >
-              {Object.values(ProficiencyLevel).map((level) => (
-                <option key={level[0]} value={level[0]}>
-                  {level[1]}
+              <option value="" disabled>
+                Please Select
+              </option>
+              {Object.keys(PROFICIENCY_LEVEL).map((level) => (
+                <option key={level} value={level}>
+                  {PROFICIENCY_LEVEL[level] as string}
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="form-check form-switch">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="isSolutionSwitch"
-              checked={data?.isSolution}
-              onChange={(e) =>
-                setData((prev: any) => ({
-                  ...prev,
-                  isSolution: e.target.checked,
-                }))
-              }
-            />
-            <label className="form-check-label" htmlFor="isSolutionSwitch">
-              Best Solution
-            </label>
-          </div>
-
-          <div className="form-check form-switch">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="isWhiteboardModeSwitch"
-              checked={data?.isWhiteboardMode}
-              onChange={(e) =>
-                setData((prev: any) => ({
-                  ...prev,
-                  isWhiteboardMode: e.target.checked,
-                }))
-              }
-            />
-            <label
-              className="form-check-label"
-              htmlFor="isWhiteboardModeSwitch"
-            >
-              Whiteboard Mode
-            </label>
-          </div>
-
-          <div className="form-check form-switch">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="isInterviewModeSwitch"
-              checked={data?.isInterviewMode}
-              onChange={(e) =>
-                setData((prev: any) => ({
-                  ...prev,
-                  isInterviewMode: e.target.checked,
-                }))
-              }
-            />
-            <label className="form-check-label" htmlFor="isInterviewModeSwitch">
-              Interview Mode
-            </label>
-          </div>
-
-          <div className="form-row mt-2 mb-2">
-            <div className="form-group col-md-6">
-              <label className="mb-2">Submitted At</label>
-              <input
-                className="form-control mb-2"
-                type="date"
-                value={data?.submittedAt.split('T')[0]}
-                onChange={(e) => handleDateTimeChange('date', e.target.value)}
-              />
-              <input
+          <div className="d-flex flex-row gap-3 mt-3">
+            <div className="form-group">
+              <label className="mb-2">O-Time</label>
+              <span className="required-asterisk"> *</span>
+              <select
                 className="form-control"
-                type="time"
-                value={data?.submittedAt.split('T')[1]}
-                onChange={(e) => handleDateTimeChange('time', e.target.value)}
-              />
+                value={data?.timeComplexity}
+                onChange={(e) => {
+                  setData((prev: any) => ({
+                    ...prev,
+                    timeComplexity: e.target.value,
+                  }));
+                }}
+              >
+                <option value="" disabled>
+                  Select
+                </option>
+                {Object.keys(BIG_O_COMPLEXITY).map((level) => (
+                  <option key={level} value={level}>
+                    {BIG_O_COMPLEXITY[level] as string}
+                  </option>
+                ))}
+              </select>
             </div>
-            <div className="form-group col-md-6 mt-3">
+
+            <div className="form-group">
+              <label className="mb-2">O-Space</label>
+              {/* <span className="required-asterisk"> *</span> */}
+              <select
+                className="form-control"
+                value={data?.spaceComplexity}
+                onChange={(e) => {
+                  setData((prev: any) => ({
+                    ...prev,
+                    spaceComplexity: e.target.value,
+                  }));
+                }}
+              >
+                <option value="" disabled>
+                  Select
+                </option>
+                {Object.keys(BIG_O_COMPLEXITY).map((level) => (
+                  <option key={level} value={level}>
+                    {BIG_O_COMPLEXITY[level] as string}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="d-flex flex-column gap-1 mt-4 mb-1">
+            <div className="form-check form-switch">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="isSolutionSwitch"
+                checked={data?.isSolution}
+                onChange={(e) =>
+                  setData((prev: any) => ({
+                    ...prev,
+                    isSolution: e.target.checked,
+                  }))
+                }
+              />
+              <label className="form-check-label" htmlFor="isSolutionSwitch">
+                Best Solution
+              </label>
+            </div>
+            <div className="form-check form-switch">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="isWhiteboardModeSwitch"
+                checked={data?.isWhiteboardMode}
+                onChange={(e) =>
+                  setData((prev: any) => ({
+                    ...prev,
+                    isWhiteboardMode: e.target.checked,
+                  }))
+                }
+              />
+              <label
+                className="form-check-label"
+                htmlFor="isWhiteboardModeSwitch"
+              >
+                Whiteboard Mode
+              </label>
+            </div>
+            <div className="form-check form-switch">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="isInterviewModeSwitch"
+                checked={data?.isInterviewMode}
+                onChange={(e) =>
+                  setData((prev: any) => ({
+                    ...prev,
+                    isInterviewMode: e.target.checked,
+                  }))
+                }
+              />
+              <label
+                className="form-check-label"
+                htmlFor="isInterviewModeSwitch"
+              >
+                Interview Mode
+              </label>
+            </div>
+          </div>
+
+          <div className="d-flex flex-row mt-3">
+            <div className="form-group">
+              <label className="mb-2">Submitted At</label>
+              <div className="d-flex flex-row">
+                <input
+                  className="form-control"
+                  type="date"
+                  value={data?.submittedAt.split('T')[0]}
+                  onChange={(e) => handleDateTimeChange('date', e.target.value)}
+                />
+                <input
+                  className="form-control ms-2"
+                  type="time"
+                  value={data?.submittedAt.split('T')[1]}
+                  onChange={(e) => handleDateTimeChange('time', e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="form-group ms-5">
               <label className="mb-2">Time Used (mins)</label>
               <input
                 className="form-control"
@@ -248,7 +325,7 @@ const SubmissionForm: React.FC<Props> = ({
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="form-group mt-3">
             <label className="mb-2">Methods</label>
             <select
               multiple
@@ -274,7 +351,7 @@ const SubmissionForm: React.FC<Props> = ({
             </select>
           </div>
 
-          <button type="submit" className="btn btn-outline-primary mt-3 mb-5">
+          <button type="submit" className="btn btn-outline-primary mt-4 mb-5">
             Submit
           </button>
         </div>

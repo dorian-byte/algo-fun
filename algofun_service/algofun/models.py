@@ -145,6 +145,19 @@ class Submission(models.Model):
     is_solution = models.BooleanField(default=False)
     is_interview_mode = models.BooleanField(default=False)
     is_whiteboard_mode = models.BooleanField(default=False)
+    time_complexity = models.CharField(
+        max_length=20,
+        choices=Complexity.choices,
+        default=Complexity.O_N,
+        blank=True,
+    )
+
+    space_complexity = models.CharField(
+        max_length=20,
+        choices=Complexity.choices,
+        default=Complexity.O_N,
+        blank=True,
+    )
     methods = models.ManyToManyField("Topic", blank=True)
 
     def passed(self):

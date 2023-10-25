@@ -35,6 +35,8 @@ const CREATE_SUBMISSION = gql`
         isSolution
         isWhiteboardMode
         isInterviewMode
+        timeComplexity
+        spaceComplexity
         problem {
           id
         }
@@ -76,7 +78,7 @@ const SubmissionCreatePage = () => {
 
   const [data, setData] = useState<any>({
     code: '',
-    proficiencyLevel: ProficiencyLevel.NO_UNDERSTANDING[0],
+    proficiencyLevel: '',
     submittedAt: toLocalTime(new Date()),
     duration: '',
     isSolution: false,
@@ -84,6 +86,8 @@ const SubmissionCreatePage = () => {
     isInterviewMode: false,
     methods: [],
     problem: problemId,
+    timeComplexity: '',
+    spaceComplexity: '',
   });
 
   const [createSubmission] = useMutation(CREATE_SUBMISSION, {
@@ -92,6 +96,8 @@ const SubmissionCreatePage = () => {
         ...data,
         duration: +data?.duration,
         submittedAt: toUTC(new Date(data?.submittedAt + ':00')).toISOString(),
+        timeComplexity: data?.timeComplexity,
+        spaceComplexity: data?.spaceComplexity,
       },
     },
   });

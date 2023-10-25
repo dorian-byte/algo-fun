@@ -193,10 +193,7 @@ const NoteForm = ({ inDrawer = false }) => {
               <label className="mb-2">
                 {problemId || submissionId ? 'Problem' : 'Select Problem'}
                 {!problemId && !submissionId && (
-                  <span className="required-asterisk" aria-hidden="true">
-                    {' '}
-                    *
-                  </span>
+                  <span className="required-asterisk"> *</span>
                 )}
               </label>
               <NoteFormTypeAhead
@@ -253,7 +250,7 @@ const NoteForm = ({ inDrawer = false }) => {
 
           {/* <div className="form-group mb-2">
             <label className="mb-2">Content</label>
-            <span className="required-asterisk" aria-hidden="true">
+            <span className="required-asterisk">
               {' '}
               *
             </span>
