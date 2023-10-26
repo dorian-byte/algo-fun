@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import CodeEditor from './CodeEditor';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import Timer from '../components/Timer';
 
 export const PROFICIENCY_LEVEL = {
   no_understanding: 'No Understanding',
@@ -112,6 +113,7 @@ const SubmissionForm: React.FC<Props> = ({
 
   return (
     <div className="container mt-5 overflow-y-auto" ref={parentRef}>
+      <Timer />
       <form className="d-flex flex-row gap-5" onSubmit={handleSubmit}>
         <div className="d-flex flex-column gap-2 flex-fill">
           <h3 className="page-header">New Submission</h3>
