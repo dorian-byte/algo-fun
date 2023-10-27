@@ -1,4 +1,11 @@
 import { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faSync,
+  faPlay,
+  faPause,
+  faStopwatch,
+} from '@fortawesome/free-solid-svg-icons';
 
 const Timer: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -39,7 +46,7 @@ const Timer: React.FC = () => {
         onClick={() => setIsExpanded((prevState) => !prevState)}
         style={{ fontSize: '1.35rem' }}
       >
-        ⏳
+        <FontAwesomeIcon icon={faStopwatch} style={{ color: 'skyblue' }} />
       </div>
       {isExpanded && (
         <div>
@@ -50,13 +57,17 @@ const Timer: React.FC = () => {
               setSeconds(0);
             }}
           >
-            🔁
+            <FontAwesomeIcon icon={faSync} style={{ color: 'lightgreen' }} />
           </div>
           <div
             className="btn"
             onClick={() => setIsActive((prevState) => !prevState)}
           >
-            {isActive ? '⏸️' : '▶️'}
+            {isActive ? (
+              <FontAwesomeIcon icon={faPause} style={{ color: 'lightgray' }} />
+            ) : (
+              <FontAwesomeIcon icon={faPlay} style={{ color: 'lightgray' }} />
+            )}
           </div>
         </div>
       )}
