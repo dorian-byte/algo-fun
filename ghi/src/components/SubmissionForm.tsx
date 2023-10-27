@@ -115,10 +115,7 @@ const SubmissionForm: React.FC<Props> = ({
     <div className="container mt-5 overflow-y-auto" ref={parentRef}>
       <form className="d-flex flex-row gap-5" onSubmit={handleSubmit}>
         <div className="d-flex flex-column gap-2 flex-fill">
-          <div className="d-flex flex-row">
-            <h3 className="page-header">New Submission</h3>
-            <Timer />
-          </div>
+          <h3 className="page-header">New Submission</h3>
           <div className="form-floating mt-3">
             <Typeahead
               className="form-control"
@@ -375,7 +372,10 @@ const SubmissionForm: React.FC<Props> = ({
         </div>
 
         <div className="d-flex flex-column flex-fill">
-          <label className="mb-2 text-gray">Code</label>
+          <div className="d-flex flex-row justify-content-between align-items-baseline">
+            <label className="text-gray">Code</label>
+            <Timer />
+          </div>
           <CodeEditor
             width="100%"
             height={codeBlockHeight - 100 + 'px'}

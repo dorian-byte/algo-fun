@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 
 const Timer: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -31,10 +30,14 @@ const Timer: React.FC = () => {
   if (location.pathname !== '/submissions/new') return null;
 
   return (
-    <div className="d-flex flex-row align-items-center">
+    <div
+      className="d-flex flex-row align-items-center"
+      style={{ marginTop: '-1rem' }}
+    >
       <div
         className="btn"
         onClick={() => setIsExpanded((prevState) => !prevState)}
+        style={{ fontSize: '1.35rem' }}
       >
         ⏳
       </div>

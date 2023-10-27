@@ -1,5 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { dtStrToLocalShortStr, dtToLocalISO16 } from '../utils/timeUtils';
+import { dtStrToLocalShortStr } from '../utils/timeUtils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faChalkboard,
+  faUserTie,
+  faCheck,
+  faTimes,
+} from '@fortawesome/free-solid-svg-icons';
 
 export interface Submission {
   id: string;
@@ -13,6 +20,8 @@ export interface Submission {
   methods: { name: string }[];
   proficiencyLevel: ProficiencyLevel;
   passed: boolean;
+  timeComplexity: string;
+  spaceComplexity: string;
 }
 
 type ProficiencyLevel =
@@ -51,11 +60,14 @@ const SubmissionList = ({
     <table className="table table-dark table-striped">
       <thead>
         <tr>
+          <th className="text-gray"></th>
           {showProblem && <th className="text-gray">Problem</th>}
           <th className="text-gray">Status</th>
           <th className="text-gray">Submission Time</th>
-          <th className="text-gray">Time Used</th>
+          <th className="text-gray">Mins</th>
           <th className="text-gray">Proficiency Level</th>
+          <th className="text-gray">O-Time</th>
+          <th className="text-gray">O-Space</th>
           <th className="text-gray"></th>
           <th className="text-gray"></th>
         </tr>
@@ -63,17 +75,45 @@ const SubmissionList = ({
       <tbody>
         {sortedSubmissions.map((sm: Submission) => (
           <tr key={sm?.id} onClick={() => navigate(`/submissions/${sm?.id}`)}>
+            <td>
+              {sm.isWhiteboardMode && (
+                <FontAwesomeIcon
+                  icon={faChalkboard}
+                  style={{ color: 'white', marginRight: '8px' }}
+                />
+              )}
+              {sm.isInterviewMode && (
+                <FontAwesomeIcon
+                  icon={faUserTie}
+                  style={{ color: 'skyblue' }}
+                />
+              )}
+            </td>
             {showProblem && (
               <td>
-                {sm?.problem?.leetcodeNumber} {sm?.problem?.title}
+                {sm?.problem?.leetcodeNumber}
+                {'. '}
+                {sm?.problem?.title}
               </td>
             )}
-            <td>{sm.passed ? '✅' : '❌'}</td>
+            {/* <td>{sm.passed ? '✅' : '❌'}</td> */}
+            <td>
+              {sm.passed ? (
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  style={{ color: 'lightgreen' }}
+                />
+              ) : (
+                <FontAwesomeIcon icon={faTimes} style={{ color: 'red' }} />
+              )}
+            </td>
             <td>{dtStrToLocalShortStr(sm.submittedAt)}</td>
             <td>{sm.duration ? sm.duration + 'm' : ''}</td>
             <td>
               {PROFICIENCY_LEVEL_DISPLAY[sm.proficiencyLevel] || 'Unknown'}
             </td>
+            <td>{sm.timeComplexity}</td>
+            <td>{sm.spaceComplexity}</td>
             <td>
               <button
                 onClick={(e) => {
