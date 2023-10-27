@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const Timer: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -27,6 +28,7 @@ const Timer: React.FC = () => {
       minutes < 10 ? `0${minutes}` : `${minutes}`
     }:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
+  if (location.pathname !== '/submissions/new') return null;
 
   return (
     <div className="d-flex flex-row align-items-center">

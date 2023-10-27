@@ -301,6 +301,19 @@ form {
   color: #b0b0b0 !important;
 }
 
+/* Form: Floating Label */
+
+.form-floating > .form-control-plaintext ~ label,
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select ~ label {
+  color: #968282 !important;
+}
+
+label::after {
+  background-color: inherit !important;
+}
+
 /* Form: Toggle Switch */
 
 /* this background-color also takes care of the toggle switch background */
@@ -509,4 +522,18 @@ table thead tr {
   background-color: transparent !important;
   color: #f38960 !important;
   border-color: #f38960 !important;
+}
+
+/* Form - Methods Input - Scrollbar (chrome & safari) */
+select::-webkit-scrollbar {
+  width: 12px !important;
+}
+
+select::-webkit-scrollbar-track {
+  background: #333 !important;
+}
+
+select::-webkit-scrollbar-thumb {
+  background-color: darkgrey !important;
+  border-radius: 6px !important;
 }

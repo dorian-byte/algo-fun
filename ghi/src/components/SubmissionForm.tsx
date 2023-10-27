@@ -113,17 +113,13 @@ const SubmissionForm: React.FC<Props> = ({
 
   return (
     <div className="container mt-5 overflow-y-auto" ref={parentRef}>
-      <Timer />
       <form className="d-flex flex-row gap-5" onSubmit={handleSubmit}>
         <div className="d-flex flex-column gap-2 flex-fill">
-          <h3 className="page-header">New Submission</h3>
-          <div className="form-group mt-3">
-            <label className="mb-2">
-              {showFixedProblemTitleInSelection ? 'Problem' : 'Select Problem'}
-              {!showFixedProblemTitleInSelection && (
-                <span className="required-asterisk"> *</span>
-              )}
-            </label>
+          <div className="d-flex flex-row">
+            <h3 className="page-header">New Submission</h3>
+            <Timer />
+          </div>
+          <div className="form-floating mt-3">
             <Typeahead
               className="form-control"
               id="select-problem-typeahead"
@@ -144,7 +140,7 @@ const SubmissionForm: React.FC<Props> = ({
                   />
                 );
               }}
-              placeholder="Choose a LeetCode problem..."
+              // placeholder="Select"
               onChange={handleSelectionChange}
               renderMenuItemChildren={(option: any) => (
                 <div>
@@ -152,145 +148,104 @@ const SubmissionForm: React.FC<Props> = ({
                 </div>
               )}
             />
+            <label>
+              {/* {showFixedProblemTitleInSelection ? 'Problem' : 'Select Problem'} */}
+              Problem
+              {!showFixedProblemTitleInSelection && (
+                <span className="required-asterisk"> *</span>
+              )}
+            </label>
           </div>
 
-          <div className="form-group mt-3">
-            <label className="mb-2">Proficiency Level</label>
-            <span className="required-asterisk"> *</span>
-            <select
-              className="form-control"
-              value={data?.proficiencyLevel}
-              onChange={(e) => {
-                setData((prev: any) => ({
-                  ...prev,
-                  proficiencyLevel: e.target.value,
-                }));
-              }}
-            >
-              <option value="" disabled>
-                Please Select
-              </option>
-              {Object.keys(PROFICIENCY_LEVEL).map((level) => (
-                <option key={level} value={level}>
-                  {PROFICIENCY_LEVEL[level] as string}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="d-flex flex-row gap-3 mt-3">
-            <div className="form-group">
-              <label className="mb-2">O-Time</label>
-              <span className="required-asterisk"> *</span>
+          <div
+            className="d-flex flex-row gap-5 mt-4"
+            style={{ justifyContent: 'space-between' }}
+          >
+            <div className="form-floating flex-fill">
               <select
                 className="form-control"
-                value={data?.timeComplexity}
+                value={data?.proficiencyLevel}
                 onChange={(e) => {
                   setData((prev: any) => ({
                     ...prev,
-                    timeComplexity: e.target.value,
+                    proficiencyLevel: e.target.value,
                   }));
                 }}
               >
-                <option value="" disabled>
-                  Select
-                </option>
-                {Object.keys(BIG_O_COMPLEXITY).map((level) => (
+                <option value="" disabled></option>
+                {Object.keys(PROFICIENCY_LEVEL).map((level) => (
                   <option key={level} value={level}>
-                    {BIG_O_COMPLEXITY[level] as string}
+                    {PROFICIENCY_LEVEL[level] as string}
                   </option>
                 ))}
               </select>
+              <label className="mb-2">
+                Proficiency Level
+                <span className="required-asterisk"> *</span>
+              </label>
             </div>
 
-            <div className="form-group">
-              <label className="mb-2">O-Space</label>
-              {/* <span className="required-asterisk"> *</span> */}
-              <select
-                className="form-control"
-                value={data?.spaceComplexity}
-                onChange={(e) => {
-                  setData((prev: any) => ({
-                    ...prev,
-                    spaceComplexity: e.target.value,
-                  }));
-                }}
-              >
-                <option value="" disabled>
-                  Select
-                </option>
-                {Object.keys(BIG_O_COMPLEXITY).map((level) => (
-                  <option key={level} value={level}>
-                    {BIG_O_COMPLEXITY[level] as string}
+            <div className="d-flex flex-row gap-3">
+              <div className="form-floating">
+                <select
+                  id="o-time"
+                  // className="form-select"
+                  className="form-control"
+                  value={data?.timeComplexity}
+                  onChange={(e) => {
+                    setData((prev: any) => ({
+                      ...prev,
+                      timeComplexity: e.target.value,
+                    }));
+                  }}
+                >
+                  <option value="" selected>
+                    {/* <option value="" disabled> */}
                   </option>
-                ))}
-              </select>
+                  {Object.keys(BIG_O_COMPLEXITY).map((level) => (
+                    <option key={level} value={level}>
+                      {BIG_O_COMPLEXITY[level] as string}
+                    </option>
+                  ))}
+                </select>
+                <label htmlFor="o-time">
+                  Time <span className="required-asterisk"> *</span>
+                </label>
+              </div>
+
+              <div className="form-floating">
+                <select
+                  id="o-space"
+                  // className="form-select"
+                  className="form-control"
+                  value={data?.spaceComplexity}
+                  onChange={(e) => {
+                    setData((prev: any) => ({
+                      ...prev,
+                      spaceComplexity: e.target.value,
+                    }));
+                  }}
+                >
+                  <option value="" selected>
+                    {/* <option value="" disabled> */}
+                  </option>
+                  {Object.keys(BIG_O_COMPLEXITY).map((level) => (
+                    <option key={level} value={level}>
+                      {BIG_O_COMPLEXITY[level] as string}
+                    </option>
+                  ))}
+                </select>
+                <label htmlFor="o-space">
+                  Space
+                  {/* <span className="required-asterisk"> *</span> */}
+                </label>
+              </div>
             </div>
           </div>
 
-          <div className="d-flex flex-column gap-1 mt-4 mb-1">
-            <div className="form-check form-switch">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="isSolutionSwitch"
-                checked={data?.isSolution}
-                onChange={(e) =>
-                  setData((prev: any) => ({
-                    ...prev,
-                    isSolution: e.target.checked,
-                  }))
-                }
-              />
-              <label className="form-check-label" htmlFor="isSolutionSwitch">
-                Best Solution
-              </label>
-            </div>
-            <div className="form-check form-switch">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="isWhiteboardModeSwitch"
-                checked={data?.isWhiteboardMode}
-                onChange={(e) =>
-                  setData((prev: any) => ({
-                    ...prev,
-                    isWhiteboardMode: e.target.checked,
-                  }))
-                }
-              />
-              <label
-                className="form-check-label"
-                htmlFor="isWhiteboardModeSwitch"
-              >
-                Whiteboard Mode
-              </label>
-            </div>
-            <div className="form-check form-switch">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="isInterviewModeSwitch"
-                checked={data?.isInterviewMode}
-                onChange={(e) =>
-                  setData((prev: any) => ({
-                    ...prev,
-                    isInterviewMode: e.target.checked,
-                  }))
-                }
-              />
-              <label
-                className="form-check-label"
-                htmlFor="isInterviewModeSwitch"
-              >
-                Interview Mode
-              </label>
-            </div>
-          </div>
-
-          <div className="d-flex flex-row mt-3">
-            <div className="form-group">
-              <label className="mb-2">Submitted At</label>
+          <div className="d-flex flex-row mt-3 justify-content-between">
+            <div className="form-group flex-fill">
+              <label className="text-gray small mb-1">Submitted At</label>
               <div className="d-flex flex-row">
                 <input
                   className="form-control"
@@ -306,12 +261,14 @@ const SubmissionForm: React.FC<Props> = ({
                 />
               </div>
             </div>
+
             <div className="form-group ms-5">
-              <label className="mb-2">Time Used (mins)</label>
+              <label className="text-gray small mb-1">Mins Used</label>
               <input
                 className="form-control"
                 type="number"
                 value={data?.duration}
+                placeholder="Mins Used"
                 onChange={(e) =>
                   setData((prev: any) => ({
                     ...prev,
@@ -327,30 +284,92 @@ const SubmissionForm: React.FC<Props> = ({
             </div>
           </div>
 
-          <div className="form-group mt-3">
-            <label className="mb-2">Methods</label>
-            <select
-              multiple
-              className="form-control"
-              value={data?.methods}
-              onChange={(e) => {
-                const selectedOptions = Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value
-                );
-                setData((prev: any) => ({
-                  ...prev,
-                  methods: selectedOptions,
-                }));
-              }}
-            >
-              {/* TODO: Fetch these method names dynamically from the backend */}
-              {['method1', 'method2', 'method3'].map((method) => (
-                <option key={method} value={method}>
-                  {method}
-                </option>
-              ))}
-            </select>
+          <div className="d-flex mt-3">
+            <div className="form-group" style={{ width: '40%' }}>
+              <label className="text-gray small mb-1">Methods</label>
+              <select
+                multiple
+                className="form-control"
+                value={data?.methods}
+                onChange={(e) => {
+                  const selectedOptions = Array.from(
+                    e.target.selectedOptions,
+                    (option) => option.value
+                  );
+                  setData((prev: any) => ({
+                    ...prev,
+                    methods: selectedOptions,
+                  }));
+                }}
+              >
+                {/* TODO: Fetch these method names dynamically from the backend */}
+                {['method1', 'method2', 'method3'].map((method) => (
+                  <option key={method} value={method}>
+                    {method}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="d-flex flex-column gap-1 mt-4 ms-5">
+              <div className="form-check form-switch">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="isSolutionSwitch"
+                  checked={data?.isSolution}
+                  onChange={(e) =>
+                    setData((prev: any) => ({
+                      ...prev,
+                      isSolution: e.target.checked,
+                    }))
+                  }
+                />
+                <label className="form-check-label" htmlFor="isSolutionSwitch">
+                  Best Solution
+                </label>
+              </div>
+              <div className="form-check form-switch">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="isWhiteboardModeSwitch"
+                  checked={data?.isWhiteboardMode}
+                  onChange={(e) =>
+                    setData((prev: any) => ({
+                      ...prev,
+                      isWhiteboardMode: e.target.checked,
+                    }))
+                  }
+                />
+                <label
+                  className="form-check-label"
+                  htmlFor="isWhiteboardModeSwitch"
+                >
+                  Whiteboard Mode
+                </label>
+              </div>
+              <div className="form-check form-switch">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="isInterviewModeSwitch"
+                  checked={data?.isInterviewMode}
+                  onChange={(e) =>
+                    setData((prev: any) => ({
+                      ...prev,
+                      isInterviewMode: e.target.checked,
+                    }))
+                  }
+                />
+                <label
+                  className="form-check-label"
+                  htmlFor="isInterviewModeSwitch"
+                >
+                  Interview Mode
+                </label>
+              </div>
+            </div>
           </div>
 
           <button type="submit" className="btn btn-outline-primary mt-4 mb-5">
@@ -360,7 +379,7 @@ const SubmissionForm: React.FC<Props> = ({
 
         <CodeEditor
           width="50%"
-          height={codeBlockHeight + 'px'}
+          height={codeBlockHeight - 60 + 'px'}
           placeholder="Enter your code here..."
           language="python"
           value={data?.code}
