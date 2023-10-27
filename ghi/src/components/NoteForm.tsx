@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import CodeEditor from './CodeEditor';
 import { dtToLocalISO16 } from '../utils/timeUtils';
 import { useParams, useNavigate } from 'react-router-dom';
+
 import {
   FETCH_PROBLEM,
   FETCH_ALL_PROBLEMS,
@@ -11,13 +12,33 @@ import {
 } from './NoteFormQueries';
 import { useQuery, useMutation } from '@apollo/client';
 import NoteFormTypeAhead from './NoteFormTypeAhead';
+import { Star } from '@mui/icons-material';
 
+const StarNote = ({
+  isStarred,
+  setStarred,
+}: {
+  isStarred: boolean;
+  setStarred: () => void;
+}) => {
+  return (
+    <Star
+      onClick={setStarred}
+      sx={{
+        color: isStarred ? 'yellow' : 'gray',
+        cursor: 'pointer',
+        marginTop: '3px',
+      }}
+      fontSize="large"
+    />
+  );
+};
 export const NoteType = {
-  INTUITION: ['intuition', 'intuition'],
-  STUCK_POINT: ['stuck_point', 'stuck point'],
+  INTUITION: ['intuition', 'Intuition'],
+  STUCK_POINT: ['stuck_point', 'Stuck point'],
   QNA: ['qna', 'Q&A'],
-  ERR: ['err', 'error'],
-  MEMO: ['memo', 'memo'],
+  ERR: ['err', 'Error'],
+  MEMO: ['memo', 'Memo'],
 };
 
 const NoteForm = ({ inDrawer = false }) => {
@@ -187,15 +208,20 @@ const NoteForm = ({ inDrawer = false }) => {
     >
       <form className="d-flex flex-row gap-5" onSubmit={handleSubmit}>
         <div className="d-flex flex-column flex-fill">
-          <h3 className="page-header mb-2">New Note</h3>
+          <div className="d-flex">
+            <h3 className="page-header me-2">New Note</h3>
+            <StarNote
+              isStarred={data?.isStarred}
+              setStarred={() => {
+                setData((prev: any) => ({
+                  ...prev,
+                  isStarred: !prev.isStarred,
+                }));
+              }}
+            />
+          </div>
           {allProblems && allProblems.length > 0 && (
-            <div className="form-group col-md-12 mb-2">
-              <label className="mb-2">
-                {problemId || submissionId ? 'Problem' : 'Select Problem'}
-                {!problemId && !submissionId && (
-                  <span className="required-asterisk"> *</span>
-                )}
-              </label>
+            <div className="form-floating col-md-12 mt-4">
               <NoteFormTypeAhead
                 selected={selected}
                 options={options}
@@ -203,41 +229,16 @@ const NoteForm = ({ inDrawer = false }) => {
                 submissionId={submissionId}
                 handleSelectionChange={handleSelectionChange}
               />
-              {/* <Typeahead
-                className="form-control"
-                id="select-problem-typeahead"
-                labelKey={(option: any) =>
-                  `${option?.leetcodeNumber || 0} ${option?.title || ''}`
-                }
-                selected={selected}
-                options={options}
-                disabled={!!problemId || !!submissionId}
-                renderInput={(props) => {
-                  const { inputRef, referenceElementRef, ...inputProps } =
-                    props;
-                  return (
-                    <input
-                      id="select-problem-inside-typeahead"
-                      {...inputProps}
-                      style={{
-                        backgroundColor: 'transparent !important',
-                      }}
-                    />
-                  );
-                }}
-                placeholder="Choose a LeetCode problem..."
-                onChange={handleSelectionChange}
-                renderMenuItemChildren={(option: any) => (
-                  <div>
-                    {option?.leetcodeNumber} - {option?.title}
-                  </div>
+              <label>
+                Problem
+                {!problemId && !submissionId && (
+                  <span className="required-asterisk"> *</span>
                 )}
-              /> */}
+              </label>
             </div>
           )}
 
-          <div className="form-group mb-2">
-            <label className="mb-2">Title</label>
+          <div className="form-floating mt-4">
             <input
               className="form-control"
               type="text"
@@ -246,26 +247,10 @@ const NoteForm = ({ inDrawer = false }) => {
                 setData((prev: any) => ({ ...prev, title: e.target.value }))
               }
             />
+            <label>Title</label>
           </div>
 
-          {/* <div className="form-group mb-2">
-            <label className="mb-2">Content</label>
-            <span className="required-asterisk">
-              {' '}
-              *
-            </span>
-            <textarea
-              className="form-control"
-              value={data?.content}
-              onChange={(e) =>
-                setData((prev: any) => ({ ...prev, content: e.target.value }))
-              }
-              required
-            />
-          </div> */}
-
-          <div className="form-group mb-2">
-            <label className="mb-2">Note Type</label>
+          <div className="form-floating mt-4">
             <select
               className="form-control"
               value={data?.noteType}
@@ -276,17 +261,24 @@ const NoteForm = ({ inDrawer = false }) => {
                 }));
               }}
             >
+              <option value="" disabled></option>
               {Object.values(NoteType).map((level) => (
                 <option key={level[0]} value={level[0]}>
                   {level[1]}
                 </option>
               ))}
             </select>
+            <label>
+              Note Type
+              <span className="required-asterisk"> *</span>
+            </label>
           </div>
 
           <div className={submissionId ? 'd-flex flex-row' : ''}>
-            <div className={`form-group ${submissionId ? 'col-md-6' : ''}`}>
-              <label className="mb-2">Submitted At</label>
+            <div
+              className={`form-group mt-3 ${submissionId ? 'col-md-6' : ''}`}
+            >
+              <label className="text-gray small mb-1">Submitted At</label>
               <div className="d-flex flex-row">
                 <input
                   className="form-control"
@@ -304,9 +296,9 @@ const NoteForm = ({ inDrawer = false }) => {
             </div>
 
             {submissionId && (
-              <div className="form-row d-flex ms-2">
-                <div className="form-group col-md-6">
-                  <label className="mb-2">line start:</label>
+              <div className="form-row d-flex mt-3 ms-5">
+                <div className="form-group col-md-4">
+                  <label className="text-gray small mb-1">Line Start</label>
                   <input
                     className="form-control"
                     type="number"
@@ -324,8 +316,8 @@ const NoteForm = ({ inDrawer = false }) => {
                     }}
                   />
                 </div>
-                <div className="form-group ms-2">
-                  <label className="mb-2">end:</label>
+                <div className="form-group ms-2 col-md-4">
+                  <label className="text-gray small mb-1">End</label>
                   <input
                     className="form-control"
                     type="number"
@@ -347,7 +339,7 @@ const NoteForm = ({ inDrawer = false }) => {
             )}
           </div>
 
-          <div className="form-check form-switch mt-2 mb-2">
+          {/* <div className="form-check form-switch mt-4">
             <label className="form-check-label" htmlFor="isStarred">
               Star this note
             </label>
@@ -363,18 +355,17 @@ const NoteForm = ({ inDrawer = false }) => {
                 }))
               }
             />
-          </div>
+          </div> */}
 
-          <button type="submit" className="btn btn-outline-primary mt-5">
+          <button type="submit" className="btn btn-outline-primary mt-4">
             Submit
           </button>
         </div>
-        <div className="d-flex flex-column flex-fill" style={{ flex: 1 }}>
-          <label className="mb-2">Content</label>
+        <div className="d-flex flex-column flex-fill">
+          <label className="mb-2 text-gray">Note Content</label>
           <CodeEditor
             width="100%"
-            height={codeBlockHeight + 'px'}
-            placeholder="Enter your code here..."
+            height={codeBlockHeight - 100 + 'px'}
             language="python"
             value={data?.content}
             showLineNumbers={true}

@@ -157,10 +157,7 @@ const SubmissionForm: React.FC<Props> = ({
             </label>
           </div>
 
-          <div
-            className="d-flex flex-row gap-5 mt-4"
-            style={{ justifyContent: 'space-between' }}
-          >
+          <div className="d-flex flex-row justify-content-between gap-5 mt-4">
             <div className="form-floating flex-fill">
               <select
                 className="form-control"
@@ -179,7 +176,7 @@ const SubmissionForm: React.FC<Props> = ({
                   </option>
                 ))}
               </select>
-              <label className="mb-2">
+              <label>
                 Proficiency Level
                 <span className="required-asterisk"> *</span>
               </label>
@@ -377,19 +374,21 @@ const SubmissionForm: React.FC<Props> = ({
           </button>
         </div>
 
-        <CodeEditor
-          width="50%"
-          height={codeBlockHeight - 60 + 'px'}
-          placeholder="Enter your code here..."
-          language="python"
-          value={data?.code}
-          showLineNumbers={true}
-          theme="vs-dark"
-          readOnly={false}
-          onChange={(value: string) => {
-            setData((prev: any) => ({ ...prev, code: value }));
-          }}
-        />
+        <div className="d-flex flex-column flex-fill">
+          <label className="mb-2 text-gray">Code</label>
+          <CodeEditor
+            width="100%"
+            height={codeBlockHeight - 100 + 'px'}
+            language="python"
+            value={data?.code}
+            showLineNumbers={true}
+            theme="vs-dark"
+            readOnly={false}
+            onChange={(value: string) => {
+              setData((prev: any) => ({ ...prev, code: value }));
+            }}
+          />
+        </div>
       </form>
     </div>
   );
