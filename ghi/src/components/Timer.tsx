@@ -46,7 +46,7 @@ const Timer: React.FC = () => {
         onClick={() => setIsExpanded((prevState) => !prevState)}
         style={{ fontSize: '1.35rem' }}
       >
-        <FontAwesomeIcon icon={faStopwatch} style={{ color: 'skyblue' }} />
+        <FontAwesomeIcon icon={faStopwatch} style={{ color: 'darkorange' }} />
       </div>
       {isExpanded && (
         <div>
@@ -57,7 +57,7 @@ const Timer: React.FC = () => {
               setSeconds(0);
             }}
           >
-            <FontAwesomeIcon icon={faSync} style={{ color: 'lightgreen' }} />
+            <FontAwesomeIcon icon={faSync} style={{ color: 'lightgray' }} />
           </div>
           <div
             className="btn"

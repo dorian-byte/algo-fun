@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { hasPassed, allFailed } from '../utils/submissionStatusHelper';
 import { difficultyColor } from '../utils/difficultyColorHelper';
 import leetcode from '../assets/images/leetcode_icon.webp';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const ProblemList = ({ problems }: { problems: any[] }) => {
   const navigate = useNavigate();
@@ -32,9 +34,12 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
           >
             <td>
               {hasPassed(pb?.submissions) ? (
-                <span>✅</span>
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  style={{ color: 'lightgreen' }}
+                />
               ) : allFailed(pb?.submissions) ? (
-                <span>❌</span>
+                <FontAwesomeIcon icon={faTimes} style={{ color: 'red' }} />
               ) : null}
             </td>
             <td>

@@ -25,7 +25,7 @@ const StarNote = ({
     <Star
       onClick={setStarred}
       sx={{
-        color: isStarred ? 'yellow' : 'gray',
+        color: isStarred ? 'orange' : 'grey',
         cursor: 'pointer',
         marginTop: '3px',
       }}

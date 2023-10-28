@@ -419,10 +419,14 @@ input[type='time']::-webkit-calendar-picker-indicator {
   position: relative;
 } */
 
+.table-dark tbody tr td,
+.table-dark thead tr th {
+  color: #b0b0b0;
+}
+
 table thead tr {
   position: sticky;
   top: 0;
-  background: white;
   box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
 }
 
@@ -534,6 +538,6 @@ select::-webkit-scrollbar-track {
 }
 
 select::-webkit-scrollbar-thumb {
-  background-color: darkgrey !important;
+  background-color: #b0b0b0 !important;
   border-radius: 6px !important;
 }
