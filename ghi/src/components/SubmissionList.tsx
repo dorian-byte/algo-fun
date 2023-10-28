@@ -18,13 +18,14 @@ export interface Submission {
   isSolution: boolean;
   isWhiteboardMode: boolean;
   isInterviewMode: boolean;
+  timeComplexity: Complexity;
+  spaceComplexity: Complexity;
   methods: { name: string }[];
   proficiencyLevel: ProficiencyLevel;
   passed: boolean;
-  timeComplexity: string;
-  spaceComplexity: string;
 }
 
+/* this has to match strictly with backend but just uppercased; its only use is to feed the "interface Submission" above */
 type ProficiencyLevel =
   | 'NO_UNDERSTANDING'
   | 'CONCEPTUAL_UNDERSTANDING'
@@ -34,7 +35,19 @@ type ProficiencyLevel =
   | 'SMOOTH_PASS'
   | 'SMOOTH_OPTIMAL_PASS';
 
-const PROFICIENCY_LEVEL_DISPLAY: Record<ProficiencyLevel, string> = {
+type Complexity =
+  | 'O1'
+  | 'NSQRT'
+  | 'LOGN'
+  | 'N'
+  | 'NLOGN'
+  | 'N2'
+  | 'N3'
+  | '2N'
+  | 'NFACTORIAL'
+  | 'A_2N';
+
+export const PROFICIENCY_LEVEL_DISPLAY = {
   NO_UNDERSTANDING: 'No Understanding',
   CONCEPTUAL_UNDERSTANDING: 'Conceptual Understanding',
   NO_PASS: 'No Pass',
@@ -42,7 +55,31 @@ const PROFICIENCY_LEVEL_DISPLAY: Record<ProficiencyLevel, string> = {
   UNSTEADY_PASS: 'Unsteady Pass',
   SMOOTH_PASS: 'Smooth Pass',
   SMOOTH_OPTIMAL_PASS: 'Smooth Optimal Pass',
-};
+} as { [key: string]: string };
+
+// export const BIG_O_COMPLEXITY_DISPLAY = {
+//   O1: 'O(1)',
+//   NSQRT: 'O(N^1/2)',
+//   LOGN: 'O(logN)',
+//   N: 'O(N)',
+//   NLOGN: 'O(NlogN)',
+//   N2: 'O(N^2)',
+//   N3: 'O(N^3)',
+//   '2N': 'O(2^N)',
+//   NFACTORIAL: 'O(N!)',
+// } as { [key: string]: string };
+
+export const BIG_O_COMPLEXITY_DISPLAY = {
+  O1: 'O(1)',
+  NSQRT: 'O(N<sup>1/2</sup>)',
+  LOGN: 'O(log N)',
+  N: 'O(N)',
+  NLOGN: 'O(N log N)',
+  N2: 'O(N<sup>2</sup>)',
+  N3: 'O(N<sup>3</sup>)',
+  '2N': 'O(2<sup>N</sup>)',
+  NFACTORIAL: 'O(N!)',
+} as { [key: string]: string };
 
 const SubmissionList = ({
   submissions,
@@ -56,6 +93,8 @@ const SubmissionList = ({
     (a: Submission, b: Submission) =>
       new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
   );
+
+  // console.log('Submission data (sortedSubmissions):', sortedSubmissions);
 
   return (
     <div className="submission-list-wrapper">
@@ -116,11 +155,24 @@ const SubmissionList = ({
               </td>
               <td>{dtStrToLocalShortStr(sm.submittedAt)}</td>
               <td>{sm.duration ? sm.duration + 'm' : ''}</td>
-              <td>
-                {PROFICIENCY_LEVEL_DISPLAY[sm.proficiencyLevel] || 'Unknown'}
-              </td>
-              <td>{sm.timeComplexity}</td>
-              <td>{sm.spaceComplexity}</td>
+              <td>{PROFICIENCY_LEVEL_DISPLAY[sm.proficiencyLevel]}</td>
+              {/* {BIG_O_COMPLEXITY_DISPLAY[sm.timeComplexity]} */}
+              <td
+                dangerouslySetInnerHTML={{
+                  __html:
+                    BIG_O_COMPLEXITY_DISPLAY[
+                      sm.timeComplexity == 'A_2N' ? '2N' : sm.timeComplexity
+                    ],
+                }}
+              ></td>
+              <td
+                dangerouslySetInnerHTML={{
+                  __html:
+                    BIG_O_COMPLEXITY_DISPLAY[
+                      sm.spaceComplexity == 'A_2N' ? '2N' : sm.spaceComplexity
+                    ],
+                }}
+              ></td>
               <td>
                 <button
                   onClick={(e) => {

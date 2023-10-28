@@ -2,16 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import CodeEditor from './CodeEditor';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Timer from '../components/Timer';
-
-export const PROFICIENCY_LEVEL = {
-  no_understanding: 'No Understanding',
-  conceptual_understanding: 'Conceptual Understanding',
-  no_pass: 'No Pass',
-  guided_pass: 'Guided Pass',
-  unsteady_pass: 'Unsteady Pass',
-  smooth_pass: 'Smooth Pass',
-  smooth_optimal_pass: 'Smooth Optimal Pass',
-} as { [key: string]: string };
+import { PROFICIENCY_LEVEL_DISPLAY } from './SubmissionList';
+import { BIG_O_COMPLEXITY_DISPLAY } from './SubmissionList';
 
 // class Complexity(models.TextChoices):
 //     O_1 = "o1", "o1"
@@ -23,18 +15,6 @@ export const PROFICIENCY_LEVEL = {
 //     O_N3 = "n3", "n3"
 //     O_2N = "2n", "2n"
 //     O_N_FACTORIAL = "nfactorial", "nfactorial"
-
-export const BIG_O_COMPLEXITY = {
-  o1: 'O(1)',
-  nsqrt: 'O(N^1/2)',
-  logn: 'O(logN)',
-  n: 'O(N)',
-  nlogn: 'O(NlogN)',
-  n2: 'O(N^2)',
-  n3: 'O(N^3)',
-  '2n': 'O(2^N)',
-  nfactorial: 'O(N!)',
-} as { [key: string]: string };
 
 interface Props {
   data: any;
@@ -167,9 +147,9 @@ const SubmissionForm: React.FC<Props> = ({
                 }}
               >
                 <option value="" disabled></option>
-                {Object.keys(PROFICIENCY_LEVEL).map((level) => (
-                  <option key={level} value={level}>
-                    {PROFICIENCY_LEVEL[level] as string}
+                {Object.keys(PROFICIENCY_LEVEL_DISPLAY).map((level) => (
+                  <option key={level} value={level.toLowerCase()}>
+                    {PROFICIENCY_LEVEL_DISPLAY[level]}
                   </option>
                 ))}
               </select>
@@ -196,10 +176,14 @@ const SubmissionForm: React.FC<Props> = ({
                   <option value="" selected>
                     {/* <option value="" disabled> */}
                   </option>
-                  {Object.keys(BIG_O_COMPLEXITY).map((level) => (
-                    <option key={level} value={level}>
-                      {BIG_O_COMPLEXITY[level] as string}
-                    </option>
+                  {Object.keys(BIG_O_COMPLEXITY_DISPLAY).map((level) => (
+                    <option
+                      key={level}
+                      value={level.toLowerCase()}
+                      dangerouslySetInnerHTML={{
+                        __html: BIG_O_COMPLEXITY_DISPLAY[level] as string,
+                      }}
+                    ></option>
                   ))}
                 </select>
                 <label htmlFor="o-time">
@@ -223,9 +207,15 @@ const SubmissionForm: React.FC<Props> = ({
                   <option value="" selected>
                     {/* <option value="" disabled> */}
                   </option>
-                  {Object.keys(BIG_O_COMPLEXITY).map((level) => (
-                    <option key={level} value={level}>
-                      {BIG_O_COMPLEXITY[level] as string}
+                  {Object.keys(BIG_O_COMPLEXITY_DISPLAY).map((level) => (
+                    <option
+                      key={level}
+                      value={level.toLowerCase()}
+                      dangerouslySetInnerHTML={{
+                        __html: BIG_O_COMPLEXITY_DISPLAY[level] as string,
+                      }}
+                    >
+                      {/* {BIG_O_COMPLEXITY_DISPLAY[level]} */}
                     </option>
                   ))}
                 </select>

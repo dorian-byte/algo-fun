@@ -151,7 +151,6 @@ class Submission(models.Model):
         default=Complexity.O_N,
         blank=True,
     )
-
     space_complexity = models.CharField(
         max_length=20,
         choices=Complexity.choices,

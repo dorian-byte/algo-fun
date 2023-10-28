@@ -104,6 +104,7 @@ const SubmissionCreatePage = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+    console.log('data', data);
     createSubmission().then((res) => {
       console.log('res', res);
     });

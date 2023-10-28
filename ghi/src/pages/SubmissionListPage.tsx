@@ -16,6 +16,8 @@ const ALL_SUBMISSIONS = gql`
       isSolution
       isWhiteboardMode
       isInterviewMode
+      timeComplexity
+      spaceComplexity
       methods {
         name
       }
@@ -32,7 +34,7 @@ const SubmissionListPage = () => {
 
   useEffect(() => {
     if (data) {
-      // console.log(data);
+      console.log('*** data ***', data);
       setSubmissions(data.allSubmissions);
     }
   }, [data]);
