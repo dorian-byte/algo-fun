@@ -73,6 +73,10 @@ const ProblemListPage = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [topics, setTopics] = useState([]);
   const [companies, setCompanies] = useState([]);
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: 'asc' | 'desc';
+  } | null>(null);
 
   const { data: topicsData } = useQuery(ALL_TOPICS);
   const { data: companiesData } = useQuery(ALL_COMPANIES);
@@ -98,7 +102,20 @@ const ProblemListPage = () => {
   }, [data]);
 
   useEffect(() => {
-    let result = problems.filter((pb: any) => {
+    let sortedProblems = [...problems];
+
+    if (sortConfig !== null) {
+      sortedProblems.sort((a: any, b: any) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'desc' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'desc' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    let result = sortedProblems.filter((pb: any) => {
       return (
         (!difficultyFilter || pb.difficulty === difficultyFilter) &&
         (tagFilters.length === 0 ||
@@ -110,7 +127,7 @@ const ProblemListPage = () => {
       );
     });
     setFilteredProblems(result);
-  }, [difficultyFilter, tagFilters, problems]);
+  }, [difficultyFilter, tagFilters, problems, sortConfig]);
 
   const toggleTag = (tag: string) => {
     setTagFilters((prev) =>
@@ -241,7 +258,10 @@ const ProblemListPage = () => {
         </div>
       </div>
       <div className="main container" id="problemlist-bottom">
-        <ProblemList problems={filteredProblems} />
+        <ProblemList
+          problems={filteredProblems}
+          setSortConfig={setSortConfig}
+        />
       </div>
     </div>
   );

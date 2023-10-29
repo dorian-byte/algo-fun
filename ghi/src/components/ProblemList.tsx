@@ -6,7 +6,13 @@ import leetcode from '../assets/images/leetcode_icon.webp';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-const ProblemList = ({ problems }: { problems: any[] }) => {
+const ProblemList = ({
+  problems,
+  setSortConfig,
+}: {
+  problems: any[];
+  setSortConfig: any;
+}) => {
   const navigate = useNavigate();
   const [hovered, setHovered] = useState(0);
 
@@ -17,8 +23,22 @@ const ProblemList = ({ problems }: { problems: any[] }) => {
           <th className="text-gray">Status</th>
           <th className="text-gray">Title</th>
           <th className="text-gray">Difficulty</th>
-          <th className="text-gray">Pass %</th>
-          <th className="text-gray">Freq %</th>
+          <th
+            className="text-gray"
+            onClick={() =>
+              setSortConfig({ key: 'acceptanceRate', direction: 'asc' })
+            }
+          >
+            Pass %
+          </th>
+          <th
+            className="text-gray"
+            onClick={() =>
+              setSortConfig({ key: 'frequency', direction: 'asc' })
+            }
+          >
+            Freq %
+          </th>
           <th className="text-gray"></th>
           <th className="text-gray"></th>
           <th className="text-gray"></th>
