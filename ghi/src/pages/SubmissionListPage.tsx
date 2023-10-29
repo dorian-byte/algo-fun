@@ -44,7 +44,7 @@ const SubmissionListPage = () => {
 
   return (
     <div className="ms-4 mt-4 overflow-y-auto">
-      <h2 className="page-header">Submissions</h2>
+      <h2 className="page-header text-center">Submissions</h2>
       <SubmissionList submissions={submissions} />
     </div>
   );

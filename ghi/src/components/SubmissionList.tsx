@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -305,7 +305,10 @@ const SubmissionList = ({ submissions }: { submissions: Submission[] }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="d-flex justify-content-center align-items-center mt-4">
+    <div
+      className="d-flex justify-content-center align-items-center opacity-75 mt-4"
+      style={{ borderRadius: '12px !important' }}
+    >
       <div style={containerStyle}>
         <div style={gridStyle} className="ag-theme-alpine-dark">
           <AgGridReact

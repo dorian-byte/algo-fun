@@ -541,3 +541,18 @@ select::-webkit-scrollbar-thumb {
   background-color: #b0b0b0 !important;
   border-radius: 6px !important;
 }
+
+/* AG Grid */
+
+.ag-root-wrapper {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.ag-cell {
+  color: lightgrey !important;
+}
+
+.ag-header-cell-label {
+  color: grey !important;
+}
