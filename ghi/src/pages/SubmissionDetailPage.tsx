@@ -49,11 +49,11 @@ const SubmissionDetailPage = () => {
   return (
     <div className="container mt-5">
       <div className="card bg-secondary text-light mb-4 p-3">
-        <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-          <Drawer buttonText="new note">
-            <NoteForm inDrawer={true} />
-          </Drawer>
-        </div>
+        {/* <div className="d-flex w-50"> */}
+        <Drawer buttonText="new note">
+          <NoteForm inDrawer={true} />
+        </Drawer>
+        {/* </div> */}
         <div className="card-text">
           <CodeEditor
             value={submission.code}

@@ -36,7 +36,8 @@ export default function FormDrawer({
         <Drawer anchor={'right'} open={state} onClose={toggleDrawer(false)}>
           <Box
             sx={{
-              width: '80vw',
+              // width: '40vw',
+              width: '800px',
               height: '100vh',
               display: 'flex',
               flexDirection: 'column',
