@@ -152,27 +152,24 @@ nav hr {
   max-height: 80vh;
 }
 
-#problemlist-bottom.container {
+.container-list-part {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  height: 75vh;
 }
 
-#problemlist-header {
+.display-list-header {
   margin-top: 3vh !important;
   padding-bottom: 0 !important;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
 
-#problemlist {
+/* .display-list {
   max-height: 75vh;
-}
-
-#problemlist-bottom {
-  border-top-left-radius: 0 !important;
-  border-top-right-radius: 0 !important;
-  height: 75vh;
-}
+} */
 
 .card {
   background-color: #303030 !important;

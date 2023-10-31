@@ -49,13 +49,17 @@ const ProblemSubmissionListPage = () => {
   if (error) return <p>Error :( {error.message}</p>;
 
   return (
-    <div className="container mt-5">
-      <h2 className="mb-4 text-light">
-        {data?.problemById?.leetcodeNumber}
-        {'. '}
-        {data?.problemById?.title}
-      </h2>
-      <SubmissionList submissions={submissions} showProblem={false} />
+    <div>
+      <div className="container display-list-header d-flex flex-row justify-content-between align-items-center">
+        <h2 className="page-header">
+          Submissions for {data?.problemById?.leetcodeNumber}
+          {'. '}
+          {data?.problemById?.title}
+        </h2>
+      </div>
+      <div className="main container container-list-part">
+        <SubmissionList submissions={submissions} />
+      </div>
     </div>
   );
 };

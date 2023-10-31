@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -198,6 +199,7 @@ export const ResourcesCellRenderer = (props: any) => {
 
 const SubmissionList = ({ submissions }: { submissions: Submission[] }) => {
   const [rowData, setRowData] = useState([]);
+  const { problemId } = useParams();
 
   useEffect(() => {
     if (submissions.length === 0) return;
@@ -211,7 +213,7 @@ const SubmissionList = ({ submissions }: { submissions: Submission[] }) => {
           ...el,
           submittedAt: dtStrToLocalShortStr(el.submittedAt),
           duration: el.duration + 'm',
-          problem: el.problem.title,
+          problem: el.problem?.title,
           timeComplexity:
             el.timeComplexity == 'A_2N' ? '2N' : el.timeComplexity,
           spaceComplexity:
@@ -222,7 +224,7 @@ const SubmissionList = ({ submissions }: { submissions: Submission[] }) => {
     });
   }, [submissions]);
 
-  const containerStyle = { width: '95vw', height: '80vh' };
+  const containerStyle = { width: '95vw', height: '71vh' };
 
   const gridStyle = { height: '100%', width: '100%' };
 
@@ -237,24 +239,26 @@ const SubmissionList = ({ submissions }: { submissions: Submission[] }) => {
       field: 'problem',
       filter: 'agSetColumnFilter',
       minWidth: 160,
+      hide: problemId ? true : false,
     },
     {
       field: 'passed',
       filter: 'agSetColumnFilter',
       headerName: 'Status',
       cellRenderer: StatusRenderer,
+      minWidth: 30,
     },
     {
       field: 'submittedAt',
-      headerName: 'Submit Time',
+      headerName: 'Submission Time',
       filter: 'agSetColumnFilter',
-      minWidth: 150,
+      minWidth: 163,
     },
     {
       field: 'duration',
       headerName: 'Mins',
       filter: 'agSetColumnFilter',
-      minWidth: 80,
+      minWidth: 85,
     },
     {
       field: 'proficiencyLevel',
@@ -266,30 +270,32 @@ const SubmissionList = ({ submissions }: { submissions: Submission[] }) => {
     {
       field: 'timeComplexity',
       cellRenderer: TimeComplexityCellRenderer,
-      headerName: 'O-Time',
+      headerName: 'Time',
       filter: 'agSetColumnFilter',
+      minWidth: 85,
     },
     {
       field: 'spaceComplexity',
       cellRenderer: SpaceComplexityCellRenderer,
-      headerName: 'O-Space',
+      headerName: 'Space',
       filter: 'agSetColumnFilter',
+      minWidth: 92,
     },
     {
       field: 'notes',
-      headerName: 'Notes',
+      headerName: '',
       cellRenderer: NotesCellRenderer,
       filter: false,
       sortable: false,
-      minWidth: 100,
+      minWidth: 120,
     },
     {
       field: 'resources',
-      headerName: 'Resources',
+      headerName: '',
       cellRenderer: ResourcesCellRenderer,
       filter: false,
       sortable: false,
-      minWidth: 120,
+      minWidth: 150,
     },
   ];
 

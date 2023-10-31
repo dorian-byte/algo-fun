@@ -126,11 +126,8 @@ const ProblemListPage = () => {
   // if (loading) return <p>Loading...</p>;
 
   return (
-    <div id="problemlist">
-      <div
-        id="problemlist-header"
-        className="container d-flex flex-row justify-content-between align-items-center"
-      >
+    <div>
+      <div className="container display-list-header d-flex flex-row justify-content-between align-items-center">
         <h2 className="page-header">Problems</h2>
         <div className="d-flex flex-row align-items-center gap-3">
           <div className="dropdown">
@@ -240,7 +237,7 @@ const ProblemListPage = () => {
           </button>
         </div>
       </div>
-      <div className="main container" id="problemlist-bottom">
+      <div className="main container container-list-part">
         <ProblemList problems={filteredProblems} loading={loading} />
       </div>
     </div>

@@ -43,9 +43,13 @@ const SubmissionListPage = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="ms-4 mt-4 overflow-y-auto">
-      <h2 className="page-header text-center">Submissions</h2>
-      <SubmissionList submissions={submissions} />
+    <div>
+      <div className="container display-list-header d-flex flex-row justify-content-between align-items-center">
+        <h2 className="page-header">Submissions</h2>
+      </div>
+      <div className="main container container-list-part">
+        <SubmissionList submissions={submissions} />
+      </div>
     </div>
   );
 };

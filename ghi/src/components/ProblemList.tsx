@@ -179,7 +179,7 @@ const ProblemList = ({
       cellRenderer: SubmissionsCellRenderer,
       filter: false,
       sortable: false,
-      minWidth: 135,
+      minWidth: 150,
     },
     {
       field: 'notes',
@@ -187,7 +187,7 @@ const ProblemList = ({
       cellRenderer: NotesCellRenderer,
       filter: false,
       sortable: false,
-      minWidth: 100,
+      minWidth: 120,
     },
     {
       field: 'resources',
@@ -195,7 +195,7 @@ const ProblemList = ({
       cellRenderer: ResourcesCellRenderer,
       filter: false,
       sortable: false,
-      minWidth: 120,
+      minWidth: 150,
     },
   ];
 
