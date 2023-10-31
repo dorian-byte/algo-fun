@@ -123,7 +123,7 @@ const ProblemListPage = () => {
   };
 
   if (error) return <p>Error :( {error.message}</p>;
-  if (loading) return <p>Loading...</p>;
+  // if (loading) return <p>Loading...</p>;
 
   return (
     <div id="problemlist">
@@ -241,7 +241,7 @@ const ProblemListPage = () => {
         </div>
       </div>
       <div className="main container" id="problemlist-bottom">
-        <ProblemList problems={filteredProblems} />
+        <ProblemList problems={filteredProblems} loading={loading} />
       </div>
     </div>
   );

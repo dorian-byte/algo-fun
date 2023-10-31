@@ -148,16 +148,18 @@ nav hr {
   border-radius: 10px !important;
   padding: 30px !important;
   z-index: 0 !important;
-  /* opacity: 0.9 !important; */
+  opacity: 0.75 !important;
   max-height: 80vh;
 }
 
 #problemlist-bottom.container {
   padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 #problemlist-header {
   margin-top: 3vh !important;
+  padding-bottom: 0 !important;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
@@ -169,6 +171,7 @@ nav hr {
 #problemlist-bottom {
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
+  height: 75vh;
 }
 
 .card {

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { useNavigate } from 'react-router-dom';
 import { Tooltip } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -198,6 +198,7 @@ export const ResourcesCellRenderer = (props: any) => {
 
 const SubmissionList = ({ submissions }: { submissions: Submission[] }) => {
   const [rowData, setRowData] = useState([]);
+
   useEffect(() => {
     if (submissions.length === 0) return;
     setRowData(() => {
