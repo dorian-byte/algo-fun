@@ -136,7 +136,7 @@ const ProblemDetailPage = () => {
       style={{ height: '85vh' }}
     >
       <div
-        className="border border-light p-4 bg-dark rounded"
+        className="border border-light p-4 bg-dark rounded overflow-y-auto"
         style={{ width: '50%' }}
       >
         <div className="d-flex align-items-center justify-content-between">
@@ -158,7 +158,7 @@ const ProblemDetailPage = () => {
           )}
         </div>
         <CodeEditor
-          height="300px"
+          height="40vh"
           value={problem.description}
           language="markdown"
           showLineNumbers={false}
@@ -166,10 +166,7 @@ const ProblemDetailPage = () => {
           readOnly={true}
         />
         <h5 className="mt-5 mb-3">Similar Questions</h5>
-        <div
-          className="d-flex gap-3 flex-wrap mb-5"
-          style={{ maxWidth: '30vw' }}
-        >
+        <div className="d-flex gap-3 flex-wrap mb-5">
           {problem?.similarProblems?.map((p: any) => {
             const difficulty = p.difficulty.toLowerCase();
             const color =
