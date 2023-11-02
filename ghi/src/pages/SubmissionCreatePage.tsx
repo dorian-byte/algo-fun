@@ -26,7 +26,7 @@ const FETCH_ALL_PROBLEMS = gql`
   }
 `;
 
-const CREATE_SUBMISSION = gql`
+export const CREATE_SUBMISSION = gql`
   mutation CreateSubmission($input: SubmissionMutationInput!) {
     updateSubmission(input: $input) {
       submission {

@@ -26,7 +26,6 @@ interface CodeEditorProps {
   onChange?: (value: string) => void;
   width?: string;
   height?: string;
-  placeholder?: string;
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({
@@ -38,7 +37,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   onChange,
   width = '100%',
   height = '',
-  placeholder = 'please enter your code here...',
 }) => {
   const padding = 20;
   const options: monaco.editor.IStandaloneEditorConstructionOptions = {

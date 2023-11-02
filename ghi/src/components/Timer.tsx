@@ -34,12 +34,12 @@ const Timer: React.FC = () => {
       minutes < 10 ? `0${minutes}` : `${minutes}`
     }:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
-  if (location.pathname !== '/submissions/new') return null;
+  // if (location.pathname !== '/submissions/new') return null;
 
   return (
     <div
       className="d-flex flex-row align-items-center"
-      style={{ marginTop: '-1rem' }}
+      // style={{ marginTop: '-1rem' }}
     >
       <div
         className="btn"
@@ -64,9 +64,15 @@ const Timer: React.FC = () => {
             onClick={() => setIsActive((prevState) => !prevState)}
           >
             {isActive ? (
-              <FontAwesomeIcon icon={faPause} style={{ color: 'lightgray' }} />
+              <FontAwesomeIcon
+                icon={faPause}
+                style={{ color: 'lightgray', width: 30 }}
+              />
             ) : (
-              <FontAwesomeIcon icon={faPlay} style={{ color: 'lightgray' }} />
+              <FontAwesomeIcon
+                icon={faPlay}
+                style={{ color: 'lightgray', width: 30 }}
+              />
             )}
           </div>
         </div>

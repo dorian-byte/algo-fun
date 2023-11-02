@@ -64,8 +64,8 @@ class Query(graphene.ObjectType):
 
     def resolve_all_problems(self, info):
         # FIXME: change back after adding pagination
-        # return Problem.objects.all()[:50]
-        return Problem.objects.all()
+        return Problem.objects.all()[:50]
+        # return Problem.objects.all()
 
     def resolve_problem_by_id(self, info, id):
         return Problem.objects.get(pk=id)

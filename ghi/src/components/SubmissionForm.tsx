@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import CodeEditor from './CodeEditor';
 import { Typeahead } from 'react-bootstrap-typeahead';
-import Timer from '../components/Timer';
+import Timer from '../components/Timer.tsx';
 import { PROFICIENCY_LEVEL_DISPLAY } from './SubmissionList';
 import { BIG_O_COMPLEXITY_DISPLAY } from './SubmissionList';
+import MethodGenerator from './MethodGenerator.tsx';
 
 // class Complexity(models.TextChoices):
 //     O_1 = "o1", "o1"
@@ -50,9 +51,9 @@ const SubmissionForm: React.FC<Props> = ({
   //   'showFixedProblemTitleInSelection',
   //   showFixedProblemTitleInSelection
   // );
-  // useEffect(() => {
-  //   console.log('data changed', data);
-  // }, [data]);
+  useEffect(() => {
+    console.log('data changed', data);
+  }, [data]);
 
   const [codeBlockHeight, setCodeBlockHeight] = useState(0);
   const parentRef = useRef<HTMLDivElement>(null);
@@ -269,7 +270,10 @@ const SubmissionForm: React.FC<Props> = ({
           </div>
 
           <div className="d-flex mt-3">
-            <div className="form-group" style={{ width: '40%' }}>
+            <div className="w-50">
+              <MethodGenerator data={data} setData={setData} />
+            </div>
+            {/* <div className="form-group" style={{ width: '40%' }}>
               <label className="text-gray small mb-1">Methods</label>
               <select
                 multiple
@@ -286,16 +290,15 @@ const SubmissionForm: React.FC<Props> = ({
                   }));
                 }}
               >
-                {/* TODO: Fetch these method names dynamically from the backend */}
                 {['method1', 'method2', 'method3'].map((method) => (
                   <option key={method} value={method}>
                     {method}
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
 
-            <div className="d-flex flex-column gap-1 mt-4 ms-5">
+            <div className="d-flex flex-column gap-1 mt-2">
               <div className="form-check form-switch">
                 <input
                   className="form-check-input"
@@ -368,8 +371,8 @@ const SubmissionForm: React.FC<Props> = ({
           </div>
           <CodeEditor
             width="100%"
-            height={codeBlockHeight - 100 + 'px'}
-            language="python"
+            height={`${codeBlockHeight - 100}px`}
+            language={data?.isWhiteboardMode ? 'plaintext' : 'python'}
             value={data?.code}
             showLineNumbers={true}
             theme="vs-dark"

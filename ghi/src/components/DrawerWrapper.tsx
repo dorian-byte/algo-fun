@@ -3,11 +3,15 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 
 export default function FormDrawer({
+  width = '80vw',
   buttonText = 'open drawer',
   children,
+  renderOpenner,
 }: {
+  width?: string;
   buttonText?: string;
   children: React.ReactNode;
+  renderOpenner: (cb: () => void) => React.ReactNode;
 }): JSX.Element {
   const [state, setState] = React.useState(false);
 
@@ -27,17 +31,20 @@ export default function FormDrawer({
   return (
     <div>
       <React.Fragment>
-        <button
-          className="btn btn-outline-primary"
-          onClick={toggleDrawer(true)}
-        >
-          {buttonText}
-        </button>
+        {renderOpenner && renderOpenner(() => toggleDrawer(true))}
+        {!renderOpenner && (
+          <button
+            className="btn btn-outline-primary"
+            onClick={toggleDrawer(true)}
+          >
+            {buttonText}
+          </button>
+        )}
         <Drawer anchor={'right'} open={state} onClose={toggleDrawer(false)}>
           <Box
             sx={{
-              // width: '40vw',
-              width: '800px',
+              width,
+              // width: '800px',
               height: '100vh',
               display: 'flex',
               flexDirection: 'column',

@@ -185,6 +185,11 @@ const NoteForm = ({ inDrawer = false }) => {
   }, [allProblems, problemDetails]);
   useEffect(() => {
     if (parentRef?.current?.clientHeight) {
+      console.log(
+        'parentRef?.current?.clientHeight',
+        parentRef?.current,
+        parentRef?.current?.clientHeight
+      );
       setCodeBlockHeight(parentRef?.current?.clientHeight);
     }
   }, [parentRef]);
@@ -203,10 +208,16 @@ const NoteForm = ({ inDrawer = false }) => {
 
   return (
     <div
-      className={`container ${inDrawer ? '' : 'mt-5'} overflow-y-auto`}
+      className={`container ${
+        inDrawer ? '' : 'mt-5'
+      } overflow-y-auto vh-100 d-flex`}
       ref={parentRef}
     >
-      <form className="d-flex flex-row gap-5" onSubmit={handleSubmit}>
+      <form
+        className="d-flex flex-row gap-5 flex-fill"
+        onSubmit={handleSubmit}
+        style={{ width: '50%' }}
+      >
         <div className="d-flex flex-column flex-fill">
           <div className="d-flex">
             <h3 className="page-header me-2">New Note</h3>
