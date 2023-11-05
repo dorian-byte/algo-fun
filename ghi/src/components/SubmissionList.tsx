@@ -197,14 +197,20 @@ export const ResourcesCellRenderer = (props: any) => {
   );
 };
 
-const SubmissionList = ({ submissions }: { submissions: Submission[] }) => {
+const SubmissionList = ({
+  submissions,
+  simplified,
+}: {
+  submissions: Submission[];
+  simplified?: boolean;
+}) => {
   const [rowData, setRowData] = useState([]);
   const { problemId } = useParams();
 
   useEffect(() => {
-    if (submissions.length === 0) return;
-    setRowData(() => {
-      return submissions.map((el: any) => {
+    if (submissions?.length === 0) return;
+    setRowData((_: any) => {
+      return submissions?.map((el: any) => {
         const flag = [];
         if (el.isInterviewMode) flag.push('Interview');
         if (el.isSolution) flag.push('Solution');
@@ -224,7 +230,7 @@ const SubmissionList = ({ submissions }: { submissions: Submission[] }) => {
     });
   }, [submissions]);
 
-  const containerStyle = { width: '95vw', height: '71vh' };
+  const containerStyle = { width: '95vw', height: '70vh' };
 
   const gridStyle = { height: '100%', width: '100%' };
 
@@ -281,23 +287,34 @@ const SubmissionList = ({ submissions }: { submissions: Submission[] }) => {
       filter: 'agSetColumnFilter',
       minWidth: 92,
     },
-    {
+  ] as {
+    field: string;
+    headerName: string;
+    filter: string | boolean;
+    sortable?: boolean;
+    cellRenderer?: any;
+    minWidth: number;
+    hide?: boolean;
+  }[];
+
+  if (!simplified) {
+    columnDefs.push({
       field: 'notes',
       headerName: '',
       cellRenderer: NotesCellRenderer,
       filter: false,
       sortable: false,
       minWidth: 120,
-    },
-    {
+    });
+    columnDefs.push({
       field: 'resources',
       headerName: '',
       cellRenderer: ResourcesCellRenderer,
       filter: false,
       sortable: false,
       minWidth: 150,
-    },
-  ];
+    });
+  }
 
   const onGridReady = (params: any) => {
     params.api.sizeColumnsToFit();
@@ -313,10 +330,12 @@ const SubmissionList = ({ submissions }: { submissions: Submission[] }) => {
 
   return (
     <div
-      className="d-flex justify-content-center align-items-center opacity-75 mt-4"
+      className={`d-flex justify-content-center align-items-center opacity-75 ${
+        simplified ? '' : 'mt-4'
+      }`}
       style={{ borderRadius: '12px !important' }}
     >
-      <div style={containerStyle}>
+      <div style={{ ...containerStyle, minHeight: '70vh' }}>
         <div style={gridStyle} className="ag-theme-alpine-dark">
           <AgGridReact
             rowData={rowData}

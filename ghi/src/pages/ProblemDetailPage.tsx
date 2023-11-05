@@ -11,10 +11,16 @@ import {
   PROFICIENCY_LEVEL_DISPLAY,
 } from '../components/SubmissionList';
 import FormDrawer from '../components/DrawerWrapper';
+import SubmissionList from '../components/SubmissionList';
 import MethodGenerator from '../components/MethodGenerator';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import { AppBar, Toolbar } from '@mui/material';
 
 const FrequencyBar = ({ frequency }: { frequency: number }) => {
-  const segmentWidth = 7; // Each segment is 7px wide
+  const segmentWidth = 7; // each segment is 7px wide
   const segments = Array.from({ length: 10 }, (_, i) => i + 1);
   const filledSegments = Math.ceil((frequency / 100) * 10);
 
@@ -73,6 +79,18 @@ const PROBLEM_BY_ID = gql`
         url
         difficulty
       }
+      submissions {
+        id
+        code
+        proficiencyLevel
+        submittedAt
+        duration
+        isSolution
+        isWhiteboardMode
+        isInterviewMode
+        timeComplexity
+        spaceComplexity
+      }
     }
   }
 `;
@@ -81,6 +99,7 @@ const ProblemDetailPage = () => {
   const navigate = useNavigate();
   const { problemId } = useParams();
   const [problem, setProblem] = useState({} as any);
+  const [submissions, setSubmissions] = useState([] as any[]);
   const [submissionData, setSubmissionData] = useState<any>({
     code: '',
     proficiencyLevel: '',
@@ -126,8 +145,19 @@ const ProblemDetailPage = () => {
     if (data) {
       console.log(data);
       setProblem(data.problemById);
+      setSubmissions(data.problemById.submissions);
     }
   }, [data]);
+
+  useEffect(() => {
+    console.log('submissions', submissions);
+  }, submissions);
+
+  const [value, setValue] = useState('1');
+  const handleChange = (_e: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
+
   if (error) return <p>Error :( {error.message}</p>;
   if (loading) return <p>Loading...</p>;
   return (
@@ -135,63 +165,79 @@ const ProblemDetailPage = () => {
       className="overflow-y-auto mt-4 d-flex gap-1 justify-content-around"
       style={{ height: '85vh' }}
     >
-      <div
-        className="border border-light p-4 bg-dark rounded overflow-y-auto"
-        style={{ width: '50%' }}
-      >
-        <div className="d-flex align-items-center justify-content-between">
-          <h3 className="mt-2 mb-2">
-            {problem.leetcodeNumber}. {problem.title}
-          </h3>
-          <div className="d-flex gap-3 align-items-center">
-            <div className="badge badge-outlined border">
-              {problem.acceptanceRate}% accepted
-            </div>
-            <FrequencyBar frequency={problem.frequency} />
-          </div>
-        </div>
-        <div className="d-flex p-2 gap-2 mb-1">
-          <div className="badge bg-success">{problem.difficulty}</div>
-          <div className="badge bg-warning text-dark">topics</div>
-          {problem.askedByFaang && (
-            <div className="badge bg-info text-dark">FANNG</div>
-          )}
-        </div>
-        <CodeEditor
-          height="40vh"
-          value={problem.description}
-          language="markdown"
-          showLineNumbers={false}
-          theme="vs-dark"
-          readOnly={true}
-        />
-        <h5 className="mt-5 mb-3">Similar Questions</h5>
-        <div className="d-flex gap-3 flex-wrap mb-5">
-          {problem?.similarProblems?.map((p: any) => {
-            const difficulty = p.difficulty.toLowerCase();
-            const color =
-              difficulty === 'easy'
-                ? 'success'
-                : difficulty === 'medium'
-                ? 'orange'
-                : 'danger';
-            return (
-              <div
-                className={`badge badge-outlined bg-transparent text-${color} border border-${color}`}
-                onClick={() => {
-                  navigate(`/problems/${p.id}`);
-                }}
+      <div className="border border-light bg-dark rounded overflow-y-auto w-50">
+        <TabContext value={value}>
+          <AppBar position="sticky" sx={{ bgcolor: '#303030' }}>
+            <Toolbar>
+              <TabList
+                onChange={handleChange}
+                aria-label="lab API tabs example"
+                textColor="inherit"
+                TabIndicatorProps={{ style: { background: '#fff' } }}
               >
-                {p.title}
+                <Tab label="Problem Detail" value="1" />
+                <Tab label="Submissions" value="2" />
+                <Tab label="GPT" value="3" />
+              </TabList>
+            </Toolbar>
+          </AppBar>
+          <TabPanel value="1">
+            <div className="d-flex align-items-center justify-content-between">
+              <h3 className="mb-2">
+                {problem.leetcodeNumber}. {problem.title}
+              </h3>
+              <div className="d-flex gap-3 align-items-center">
+                <div className="badge badge-outlined border">
+                  {problem.acceptanceRate}% accepted
+                </div>
+                <FrequencyBar frequency={problem.frequency} />
               </div>
-            );
-          })}
-        </div>
+            </div>
+            <div className="d-flex p-2 gap-2 mb-1">
+              <div className="badge bg-success">{problem.difficulty}</div>
+              <div className="badge bg-warning text-dark">topics</div>
+              {problem.askedByFaang && (
+                <div className="badge bg-info text-dark">FANNG</div>
+              )}
+            </div>
+            <CodeEditor
+              height="40vh"
+              value={problem.description}
+              language="markdown"
+              showLineNumbers={false}
+              theme="vs-dark"
+              readOnly={true}
+            />
+            <h5 className="mt-5 mb-3">Similar Questions</h5>
+            <div className="d-flex gap-3 flex-wrap">
+              {problem?.similarProblems?.map((p: any) => {
+                const difficulty = p.difficulty.toLowerCase();
+                const color =
+                  difficulty === 'easy'
+                    ? 'success'
+                    : difficulty === 'medium'
+                    ? 'orange'
+                    : 'danger';
+                return (
+                  <div
+                    className={`badge badge-outlined bg-transparent text-${color} border border-${color}`}
+                    onClick={() => {
+                      navigate(`/problems/${p.id}`);
+                    }}
+                  >
+                    {p.title}
+                  </div>
+                );
+              })}
+            </div>
+          </TabPanel>
+          <TabPanel value="2">
+            <SubmissionList submissions={submissions} simplified={true} />
+          </TabPanel>
+        </TabContext>
       </div>
-      <div
-        className="border border-light p-4 bg-dark rounded "
-        style={{ width: '50%' }}
-      >
+
+      <div className="border border-light p-4 bg-dark rounded w-50">
         <div className="d-flex justify-content-between align-items-center">
           <h3 className="mb-3">New Submission</h3>
           <div className="d-flex align-items-center gap-2">
