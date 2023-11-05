@@ -1,8 +1,7 @@
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { getGptResponse } from '../utils/queryGpt';
+import { getChatResponse } from '../utils/queryChat';
 import { gql, useQuery } from '@apollo/client';
-import { all } from 'axios';
 
 const GET_ALL_METHODS = gql`
   query GetAllMethods {
@@ -13,7 +12,7 @@ const GET_ALL_METHODS = gql`
   }
 `;
 
-const codeWrapper = (code: string) => `
+const requestWrapper = (code: string) => `
 Identify method(s) or data structures from the provided list of methods that are utilized in the given code. Please only pick value(s) from the provided list of methods, and only return an array that I can use in javascript. Don’t say anything else.
 
 list of methods: 
@@ -75,16 +74,23 @@ list of methods:
 # NOTE: this function below is the real function I need answer for.
 ${code}
 `;
-const MethodGenerator = ({ data, setData }: { data: any; setData: any }) => {
-  const { data: allTopics } = useQuery(GET_ALL_METHODS);
+const ChatMethodGenerator = ({
+  data,
+  setData,
+}: {
+  data: any;
+  setData: any;
+}) => {
+  // rename "data" to "topics" because there is already a data variable
+  const { data: topics } = useQuery(GET_ALL_METHODS);
   const [loading, setLoading] = useState(false);
-  const [chadResponse, setChadResponse] = useState<any>('');
+  const [chatResponse, setChatResponse] = useState<any>('');
   const [methodsArr, setMethodsArr] = useState<any>([]);
   useEffect(() => {
-    if (chadResponse) {
-      const res = JSON.parse(chadResponse.replace(/'/g, '"'));
-      if (allTopics) {
-        const topicsHash = allTopics.allTopics.reduce((acc: any, item: any) => {
+    if (chatResponse) {
+      const res = JSON.parse(chatResponse.replace(/'/g, '"'));
+      if (topics) {
+        const topicsHash = topics.allTopics.reduce((acc: any, item: any) => {
           acc[item.name] = parseInt(item.id);
           return acc;
         }, {});
@@ -98,7 +104,7 @@ const MethodGenerator = ({ data, setData }: { data: any; setData: any }) => {
         });
       }
     }
-  }, [chadResponse, allTopics]);
+  }, [chatResponse, topics]);
 
   return (
     <div className="mt-2" style={{ minHeight: 150 }}>
@@ -108,10 +114,10 @@ const MethodGenerator = ({ data, setData }: { data: any; setData: any }) => {
           onClick={async (e) => {
             setData({ ...data, methods: [] });
             e.preventDefault();
-            getGptResponse({
+            getChatResponse({
               setLoading,
-              setChadResponse,
-              query: codeWrapper(data.code),
+              setChatResponse,
+              query: requestWrapper(data.code),
             });
           }}
         >
@@ -135,4 +141,4 @@ const MethodGenerator = ({ data, setData }: { data: any; setData: any }) => {
   );
 };
 
-export default MethodGenerator;
+export default ChatMethodGenerator;

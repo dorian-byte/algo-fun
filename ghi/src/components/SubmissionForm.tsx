@@ -4,7 +4,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import Timer from '../components/Timer.tsx';
 import { PROFICIENCY_LEVEL_DISPLAY } from './SubmissionList';
 import { BIG_O_COMPLEXITY_DISPLAY } from './SubmissionList';
-import MethodGenerator from './MethodGenerator.tsx';
+import ChatMethodGenerator from './ChatMethodGenerator.tsx';
 
 // class Complexity(models.TextChoices):
 //     O_1 = "o1", "o1"
@@ -271,7 +271,7 @@ const SubmissionForm: React.FC<Props> = ({
 
           <div className="d-flex mt-3">
             <div className="w-50">
-              <MethodGenerator data={data} setData={setData} />
+              <ChatMethodGenerator data={data} setData={setData} />
             </div>
             {/* <div className="form-group" style={{ width: '40%' }}>
               <label className="text-gray small mb-1">Methods</label>

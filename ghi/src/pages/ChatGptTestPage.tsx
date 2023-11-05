@@ -12,8 +12,8 @@ const TestPage = () => {
 
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
-  const [chadCompletion, setChadCompletion] = useState<any>({});
-  async function getGptResponse() {
+  const [chatCompletion, setChatCompletion] = useState<any>({});
+  async function getChatResponse() {
     setLoading(true);
     const completion = await openai.chat.completions.create({
       messages: [
@@ -27,7 +27,7 @@ const TestPage = () => {
     setLoading(false);
 
     console.log('completion', completion);
-    setChadCompletion(completion);
+    setChatCompletion(completion);
   }
 
   return (
@@ -44,7 +44,7 @@ const TestPage = () => {
       />
       <button
         onClick={async () => {
-          getGptResponse();
+          getChatResponse();
         }}
       >
         ASK GPT
@@ -53,15 +53,15 @@ const TestPage = () => {
       <CodeEditor
         height="300px"
         value={
-          chadCompletion?.choices &&
-          chadCompletion?.choices[0]?.message?.content
+          chatCompletion?.setChatCompletion &&
+          chatCompletion?.setChatCompletion[0]?.message?.content
         }
         language="markdown"
         showLineNumbers={false}
         theme="vs-dark"
         readOnly={true}
       />
-      <button onClick={() => setChadCompletion({})}>clear</button>
+      <button onClick={() => setChatCompletion({})}>clear</button>
     </div>
   );
 };

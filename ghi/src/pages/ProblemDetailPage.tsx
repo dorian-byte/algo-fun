@@ -12,12 +12,15 @@ import {
 } from '../components/SubmissionList';
 import FormDrawer from '../components/DrawerWrapper';
 import SubmissionList from '../components/SubmissionList';
-import MethodGenerator from '../components/MethodGenerator';
+import ChatMethodGenerator from '../components/ChatMethodGenerator';
+import ChatSubmissionAnalyzer from '../components/ChatSubmissionAnalyzer';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { AppBar, Toolbar } from '@mui/material';
+import { getChatResponse } from '../utils/queryChat';
+import { requestWrapper } from '../components/ChatSubmissionAnalyzer';
 
 const FrequencyBar = ({ frequency }: { frequency: number }) => {
   const segmentWidth = 7; // each segment is 7px wide
@@ -130,6 +133,8 @@ const ProblemDetailPage = () => {
       type === 'date' ? `${value}T${currentTime}` : `${currentDate}T${value}`;
     setSubmissionData((prev: any) => ({ ...prev, submittedAt: newDateTime }));
   };
+  const [chatloading, setChatLoading] = useState(false);
+  const [chatResponse, setChatResponse] = useState('');
   const handleSubmit = (e: any) => {
     e.preventDefault();
     createSubmission()
@@ -137,6 +142,17 @@ const ProblemDetailPage = () => {
         console.log('res', res);
       })
       .catch((err) => console.error(err));
+  };
+  const handleAnalyze = (e: any) => {
+    e.preventDefault();
+    setValue('4');
+    if (!submissionData.code) return;
+    setChatLoading(true);
+    getChatResponse({
+      setLoading: setChatLoading,
+      setChatResponse,
+      query: requestWrapper(submissionData.code),
+    }).then(() => setChatLoading(false));
   };
   const { loading, error, data } = useQuery(PROBLEM_BY_ID, {
     variables: { id: problemId ? +problemId : 0 },
@@ -175,30 +191,33 @@ const ProblemDetailPage = () => {
                 textColor="inherit"
                 TabIndicatorProps={{ style: { background: '#fff' } }}
               >
-                <Tab label="Problem Detail" value="1" />
-                <Tab label="Submissions" value="2" />
-                <Tab label="GPT" value="3" />
+                <Tab label="Description" value="1" />
+                <Tab label="Solutions" value="2" />
+                <Tab label="Submissions" value="3" />
+                <Tab label="Submission Analysis" value="4" />
               </TabList>
             </Toolbar>
           </AppBar>
           <TabPanel value="1">
             <div className="d-flex align-items-center justify-content-between">
-              <h3 className="mb-2">
-                {problem.leetcodeNumber}. {problem.title}
-              </h3>
+              <h4 className="mb-2">
+                <b>
+                  {problem.leetcodeNumber}. {problem.title}
+                </b>
+              </h4>
               <div className="d-flex gap-3 align-items-center">
                 <div className="badge badge-outlined border">
-                  {problem.acceptanceRate}% accepted
+                  {Math.round(problem.acceptanceRate)}% accepted
                 </div>
                 <FrequencyBar frequency={problem.frequency} />
               </div>
             </div>
             <div className="d-flex p-2 gap-2 mb-1">
               <div className="badge bg-success">{problem.difficulty}</div>
-              <div className="badge bg-warning text-dark">topics</div>
               {problem.askedByFaang && (
                 <div className="badge bg-info text-dark">FANNG</div>
               )}
+              <div className="badge bg-warning text-dark">Topics</div>
             </div>
             <CodeEditor
               height="40vh"
@@ -232,14 +251,28 @@ const ProblemDetailPage = () => {
             </div>
           </TabPanel>
           <TabPanel value="2">
+            <SubmissionList
+              submissions={submissions.filter((sb) => sb.isSolution)}
+              simplified={true}
+            />
+          </TabPanel>
+          <TabPanel value="3">
             <SubmissionList submissions={submissions} simplified={true} />
+          </TabPanel>
+          <TabPanel value="4">
+            <ChatSubmissionAnalyzer
+              loading={chatloading}
+              chatResponse={chatResponse}
+            />
           </TabPanel>
         </TabContext>
       </div>
 
       <div className="border border-light p-4 bg-dark rounded w-50">
         <div className="d-flex justify-content-between align-items-center">
-          <h3 className="mb-3">New Submission</h3>
+          <h4>
+            <b>New Submission</b>
+          </h4>
           <div className="d-flex align-items-center gap-2">
             <Timer />
             <FormDrawer
@@ -443,7 +476,7 @@ const ProblemDetailPage = () => {
                       </div>
                     </div>
                   </div>
-                  <MethodGenerator
+                  <ChatMethodGenerator
                     data={submissionData}
                     setData={setSubmissionData}
                   />
@@ -471,11 +504,18 @@ const ProblemDetailPage = () => {
             setSubmissionData((prev: any) => ({ ...prev, code: value }));
           }}
         />
-        <div className="w-100 d-flex justify-content-end mt-2">
+        <div className="w-100 d-flex gap-4 mt-2">
+          <button
+            disabled={!submissionData.code}
+            onClick={handleAnalyze}
+            className="btn btn-outline-success w-75"
+          >
+            Analyze
+          </button>
           <button
             disabled={!submissionData.code}
             onClick={handleSubmit}
-            className="btn btn-primary w-100"
+            className="btn btn-outline-primary w-75"
           >
             Submit
           </button>

@@ -1,9 +1,9 @@
 import { OPEN_AI_API_KEY } from './keys';
 import OpenAI from 'openai';
 
-export async function getGptResponse({
+export async function getChatResponse({
   setLoading,
-  setChadResponse,
+  setChatResponse,
   query,
 }: any) {
   setLoading(true);
@@ -21,5 +21,5 @@ export async function getGptResponse({
     model: 'gpt-3.5-turbo',
   });
   setLoading(false);
-  setChadResponse(completion.choices[0]?.message?.content || '');
+  setChatResponse(completion.choices[0]?.message?.content || '');
 }
