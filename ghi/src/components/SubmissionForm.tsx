@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { gql, useMutation, useQuery } from '@apollo/client';
+import { dtToLocalISO16 } from '../utils/timeUtils';
 import CodeEditor from './CodeEditor';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Timer from '../components/Timer.tsx';
@@ -7,6 +10,52 @@ import { BIG_O_COMPLEXITY_DISPLAY } from './SubmissionList';
 import ChatMethodGenerator from './ChatMethodGenerator.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey } from '@fortawesome/free-solid-svg-icons';
+
+// NOTE: Despite our GraphQL schema defining the query as 'problem_by_id',
+// the server expects it in camelCase as 'problemById'.
+const FETCH_PROBLEM = gql`
+  query FetchProblem($id: Int!) {
+    problemById(id: $id) {
+      id
+      title
+      leetcodeNumber
+    }
+  }
+`;
+
+const FETCH_ALL_PROBLEMS = gql`
+  query FetchAllProblems {
+    allProblems {
+      id
+      title
+      leetcodeNumber
+    }
+  }
+`;
+
+export const CREATE_SUBMISSION = gql`
+  mutation CreateSubmission($input: SubmissionMutationInput!) {
+    updateSubmission(input: $input) {
+      submission {
+        code
+        duration
+        isSolution
+        isWhiteboardMode
+        isInterviewMode
+        timeComplexity
+        spaceComplexity
+        problem {
+          id
+        }
+        methods {
+          name
+        }
+        proficiencyLevel
+        submittedAt
+      }
+    }
+  }
+`;
 
 // class Complexity(models.TextChoices):
 //     O_1 = "o1", "o1"
@@ -18,19 +67,6 @@ import { faKey } from '@fortawesome/free-solid-svg-icons';
 //     O_N3 = "n3", "n3"
 //     O_2N = "2n", "2n"
 //     O_N_FACTORIAL = "nfactorial", "nfactorial"
-
-interface Props {
-  data: any;
-  setData: (data: any) => void;
-  handleSubmit: (e: any) => void;
-  problemDetails: {
-    id: string;
-    leetcodeNumber: number;
-    title: string;
-  };
-  showFixedProblemTitleInSelection?: boolean;
-  allProblems?: any[];
-}
 
 const BestSolutionKey = ({
   isSolution,
@@ -52,27 +88,76 @@ const BestSolutionKey = ({
   );
 };
 
-const SubmissionForm: React.FC<Props> = ({
-  data,
-  setData,
-  handleSubmit,
-  problemDetails,
-  showFixedProblemTitleInSelection,
-  allProblems,
-}) => {
+const SubmissionForm: React.FC = () => {
+  const { problemId } = useParams() as any;
+  const navigate = useNavigate();
+
+  const problemQueryResult = useQuery(FETCH_PROBLEM, {
+    skip: !problemId,
+    variables: { id: problemId ? +problemId : 0 },
+  });
+
+  const allProblemsQueryResult = useQuery(FETCH_ALL_PROBLEMS, {
+    skip: !!problemId,
+  });
+
+  const {
+    loading: singleProblemLoading,
+    error: singleProblemError,
+    data: problemData,
+  } = problemQueryResult;
+  const {
+    loading: allProblemsLoading,
+    error: allProblemsError,
+    data: allProblemsData,
+  } = allProblemsQueryResult;
+
+  const showFixedProblemTitleInSelection = !!problemId;
+
+  const [data, setData] = useState<any>({
+    code: '',
+    proficiencyLevel: '',
+    submittedAt: dtToLocalISO16(new Date()),
+    duration: '',
+    isSolution: false,
+    isWhiteboardMode: false,
+    isInterviewMode: false,
+    methods: [],
+    problem: problemId,
+    timeComplexity: '',
+    spaceComplexity: '',
+  });
+
+  const [createSubmission] = useMutation(CREATE_SUBMISSION, {
+    variables: {
+      input: {
+        ...data,
+        duration: +data?.duration,
+        submittedAt: new Date(data?.submittedAt + ':00'),
+        timeComplexity: data?.timeComplexity,
+        spaceComplexity: data?.spaceComplexity,
+      },
+    },
+  });
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    console.log('data', data);
+    createSubmission().then((res) => {
+      console.log('res', res);
+    });
+    showFixedProblemTitleInSelection
+      ? navigate(`/problems/${problemId}/submissions`)
+      : navigate(`/submissions`);
+  };
+
   const handleDateTimeChange = (type: 'date' | 'time', value: string) => {
     const [currentDate, currentTime] = data?.submittedAt?.split('T');
     const newDateTime =
       type === 'date' ? `${value}T${currentTime}` : `${currentDate}T${value}`;
     setData((prev: any) => ({ ...prev, submittedAt: newDateTime }));
   };
-  // console.log('data', data);
-  // console.log('problemDetails', problemDetails);
-  // console.log('all problems', allProblems);
-  // console.log(
-  //   'showFixedProblemTitleInSelection',
-  //   showFixedProblemTitleInSelection
-  // );
+
   useEffect(() => {
     console.log('data changed', data);
   }, [data]);
@@ -80,12 +165,14 @@ const SubmissionForm: React.FC<Props> = ({
   const [codeBlockHeight, setCodeBlockHeight] = useState(0);
   const parentRef = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<any[]>([
-    allProblems && allProblems.length > 0
+    allProblemsData?.allProblems && allProblemsData?.allProblems.length > 0
       ? { id: '', leetcodeNumber: '', title: '' }
-      : problemDetails,
+      : problemData?.problemById,
   ]);
   const [options, setOptions] = useState<any[]>(
-    allProblems && allProblems.length > 0 ? allProblems : [problemDetails]
+    allProblemsData?.allProblems && allProblemsData?.allProblems.length > 0
+      ? allProblemsData?.allProblems
+      : [problemData?.problemById]
   );
   useEffect(() => {
     if (parentRef?.current?.clientHeight) {
@@ -102,17 +189,23 @@ const SubmissionForm: React.FC<Props> = ({
     setSelected(selectedProblem || []); // Ensures 'selected' is always an array
   }, []);
   useEffect(() => {
-    if (allProblems && Array.isArray(allProblems)) {
-      setOptions(allProblems);
+    if (
+      allProblemsData?.allProblems &&
+      Array.isArray(allProblemsData?.allProblems)
+    ) {
+      setOptions(allProblemsData?.allProblems);
     }
-    if (problemDetails && typeof problemDetails === 'object') {
-      setSelected([problemDetails]);
+    if (
+      problemData?.problemById &&
+      typeof problemData?.problemById === 'object'
+    ) {
+      setSelected([problemData?.problemById]);
     }
-  }, [allProblems, problemDetails]);
+  }, [allProblemsData?.allProblems, problemData?.problemById]);
 
-  // useEffect(() => {
-  //   console.log('data', data);
-  // }, [data]);
+  if (singleProblemLoading || allProblemsLoading) return <p>Loading...</p>;
+  if (singleProblemError) return <p>Error: {singleProblemError.message}</p>;
+  if (allProblemsError) return <p>Error: {allProblemsError.message}</p>;
 
   return (
     <div className="container mt-5 overflow-y-auto" ref={parentRef}>
