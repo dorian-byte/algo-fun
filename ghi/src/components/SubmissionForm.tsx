@@ -5,6 +5,8 @@ import Timer from '../components/Timer.tsx';
 import { PROFICIENCY_LEVEL_DISPLAY } from './SubmissionList';
 import { BIG_O_COMPLEXITY_DISPLAY } from './SubmissionList';
 import ChatMethodGenerator from './ChatMethodGenerator.tsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
 
 // class Complexity(models.TextChoices):
 //     O_1 = "o1", "o1"
@@ -29,6 +31,26 @@ interface Props {
   showFixedProblemTitleInSelection?: boolean;
   allProblems?: any[];
 }
+
+const BestSolutionKey = ({
+  isSolution,
+  setIsSolution,
+}: {
+  isSolution: boolean;
+  setIsSolution: () => void;
+}) => {
+  return (
+    <FontAwesomeIcon
+      icon={faKey}
+      style={{
+        color: isSolution ? 'darkorange' : 'grey',
+        fontSize: '24px',
+        cursor: 'pointer',
+      }}
+      onClick={setIsSolution}
+    />
+  );
+};
 
 const SubmissionForm: React.FC<Props> = ({
   data,
@@ -96,7 +118,18 @@ const SubmissionForm: React.FC<Props> = ({
     <div className="container mt-5 overflow-y-auto" ref={parentRef}>
       <form className="d-flex flex-row gap-5" onSubmit={handleSubmit}>
         <div className="d-flex flex-column gap-2 flex-fill">
-          <h3 className="page-header">New Submission</h3>
+          <div className="d-flex flex-row align-items-baseline justify-content-start gap-3">
+            <h3 className="page-header">New Submission</h3>
+            <BestSolutionKey
+              isSolution={data?.isSolution}
+              setIsSolution={() => {
+                setData((prev: any) => ({
+                  ...prev,
+                  isSolution: !prev.isSolution,
+                }));
+              }}
+            />
+          </div>
           <div className="form-floating mt-3">
             <Typeahead
               className="form-control"
@@ -135,7 +168,7 @@ const SubmissionForm: React.FC<Props> = ({
             </label>
           </div>
 
-          <div className="d-flex flex-row justify-content-between gap-5 mt-4">
+          <div className="d-flex flex-row justify-content-between gap-4 mt-4">
             <div className="form-floating flex-fill">
               <select
                 className="form-control"
@@ -160,7 +193,7 @@ const SubmissionForm: React.FC<Props> = ({
               </label>
             </div>
 
-            <div className="d-flex flex-row gap-3">
+            <div className="d-flex flex-row gap-2">
               <div className="form-floating">
                 <select
                   id="o-time"
@@ -299,7 +332,7 @@ const SubmissionForm: React.FC<Props> = ({
             </div> */}
 
             <div className="d-flex flex-column gap-1 mt-2">
-              <div className="form-check form-switch">
+              {/* <div className="form-check form-switch">
                 <input
                   className="form-check-input"
                   type="checkbox"
@@ -315,7 +348,7 @@ const SubmissionForm: React.FC<Props> = ({
                 <label className="form-check-label" htmlFor="isSolutionSwitch">
                   Best Solution
                 </label>
-              </div>
+              </div> */}
               <div className="form-check form-switch">
                 <input
                   className="form-check-input"
@@ -359,7 +392,7 @@ const SubmissionForm: React.FC<Props> = ({
             </div>
           </div>
 
-          <button type="submit" className="btn btn-outline-primary mt-4 mb-5">
+          <button type="submit" className="btn btn-outline-primary mt-1">
             Submit
           </button>
         </div>

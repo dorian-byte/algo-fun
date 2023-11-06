@@ -12,7 +12,8 @@ import {
 } from './NoteFormQueries';
 import { useQuery, useMutation } from '@apollo/client';
 import NoteFormTypeAhead from './NoteFormTypeAhead';
-import { Star } from '@mui/icons-material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 const StarNote = ({
   isStarred,
@@ -22,14 +23,14 @@ const StarNote = ({
   setStarred: () => void;
 }) => {
   return (
-    <Star
+    <FontAwesomeIcon
+      icon={faStar}
       onClick={setStarred}
-      sx={{
+      style={{
         color: isStarred ? 'orange' : 'grey',
         cursor: 'pointer',
-        marginTop: '3px',
+        fontSize: '28px',
       }}
-      fontSize="large"
     />
   );
 };
@@ -219,7 +220,7 @@ const NoteForm = ({ inDrawer = false }) => {
         style={{ width: '50%' }}
       >
         <div className="d-flex flex-column flex-fill">
-          <div className="d-flex">
+          <div className="d-flex align-items-baseline gap-1">
             <h3 className="page-header me-2">New Note</h3>
             <StarNote
               isStarred={data?.isStarred}
