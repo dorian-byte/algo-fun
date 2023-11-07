@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { dtToLocalISO16 } from '../utils/timeUtils';
 import CodeEditor from './CodeEditor';
@@ -10,6 +10,7 @@ import { BIG_O_COMPLEXITY_DISPLAY } from './SubmissionList';
 import ChatMethodGenerator from './ChatMethodGenerator.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey } from '@fortawesome/free-solid-svg-icons';
+import { Edit } from '@mui/icons-material';
 
 // NOTE: Despite our GraphQL schema defining the query as 'problem_by_id',
 // the server expects it in camelCase as 'problemById'.
@@ -88,37 +89,73 @@ const BestSolutionKey = ({
   );
 };
 
+const FETCH_SUBMISSION = gql`
+  query FetchSubmission($id: Int!) {
+    submissionById(id: $id) {
+      id
+      code
+      proficiencyLevel
+      passed
+      submittedAt
+      duration
+      isSolution
+      isInterviewMode
+      isWhiteboardMode
+      timeComplexity
+      spaceComplexity
+      methods {
+        id
+        name
+      }
+      problem {
+        id
+        title
+      }
+    }
+  }
+`;
+
 const SubmissionForm: React.FC = () => {
   const { problemId, submissionId } = useParams() as any;
+  const { pathname } = useLocation();
+  const [localProblemId, setLocalProblemId] = useState(null);
   const [readOnly, setReadOnly] = useState(false);
   useEffect(() => {
-    if (!submissionId) {
+    if (pathname.includes('new') || pathname.includes('edit')) {
       setReadOnly(false);
+    } else {
+      setReadOnly(true);
     }
-  }, [submissionId]);
+  }, [pathname]);
   const navigate = useNavigate();
 
-  const problemQueryResult = useQuery(FETCH_PROBLEM, {
-    skip: !problemId,
-    variables: { id: problemId ? +problemId : 0 },
-  });
-
-  const allProblemsQueryResult = useQuery(FETCH_ALL_PROBLEMS, {
-    skip: !!problemId,
+  const {
+    data: submissionDetailData,
+    loading: submissionDetailLoading,
+    error: submissionDetailError,
+  } = useQuery(FETCH_SUBMISSION, {
+    skip: !submissionId,
+    variables: { id: submissionId ? +submissionId : 0 },
   });
 
   const {
     loading: singleProblemLoading,
     error: singleProblemError,
     data: problemData,
-  } = problemQueryResult;
+  } = useQuery(FETCH_PROBLEM, {
+    skip: !problemId && !localProblemId,
+    variables: {
+      id: problemId ? +problemId : localProblemId ? +localProblemId : 0,
+    },
+  });
   const {
     loading: allProblemsLoading,
     error: allProblemsError,
     data: allProblemsData,
-  } = allProblemsQueryResult;
-
-  const showFixedProblemTitleInSelection = !!problemId;
+  } = useQuery(FETCH_ALL_PROBLEMS, {
+    skip: problemId || localProblemId,
+  });
+  const showFixedProblemTitleInSelection = problemId || localProblemId;
 
   const [data, setData] = useState<any>({
     code: '',
@@ -133,40 +170,62 @@ const SubmissionForm: React.FC = () => {
     timeComplexity: '',
     spaceComplexity: '',
   });
+  useEffect(() => {
+    if (submissionDetailData) {
+      setData({
+        ...submissionDetailData.submissionById,
+        timeComplexity:
+          submissionDetailData.submissionById.timeComplexity?.toLowerCase(),
+        spaceComplexity:
+          submissionDetailData.submissionById.spaceComplexity?.toLowerCase(),
 
-  const [createSubmission] = useMutation(CREATE_SUBMISSION, {
-    variables: {
-      input: {
-        ...data,
-        duration: +data?.duration,
-        submittedAt: new Date(data?.submittedAt + ':00'),
-        timeComplexity: data?.timeComplexity,
-        spaceComplexity: data?.spaceComplexity,
-      },
-    },
-  });
+        submittedAt: dtToLocalISO16(
+          new Date(submissionDetailData.submissionById.submittedAt)
+        ),
+        methods: submissionDetailData.submissionById.methods.map(
+          (method: any) => +method.id
+        ),
+      });
+      setLocalProblemId(submissionDetailData.submissionById.problem.id);
+    }
+  }, [submissionDetailData]);
+
+  const [createSubmission] = useMutation(CREATE_SUBMISSION);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log('data', data);
-    createSubmission().then((res) => {
+    const input = {
+      code: data?.code,
+      proficiencyLevel: data?.proficiencyLevel?.toLowerCase(),
+      isInterviewMode: data?.isInterviewMode,
+      isWhiteboardMode: data?.isWhiteboardMode,
+      isSolution: data?.isSolution,
+      duration: +data?.duration,
+      submittedAt: new Date(data?.submittedAt + ':00').toISOString(),
+      timeComplexity: data?.timeComplexity,
+      spaceComplexity: data?.spaceComplexity,
+      problem: +data?.problem?.id,
+    } as any;
+    if (data?.id || submissionId) {
+      input['id'] = data?.id || submissionId;
+    }
+    createSubmission({
+      variables: { input },
+    }).then((res) => {
       console.log('res', res);
+      showFixedProblemTitleInSelection
+        ? navigate(`/problems/${problemId || localProblemId}/submissions`)
+        : navigate(`/submissions`);
     });
-    showFixedProblemTitleInSelection
-      ? navigate(`/problems/${problemId}/submissions`)
-      : navigate(`/submissions`);
   };
 
   const handleDateTimeChange = (type: 'date' | 'time', value: string) => {
     const [currentDate, currentTime] = data?.submittedAt?.split('T');
     const newDateTime =
       type === 'date' ? `${value}T${currentTime}` : `${currentDate}T${value}`;
+    console.log('newDateTime', newDateTime);
     setData((prev: any) => ({ ...prev, submittedAt: newDateTime }));
   };
-
-  useEffect(() => {
-    console.log('data changed', data);
-  }, [data]);
 
   const [codeBlockHeight, setCodeBlockHeight] = useState(0);
   const parentRef = useRef<HTMLDivElement>(null);
@@ -187,33 +246,39 @@ const SubmissionForm: React.FC = () => {
     setSelected(selectedProblem || []); // Ensures 'selected' is always an array
   }, []);
   useEffect(() => {
-    if (
-      allProblemsData?.allProblems &&
-      Array.isArray(allProblemsData?.allProblems)
-    ) {
-      setOptions(allProblemsData?.allProblems);
-    }
-    if (
-      problemData?.problemById &&
-      typeof problemData?.problemById === 'object'
-    ) {
-      setSelected([problemData?.problemById]);
-    }
-  }, [allProblemsData?.allProblems, problemData?.problemById]);
+    console.log('data changed to: ', data);
+  }, [data]);
+  // useEffect(() => {
+  //   if (
+  //     allProblemsData?.allProblems &&
+  //     Array.isArray(allProblemsData?.allProblems)
+  //   ) {
+  //     setOptions(allProblemsData?.allProblems);
+  //   }
+  //   if (
+  //     problemData?.problemById &&
+  //     typeof problemData?.problemById === 'object'
+  //   ) {
+  //     setSelected([problemData?.problemById]);
+  //   }
+  // }, [allProblemsData?.allProblems, problemData?.problemById]);
 
   useEffect(() => {
-    if (allProblemsData && problemData) {
+    if (problemData) {
+      console.log('allProblemsData', allProblemsData);
+      console.log('problemData', problemData);
       setSelected(
         allProblemsData?.allProblems && allProblemsData?.allProblems.length > 0
-          ? { id: '', leetcodeNumber: '', title: '' }
-          : problemData?.problemById
+          ? [{ id: '', leetcodeNumber: '', title: '' }]
+          : [problemData?.problemById]
       );
       if (allProblemsData?.allProblems?.length > 0) {
+        console.log('tf');
         setOptions(allProblemsData?.allProblems);
       } else {
+        console.log('wtf');
         setOptions([problemData?.problemById]);
       }
-      setOptions(allProblemsData?.allProblems);
     }
   }, [problemData, allProblemsData]);
 
@@ -286,10 +351,11 @@ const SubmissionForm: React.FC = () => {
                     proficiencyLevel: e.target.value,
                   }));
                 }}
+                disabled={readOnly}
               >
                 <option value="" disabled></option>
                 {Object.keys(PROFICIENCY_LEVEL_DISPLAY).map((level) => (
-                  <option key={level} value={level.toLowerCase()}>
+                  <option key={level} value={level?.toLowerCase()}>
                     {PROFICIENCY_LEVEL_DISPLAY[level]}
                   </option>
                 ))}
@@ -313,12 +379,13 @@ const SubmissionForm: React.FC = () => {
                       timeComplexity: e.target.value,
                     }));
                   }}
+                  disabled={readOnly}
                 >
                   <option value="">{/* <option value="" disabled> */}</option>
                   {Object.keys(BIG_O_COMPLEXITY_DISPLAY).map((level) => (
                     <option
                       key={level}
-                      value={level.toLowerCase()}
+                      value={level?.toLowerCase()}
                       dangerouslySetInnerHTML={{
                         __html: BIG_O_COMPLEXITY_DISPLAY[level] as string,
                       }}
@@ -342,12 +409,13 @@ const SubmissionForm: React.FC = () => {
                       spaceComplexity: e.target.value,
                     }));
                   }}
+                  disabled={readOnly}
                 >
                   <option value="">{/* <option value="" disabled> */}</option>
                   {Object.keys(BIG_O_COMPLEXITY_DISPLAY).map((level) => (
                     <option
                       key={level}
-                      value={level.toLowerCase()}
+                      value={level?.toLowerCase()}
                       dangerouslySetInnerHTML={{
                         __html: BIG_O_COMPLEXITY_DISPLAY[level] as string,
                       }}
@@ -467,7 +535,8 @@ const SubmissionForm: React.FC = () => {
                       isWhiteboardMode: e.target.checked,
                     }))
                   }
-                  readOnly={readOnly}
+                  disabled={readOnly}
+                  // readOnly={readOnly}
                 />
                 <label
                   className="form-check-label"
@@ -488,7 +557,7 @@ const SubmissionForm: React.FC = () => {
                       isInterviewMode: e.target.checked,
                     }))
                   }
-                  readOnly={readOnly}
+                  disabled={readOnly}
                 />
                 <label
                   className="form-check-label"
@@ -500,19 +569,32 @@ const SubmissionForm: React.FC = () => {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-outline-primary mt-1">
-            Submit
-          </button>
+          {!readOnly && (
+            <button type="submit" className="btn btn-outline-primary mt-1">
+              Submit
+            </button>
+          )}
         </div>
 
         <div className="d-flex flex-column flex-fill">
           <div className="d-flex flex-row justify-content-between align-items-baseline">
             <label className="text-gray">Code</label>
-            <Timer />
+            {!readOnly && <Timer />}
+            {readOnly && (
+              <Edit
+                onClick={() => {
+                  setReadOnly(false);
+                  navigate(`/submissions/${submissionId}/edit`);
+                }}
+                sx={{ cursor: 'pointer' }}
+              />
+            )}
           </div>
           <CodeEditor
             width="100%"
-            height={`${codeBlockHeight - 100}px`}
+            height={`${
+              codeBlockHeight - 100 > 100 ? codeBlockHeight - 100 : 400
+            }px`}
             language={data?.isWhiteboardMode ? 'plaintext' : 'python'}
             value={data?.code}
             showLineNumbers={true}

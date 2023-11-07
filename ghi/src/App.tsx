@@ -54,6 +54,7 @@ function App() {
             <Route path="new" element={<SubmissionCreatePage />} />
             <Route path=":submissionId">
               <Route path="" element={<SubmissionDetailPage />} />
+              <Route path="edit" element={<SubmissionCreatePage />} />
               <Route path="notes">
                 <Route path="" element={<SubmissionNoteListPage />} />
                 {/* same page as above but passing in problemId */}

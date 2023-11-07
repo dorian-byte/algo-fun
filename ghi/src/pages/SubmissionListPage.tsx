@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import SubmissionList, { Submission } from '../components/SubmissionList';
+import { useLocation } from 'react-router-dom';
 
 const ALL_SUBMISSIONS = gql`
   query AllSubmissions {
@@ -30,14 +31,19 @@ const ALL_SUBMISSIONS = gql`
 
 const SubmissionListPage = () => {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const { loading, error, data } = useQuery(ALL_SUBMISSIONS);
+  const { loading, error, data, refetch } = useQuery(ALL_SUBMISSIONS);
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    if (data) {
-      console.log('*** data ***', data);
-      setSubmissions(data.allSubmissions);
-    }
+    if (data) setSubmissions(data.allSubmissions);
   }, [data]);
+
+  useEffect(() => {
+    refetch().then((res) => {
+      console.log('refetching', res);
+      if (res.data) setSubmissions(res.data.allSubmissions);
+    });
+  }, []);
 
   if (error) return <p>Error :( {error.message}</p>;
   if (loading) return <p>Loading...</p>;
