@@ -203,7 +203,7 @@ const ProblemList = ({
     flex: 1,
     sortable: true,
     resizable: true,
-    menuTab: ['export'],
+    menuTabs: ['export'],
     // filter: true,
   };
 

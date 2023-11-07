@@ -288,12 +288,12 @@ const SubmissionList = ({
       minWidth: 92,
     },
   ] as {
-    field: string;
-    headerName: string;
-    filter: string | boolean;
+    field?: string;
+    headerName?: string;
+    filter?: string | boolean;
     sortable?: boolean;
     cellRenderer?: any;
-    minWidth: number;
+    minWidth?: number;
     hide?: boolean;
   }[];
 
@@ -323,7 +323,7 @@ const SubmissionList = ({
     flex: 1,
     sortable: true,
     resizable: true,
-    menuTab: ['export'],
+    // menuTabs: ['export'],
     // filter: true,
   };
   const navigate = useNavigate();

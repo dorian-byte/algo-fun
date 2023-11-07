@@ -4,7 +4,7 @@ import { gql, useQuery } from '@apollo/client';
 import CodeEditor from '../components/CodeEditor';
 import Timer from '../components/Timer';
 import { dtToLocalISO16 } from '../utils/timeUtils';
-import { CREATE_SUBMISSION } from './SubmissionCreatePage';
+import { CREATE_SUBMISSION } from '../components/SubmissionForm';
 import { useMutation } from '@apollo/client';
 import {
   BIG_O_COMPLEXITY_DISPLAY,

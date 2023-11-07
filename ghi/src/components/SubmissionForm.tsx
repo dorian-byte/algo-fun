@@ -89,7 +89,13 @@ const BestSolutionKey = ({
 };
 
 const SubmissionForm: React.FC = () => {
-  const { problemId } = useParams() as any;
+  const { problemId, submissionId } = useParams() as any;
+  const [readOnly, setReadOnly] = useState(false);
+  useEffect(() => {
+    if (!submissionId) {
+      setReadOnly(false);
+    }
+  }, [submissionId]);
   const navigate = useNavigate();
 
   const problemQueryResult = useQuery(FETCH_PROBLEM, {
@@ -164,16 +170,8 @@ const SubmissionForm: React.FC = () => {
 
   const [codeBlockHeight, setCodeBlockHeight] = useState(0);
   const parentRef = useRef<HTMLDivElement>(null);
-  const [selected, setSelected] = useState<any[]>([
-    allProblemsData?.allProblems && allProblemsData?.allProblems.length > 0
-      ? { id: '', leetcodeNumber: '', title: '' }
-      : problemData?.problemById,
-  ]);
-  const [options, setOptions] = useState<any[]>(
-    allProblemsData?.allProblems && allProblemsData?.allProblems.length > 0
-      ? allProblemsData?.allProblems
-      : [problemData?.problemById]
-  );
+  const [selected, setSelected] = useState<any[]>([]);
+  const [options, setOptions] = useState<any[]>([]);
   useEffect(() => {
     if (parentRef?.current?.clientHeight) {
       console.log('parentRef height', parentRef?.current?.clientHeight);
@@ -202,6 +200,22 @@ const SubmissionForm: React.FC = () => {
       setSelected([problemData?.problemById]);
     }
   }, [allProblemsData?.allProblems, problemData?.problemById]);
+
+  useEffect(() => {
+    if (allProblemsData && problemData) {
+      setSelected(
+        allProblemsData?.allProblems && allProblemsData?.allProblems.length > 0
+          ? { id: '', leetcodeNumber: '', title: '' }
+          : problemData?.problemById
+      );
+      if (allProblemsData?.allProblems?.length > 0) {
+        setOptions(allProblemsData?.allProblems);
+      } else {
+        setOptions([problemData?.problemById]);
+      }
+      setOptions(allProblemsData?.allProblems);
+    }
+  }, [problemData, allProblemsData]);
 
   if (singleProblemLoading || allProblemsLoading) return <p>Loading...</p>;
   if (singleProblemError) return <p>Error: {singleProblemError.message}</p>;
@@ -232,12 +246,13 @@ const SubmissionForm: React.FC = () => {
               }
               selected={selected}
               options={options}
-              disabled={showFixedProblemTitleInSelection}
+              disabled={readOnly || showFixedProblemTitleInSelection}
               renderInput={(props) => {
+                const { inputRef, referenceElementRef, ...inputProps } = props;
                 return (
                   <input
                     id="select-problem-inside-typeahead"
-                    {...props}
+                    {...inputProps}
                     style={{
                       backgroundColor: 'transparent !important',
                     }}
@@ -253,7 +268,6 @@ const SubmissionForm: React.FC = () => {
               )}
             />
             <label>
-              {/* {showFixedProblemTitleInSelection ? 'Problem' : 'Select Problem'} */}
               Problem
               {!showFixedProblemTitleInSelection && (
                 <span className="required-asterisk"> *</span>
@@ -292,7 +306,7 @@ const SubmissionForm: React.FC = () => {
                   id="o-time"
                   // className="form-select"
                   className="form-control"
-                  value={data?.timeComplexity}
+                  value={data?.timeComplexity || ''}
                   onChange={(e) => {
                     setData((prev: any) => ({
                       ...prev,
@@ -300,9 +314,7 @@ const SubmissionForm: React.FC = () => {
                     }));
                   }}
                 >
-                  <option value="" selected>
-                    {/* <option value="" disabled> */}
-                  </option>
+                  <option value="">{/* <option value="" disabled> */}</option>
                   {Object.keys(BIG_O_COMPLEXITY_DISPLAY).map((level) => (
                     <option
                       key={level}
@@ -323,7 +335,7 @@ const SubmissionForm: React.FC = () => {
                   id="o-space"
                   // className="form-select"
                   className="form-control"
-                  value={data?.spaceComplexity}
+                  value={data?.spaceComplexity || ''}
                   onChange={(e) => {
                     setData((prev: any) => ({
                       ...prev,
@@ -331,9 +343,7 @@ const SubmissionForm: React.FC = () => {
                     }));
                   }}
                 >
-                  <option value="" selected>
-                    {/* <option value="" disabled> */}
-                  </option>
+                  <option value="">{/* <option value="" disabled> */}</option>
                   {Object.keys(BIG_O_COMPLEXITY_DISPLAY).map((level) => (
                     <option
                       key={level}
@@ -363,12 +373,14 @@ const SubmissionForm: React.FC = () => {
                   type="date"
                   value={data?.submittedAt.split('T')[0]}
                   onChange={(e) => handleDateTimeChange('date', e.target.value)}
+                  readOnly={readOnly}
                 />
                 <input
                   className="form-control ms-2"
                   type="time"
                   value={data?.submittedAt.split('T')[1]}
                   onChange={(e) => handleDateTimeChange('time', e.target.value)}
+                  readOnly={readOnly}
                 />
               </div>
             </div>
@@ -391,6 +403,7 @@ const SubmissionForm: React.FC = () => {
                   const input = e.target as HTMLInputElement;
                   if (Number(input.value) < 0) input.value = '0';
                 }}
+                readOnly={readOnly}
               />
             </div>
           </div>
@@ -454,6 +467,7 @@ const SubmissionForm: React.FC = () => {
                       isWhiteboardMode: e.target.checked,
                     }))
                   }
+                  readOnly={readOnly}
                 />
                 <label
                   className="form-check-label"
@@ -474,6 +488,7 @@ const SubmissionForm: React.FC = () => {
                       isInterviewMode: e.target.checked,
                     }))
                   }
+                  readOnly={readOnly}
                 />
                 <label
                   className="form-check-label"
@@ -502,10 +517,10 @@ const SubmissionForm: React.FC = () => {
             value={data?.code}
             showLineNumbers={true}
             theme="vs-dark"
-            readOnly={false}
             onChange={(value: string) => {
               setData((prev: any) => ({ ...prev, code: value }));
             }}
+            readOnly={readOnly}
           />
         </div>
       </form>
