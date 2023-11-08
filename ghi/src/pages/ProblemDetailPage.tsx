@@ -2,17 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import CodeEditor from '../components/CodeEditor';
-import Timer from '../components/Timer';
 import { dtToLocalISO16 } from '../utils/timeUtils';
 import { CREATE_SUBMISSION } from '../components/SubmissionForm';
 import { useMutation } from '@apollo/client';
-import {
-  BIG_O_COMPLEXITY_DISPLAY,
-  PROFICIENCY_LEVEL_DISPLAY,
-} from '../components/SubmissionList';
-import FormDrawer from '../components/DrawerWrapper';
 import SubmissionList from '../components/SubmissionList';
-import ChatMethodGenerator from '../components/ChatMethodGenerator';
 import ChatSubmissionAnalyzer from '../components/ChatSubmissionAnalyzer';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -21,6 +14,8 @@ import TabPanel from '@mui/lab/TabPanel';
 import { AppBar, Toolbar } from '@mui/material';
 import { getChatResponse } from '../utils/queryChat';
 import { requestWrapper } from '../components/ChatSubmissionAnalyzer';
+import SubmissionFormInTab from '../components/SubmissionFormInTab';
+import SubmissionDetailPage from './SubmissionDetailPage';
 
 const FrequencyBar = ({ frequency }: { frequency: number }) => {
   const segmentWidth = 7; // each segment is 7px wide
@@ -103,6 +98,7 @@ const ProblemDetailPage = () => {
   const { problemId } = useParams();
   const [problem, setProblem] = useState({} as any);
   const [submissions, setSubmissions] = useState([] as any[]);
+  const [selectedSubmission, setSelectedSubmission] = useState();
   const [submissionData, setSubmissionData] = useState<any>({
     code: '',
     proficiencyLevel: '',
@@ -198,6 +194,7 @@ const ProblemDetailPage = () => {
                 <Tab label="Solutions" value="2" />
                 <Tab label="Submissions" value="3" />
                 <Tab label="Submission Analysis" value="4" />
+                <Tab label="undefined" value="4" />
               </TabList>
             </Toolbar>
           </AppBar>
@@ -257,10 +254,23 @@ const ProblemDetailPage = () => {
             <SubmissionList
               submissions={submissions.filter((sb) => sb.isSolution)}
               simplified={true}
+              rowClickCallback={(params: any) => {
+                setRightTabValue('2');
+                console.log('p', params);
+                setSelectedSubmission(params);
+              }}
             />
           </TabPanel>
           <TabPanel value="3">
-            <SubmissionList submissions={submissions} simplified={true} />
+            <SubmissionList
+              submissions={submissions}
+              simplified={true}
+              rowClickCallback={(row: any) => {
+                setRightTabValue('2');
+                console.log('p', row);
+                setSelectedSubmission(row);
+              }}
+            />
           </TabPanel>
           <TabPanel value="4">
             <ChatSubmissionAnalyzer
@@ -268,6 +278,7 @@ const ProblemDetailPage = () => {
               chatResponse={chatResponse}
             />
           </TabPanel>
+          <TabPanel value="5"></TabPanel>
         </TabContext>
       </div>
 
@@ -288,271 +299,20 @@ const ProblemDetailPage = () => {
             </Toolbar>
           </AppBar>
           <TabPanel value="1">
-            {' '}
-            <div className="d-flex justify-content-between align-items-center">
-              <h4>
-                <b>New Submission</b>
-              </h4>
-              <div className="d-flex align-items-center gap-2">
-                <Timer />
-                <FormDrawer
-                  width={'400px'}
-                  renderOpenner={(cb) => <Openner cb={cb} />}
-                >
-                  <form
-                    className="d-flex flex-row gap-5"
-                    onSubmit={handleSubmit}
-                  >
-                    <div className="d-flex flex-column gap-5">
-                      <div className="form-floating">
-                        <select
-                          className="form-control"
-                          value={submissionData?.proficiencyLevel}
-                          onChange={(e) => {
-                            setSubmissionData((prev: any) => ({
-                              ...prev,
-                              proficiencyLevel: e.target.value,
-                            }));
-                          }}
-                        >
-                          <option value="" disabled></option>
-                          {Object.keys(PROFICIENCY_LEVEL_DISPLAY).map(
-                            (level) => (
-                              <option key={level} value={level.toLowerCase()}>
-                                {PROFICIENCY_LEVEL_DISPLAY[level]}
-                              </option>
-                            )
-                          )}
-                        </select>
-                        <label>
-                          Proficiency Level
-                          <span className="required-asterisk"> *</span>
-                        </label>
-                      </div>
-
-                      <div className="d-flex flex-row gap-3">
-                        <div className="form-floating">
-                          <select
-                            id="o-time"
-                            // className="form-select"
-                            className="form-control"
-                            value={submissionData?.timeComplexity}
-                            onChange={(e) => {
-                              setSubmissionData((prev: any) => ({
-                                ...prev,
-                                timeComplexity: e.target.value,
-                              }));
-                            }}
-                          >
-                            <option value="" selected>
-                              {/* <option value="" disabled> */}
-                            </option>
-                            {Object.keys(BIG_O_COMPLEXITY_DISPLAY).map(
-                              (level) => (
-                                <option
-                                  key={level}
-                                  value={level.toLowerCase()}
-                                  dangerouslySetInnerHTML={{
-                                    __html: BIG_O_COMPLEXITY_DISPLAY[
-                                      level
-                                    ] as string,
-                                  }}
-                                ></option>
-                              )
-                            )}
-                          </select>
-                          <label htmlFor="o-time">
-                            Time <span className="required-asterisk"> *</span>
-                          </label>
-                        </div>
-
-                        <div className="form-floating">
-                          <select
-                            id="o-space"
-                            className="form-control"
-                            value={submissionData?.spaceComplexity}
-                            onChange={(e) => {
-                              setSubmissionData((prev: any) => ({
-                                ...prev,
-                                spaceComplexity: e.target.value,
-                              }));
-                            }}
-                          >
-                            <option value="" selected></option>
-                            {Object.keys(BIG_O_COMPLEXITY_DISPLAY).map(
-                              (level) => (
-                                <option
-                                  key={level}
-                                  value={level.toLowerCase()}
-                                  dangerouslySetInnerHTML={{
-                                    __html: BIG_O_COMPLEXITY_DISPLAY[
-                                      level
-                                    ] as string,
-                                  }}
-                                ></option>
-                              )
-                            )}
-                          </select>
-                          <label htmlFor="o-space">Space</label>
-                        </div>
-                      </div>
-
-                      <div className="d-flex flex-row mt-3 justify-content-between">
-                        <div className="form-group flex-fill">
-                          <label className="text-gray small mb-1">
-                            Submitted At
-                          </label>
-                          <div className="d-flex flex-row">
-                            <input
-                              className="form-control"
-                              type="date"
-                              value={submissionData?.submittedAt.split('T')[0]}
-                              onChange={(e) =>
-                                handleDateTimeChange('date', e.target.value)
-                              }
-                            />
-                            <input
-                              className="form-control ms-2"
-                              type="time"
-                              value={submissionData?.submittedAt.split('T')[1]}
-                              onChange={(e) =>
-                                handleDateTimeChange('time', e.target.value)
-                              }
-                            />
-                          </div>
-                          <div className="form-group">
-                            <label className="text-gray small mb-1">
-                              Mins Used
-                            </label>
-                            <input
-                              className="form-control"
-                              type="number"
-                              value={submissionData?.duration}
-                              placeholder="Mins Used"
-                              onChange={(e) =>
-                                setSubmissionData((prev: any) => ({
-                                  ...prev,
-                                  duration: e.target.value,
-                                }))
-                              }
-                              min="0"
-                              onInput={(e) => {
-                                const input = e.target as HTMLInputElement;
-                                if (Number(input.value) < 0) input.value = '0';
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-3">
-                        <div className="d-flex flex-column gap-1 ">
-                          <div className="form-check form-switch">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id="isSolutionSwitch"
-                              checked={submissionData?.isSolution}
-                              onChange={(e) =>
-                                setSubmissionData((prev: any) => ({
-                                  ...prev,
-                                  isSolution: e.target.checked,
-                                }))
-                              }
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="isSolutionSwitch"
-                            >
-                              Best Solution
-                            </label>
-                          </div>
-                          <div className="form-check form-switch">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id="isWhiteboardModeSwitch"
-                              checked={submissionData?.isWhiteboardMode}
-                              onChange={(e) =>
-                                setSubmissionData((prev: any) => ({
-                                  ...prev,
-                                  isWhiteboardMode: e.target.checked,
-                                }))
-                              }
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="isWhiteboardModeSwitch"
-                            >
-                              Whiteboard Mode
-                            </label>
-                          </div>
-                          <div className="form-check form-switch">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              id="isInterviewModeSwitch"
-                              checked={submissionData?.isInterviewMode}
-                              onChange={(e) =>
-                                setSubmissionData((prev: any) => ({
-                                  ...prev,
-                                  isInterviewMode: e.target.checked,
-                                }))
-                              }
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="isInterviewModeSwitch"
-                            >
-                              Interview Mode
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      <ChatMethodGenerator
-                        data={submissionData}
-                        setData={setSubmissionData}
-                      />
-
-                      {/* <button
-                    type="submit"
-                    className="btn btn-outline-primary mt-4 mb-5"
-                  >
-                    Submit
-                  </button> */}
-                    </div>
-                  </form>
-                </FormDrawer>
-              </div>
-            </div>
-            <CodeEditor
-              width="100%"
-              height="68vh"
-              value={submissionData.code}
-              language="python"
-              showLineNumbers={false}
-              theme="vs-dark"
-              readOnly={false}
-              onChange={(value) => {
-                setSubmissionData((prev: any) => ({ ...prev, code: value }));
-              }}
+            <SubmissionFormInTab
+              submissionData={submissionData}
+              setSubmissionData={setSubmissionData}
+              handleSubmit={handleSubmit}
+              handleAnalyze={handleAnalyze}
+              handleDateTimeChange={handleDateTimeChange}
+              openner={Openner}
             />
-            <div className="w-100 d-flex gap-4 mt-2">
-              <button
-                disabled={!submissionData.code}
-                onClick={handleAnalyze}
-                className="btn btn-outline-success w-75"
-              >
-                Analyze
-              </button>
-              <button
-                disabled={!submissionData.code}
-                onClick={handleSubmit}
-                className="btn btn-outline-primary w-75"
-              >
-                Submit
-              </button>
-            </div>
+          </TabPanel>
+          <TabPanel value="2">
+            <SubmissionDetailPage
+              simplified={true}
+              selectedSubmission={selectedSubmission}
+            />
           </TabPanel>
         </TabContext>
       </div>

@@ -11,7 +11,7 @@ export default function FormDrawer({
   width?: string;
   buttonText?: string;
   children: React.ReactNode;
-  renderOpenner: (cb: () => void) => React.ReactNode;
+  renderOpenner?: (cb: () => void) => React.ReactNode;
 }): JSX.Element {
   const [state, setState] = React.useState(false);
 

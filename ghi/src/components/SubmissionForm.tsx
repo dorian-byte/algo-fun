@@ -115,7 +115,13 @@ const FETCH_SUBMISSION = gql`
   }
 `;
 
-const SubmissionForm: React.FC = () => {
+const SubmissionForm = ({
+  simplified,
+  selectedSubmission,
+}: {
+  simplified?: boolean;
+  selectedSubmission?: any;
+}) => {
   const { problemId, submissionId } = useParams() as any;
   const { pathname } = useLocation();
   const [localProblemId, setLocalProblemId] = useState(null);
@@ -285,6 +291,27 @@ const SubmissionForm: React.FC = () => {
   if (singleProblemLoading || allProblemsLoading) return <p>Loading...</p>;
   if (singleProblemError) return <p>Error: {singleProblemError.message}</p>;
   if (allProblemsError) return <p>Error: {allProblemsError.message}</p>;
+
+  if (simplified) {
+    console.log('sS', selectedSubmission);
+    return (
+      <div>
+        <CodeEditor
+          width="100%"
+          height="300px"
+          language="python"
+          value={selectedSubmission?.code}
+          showLineNumbers={true}
+          theme="vs-dark"
+          readOnly={readOnly}
+        />
+        <div>submittedAt: {selectedSubmission?.submittedAt}</div>
+        <div>duration: {selectedSubmission?.duration}</div>
+        <div>timeComplexity: {selectedSubmission?.timeComplexity}</div>
+        <div>spaceComplexity: {selectedSubmission?.spaceComplexity}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-5 overflow-y-auto" ref={parentRef}>

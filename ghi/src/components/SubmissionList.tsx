@@ -200,9 +200,11 @@ export const ResourcesCellRenderer = (props: any) => {
 const SubmissionList = ({
   submissions,
   simplified,
+  rowClickCallback,
 }: {
   submissions: Submission[];
   simplified?: boolean;
+  rowClickCallback?: (_: any) => void;
 }) => {
   const [rowData, setRowData] = useState([]);
   const { problemId } = useParams();
@@ -345,7 +347,10 @@ const SubmissionList = ({
             paginationAutoPageSize={true}
             onGridReady={onGridReady}
             onRowDoubleClicked={(e: any) => {
-              navigate(`/submissions/${e.data.id}`);
+              console.log('row', submissions[e.rowIndex]);
+              rowClickCallback
+                ? rowClickCallback(submissions[e.rowIndex])
+                : navigate(`/submissions/${e.data.id}`);
             }}
           />
         </div>
