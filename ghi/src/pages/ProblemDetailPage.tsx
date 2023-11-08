@@ -169,7 +169,7 @@ const ProblemDetailPage = () => {
                 <Tab label="Solutions" value="2" />
                 <Tab label="Submissions" value="3" />
                 <Tab label="Submission Analysis" value="4" />
-                <Tab label="undefined" value="4" />
+                <Tab label="undefined" value="5" />
               </TabList>
             </Toolbar>
           </AppBar>
@@ -181,7 +181,7 @@ const ProblemDetailPage = () => {
               submissions={submissions.filter((sb) => sb.isSolution)}
               simplified={true}
               rowClickCallback={(params: any) => {
-                setRightTabValue('2');
+                setRightTabValue('7');
                 console.log('p', params);
                 setSelectedSubmission(params);
               }}
@@ -192,7 +192,7 @@ const ProblemDetailPage = () => {
               submissions={submissions}
               simplified={true}
               rowClickCallback={(row: any) => {
-                setRightTabValue('2');
+                setRightTabValue('7');
                 console.log('p', row);
                 setSelectedSubmission(row);
               }}
@@ -217,14 +217,14 @@ const ProblemDetailPage = () => {
                 textColor="inherit"
                 TabIndicatorProps={{ style: { background: '#fff' } }}
               >
-                <Tab label="New Submission" value="1" />
-                <Tab label="Submission Detail" value="2" />
-                <Tab label="undefined 1" value="3" />
-                <Tab label="undefined 2" value="4" />
+                <Tab label="New Submission" value="6" />
+                <Tab label="Submission Detail" value="7" />
+                <Tab label="undefined 1" value="8" />
+                <Tab label="undefined 2" value="9" />
               </TabList>
             </Toolbar>
           </AppBar>
-          <TabPanel value="1">
+          <TabPanel value="6">
             <SubmissionFormInTab
               submissionData={submissionData}
               setSubmissionData={setSubmissionData}
@@ -234,12 +234,14 @@ const ProblemDetailPage = () => {
               openner={Openner}
             />
           </TabPanel>
-          <TabPanel value="2">
+          <TabPanel value="7">
             <SubmissionDetailPage
               simplified={true}
               selectedSubmission={selectedSubmission}
             />
           </TabPanel>
+          <TabPanel value="8"></TabPanel>
+          <TabPanel value="9"></TabPanel>
         </TabContext>
       </div>
     </div>
