@@ -16,6 +16,8 @@ import { requestWrapper } from '../components/ChatSubmissionAnalyzer';
 import SubmissionFormInTab from '../components/SubmissionFormInTab';
 import SubmissionDetailPage from './SubmissionDetailPage';
 import ProblemDetail from '../components/ProblemDetail';
+import NoteForm from '../components/NoteForm';
+import ProblemNoteListPage from './ProblemNoteListPage';
 
 const PROBLEM_BY_ID = gql`
   query ProblemById($id: Int!) {
@@ -169,12 +171,17 @@ const ProblemDetailPage = () => {
                 <Tab label="Solutions" value="2" />
                 <Tab label="Submissions" value="3" />
                 <Tab label="Submission Analysis" value="4" />
-                <Tab label="undefined" value="5" />
+                <Tab label="Problem Notes" value="5" />
               </TabList>
             </Toolbar>
           </AppBar>
           <TabPanel value="1">
-            <ProblemDetail problem={problem} />
+            <ProblemDetail
+              problem={problem}
+              simplified={true}
+              setLeftTabValue={setLeftTabValue}
+              setRightTabValue={setRightTabValue}
+            />
           </TabPanel>
           <TabPanel value="2">
             <SubmissionList
@@ -204,7 +211,9 @@ const ProblemDetailPage = () => {
               chatResponse={chatResponse}
             />
           </TabPanel>
-          <TabPanel value="5"></TabPanel>
+          <TabPanel value="5">
+            <ProblemNoteListPage />
+          </TabPanel>
         </TabContext>
       </div>
 
@@ -219,7 +228,7 @@ const ProblemDetailPage = () => {
               >
                 <Tab label="New Submission" value="6" />
                 <Tab label="Submission Detail" value="7" />
-                <Tab label="undefined 1" value="8" />
+                <Tab label="New Note" value="8" />
                 <Tab label="undefined 2" value="9" />
               </TabList>
             </Toolbar>
@@ -240,7 +249,9 @@ const ProblemDetailPage = () => {
               selectedSubmission={selectedSubmission}
             />
           </TabPanel>
-          <TabPanel value="8"></TabPanel>
+          <TabPanel value="8">
+            <NoteForm />
+          </TabPanel>
           <TabPanel value="9"></TabPanel>
         </TabContext>
       </div>

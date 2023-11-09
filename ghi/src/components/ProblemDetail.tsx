@@ -53,8 +53,29 @@ const FrequencyBar = ({ frequency }: { frequency: number }) => {
   );
 };
 
-const ProblemDetail = ({ problem }: { problem: Problem }) => {
+const ProblemDetail = ({
+  problem,
+  simplified,
+  setLeftTabValue,
+  setRightTabValue,
+}: {
+  problem: Problem;
+  simplified: boolean;
+  setLeftTabValue: React.Dispatch<React.SetStateAction<string>>;
+  setRightTabValue: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const navigate = useNavigate();
+
+  const handleClickOnNotes = () => {
+    if (!simplified) {
+      navigate(`/problems/${problem.id}/notes`);
+    }
+    setLeftTabValue('5');
+  };
+  const handleClickOnAddNote = () => {
+    setRightTabValue('8');
+  };
+
   return (
     <div>
       <div className="d-flex align-items-center justify-content-between">
@@ -63,14 +84,26 @@ const ProblemDetail = ({ problem }: { problem: Problem }) => {
             {problem.leetcodeNumber}. {problem.title}
           </b>
         </h4>
-        <div className="d-flex gap-3 align-items-center">
-          <div className="badge badge-outlined border">
-            {Math.round(problem.acceptanceRate)}% accepted
-          </div>
-          <FrequencyBar frequency={problem.frequency} />
+        <div className="d-flex gap-2">
+          <button
+            className="btn btn-outline-primary btn-sm"
+            onClick={handleClickOnNotes}
+          >
+            Notes
+          </button>
+          <button
+            className="btn btn-outline-primary btn-sm"
+            onClick={handleClickOnAddNote}
+          >
+            +
+          </button>
         </div>
       </div>
-      <div className="d-flex p-2 gap-2 mb-1">
+      <div className="d-flex align-items-center p-2 gap-2 mb-1">
+        <FrequencyBar frequency={problem.frequency} />
+        <div className="badge badge-outlined border">
+          {Math.round(problem.acceptanceRate)}% 🎉
+        </div>
         <div className="badge bg-success">{problem.difficulty}</div>
         {problem.askedByFaang && (
           <div className="badge bg-info text-dark">FANNG</div>

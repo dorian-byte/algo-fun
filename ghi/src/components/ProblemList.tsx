@@ -9,7 +9,6 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { Box } from '@mui/material';
 
 export const StatusCellRenderer = (props: any) => {
   return (

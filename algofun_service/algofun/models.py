@@ -108,6 +108,10 @@ class Problem(models.Model):
         "self", symmetrical=False, blank=True, related_name="reverse_similar_problems"
     )
 
+    # NOTE: added below counts to avoid backend's N+1 query problem
+    # this helps the frontend's Problem List page to load faster by reducing the number of queries
+    # and enables faster display of the conditional button styles based on the counts of notes, submissions, and resources
+
     def tags(self):
         content_type = ContentType.objects.get_for_model(self)
         tagged_items = TaggedItem.objects.filter(
