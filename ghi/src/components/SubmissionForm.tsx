@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { dtToLocalISO16 } from '../utils/timeUtils';
+import { dtStrToLocalShortStr } from '../utils/timeUtils';
 import CodeEditor from './CodeEditor';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Timer from '../components/Timer.tsx';
@@ -305,10 +306,36 @@ const SubmissionForm = ({
           theme="vs-dark"
           readOnly={readOnly}
         />
-        <div>submittedAt: {selectedSubmission?.submittedAt}</div>
-        <div>duration: {selectedSubmission?.duration}</div>
-        <div>timeComplexity: {selectedSubmission?.timeComplexity}</div>
-        <div>spaceComplexity: {selectedSubmission?.spaceComplexity}</div>
+        <div>
+          @
+          {selectedSubmission?.submittedAt
+            ? dtStrToLocalShortStr(selectedSubmission?.submittedAt)
+            : ''}
+          , used {selectedSubmission?.duration}m
+        </div>
+        <div>
+          Big-O time: {selectedSubmission?.timeComplexity}, space:{' '}
+          {selectedSubmission?.spaceComplexity}
+        </div>
+        <button
+          className="btn btn-outline-success btn-sm mt-2"
+          onClick={() =>
+            navigate(`/submissions/${selectedSubmission?.id}/edit`)
+          }
+        >
+          Edit
+        </button>
+        <button className="btn btn-outline-primary btn-sm mt-2 ms-3">
+          Notes
+        </button>
+        <button
+          className="btn btn-outline-primary btn-sm mt-2 ms-2"
+          onClick={() =>
+            navigate(`/submissions/${selectedSubmission?.id}/edit`)
+          }
+        >
+          +
+        </button>
       </div>
     );
   }

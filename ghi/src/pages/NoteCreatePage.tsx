@@ -44,68 +44,12 @@ const CREATE_NOTE = gql`
 `;
 
 const ProblemNoteCreatePage = () => {
-  const { problemId } = useParams() as any;
-  const navigate = useNavigate();
-
-  const problemQueryResult = useQuery(FETCH_PROBLEM, {
-    skip: !problemId,
-    variables: { id: problemId ? +problemId : 0 },
-  });
-
-  const allProblemsQueryResult = useQuery(FETCH_ALL_PROBLEMS, {
-    skip: !!problemId,
-  });
-
-  const {
-    loading: singleProblemLoading,
-    error: singleProblemError,
-    data: problemData,
-  } = problemQueryResult;
-  const {
-    loading: allProblemsLoading,
-    error: allProblemsError,
-    data: allProblemsData,
-  } = allProblemsQueryResult;
-
-  const showFixedProblemTitleInSelection = !!problemId;
-
-  const [data, setData] = useState<any>({
-    problem: problemId,
-    title: '',
-    content: '',
-    submittedAt: dtToLocalISO16(new Date()),
-    isStarred: false,
-    noteType: NoteType.ERR[0],
-    startLineNumber: 0,
-    endLineNumber: 0,
-  });
-
-  const [createNote] = useMutation(CREATE_NOTE, {
-    variables: {
-      input: {
-        ...data,
-        startLineNumber: +data?.startLineNumber,
-        endLineNumber: +data?.endLineNumber,
-        submittedAt: new Date(data?.submittedAt + ':00'),
-      },
-    },
-  });
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    createNote().then((res) => {
-      console.log('res', res);
-    });
-    showFixedProblemTitleInSelection
-      ? navigate(`/problems/${problemId}/notes`)
-      : navigate(`/notes`);
-  };
-
-  if (singleProblemLoading || allProblemsLoading) return <p>Loading...</p>;
-  if (singleProblemError) return <p>Error: {singleProblemError.message}</p>;
-  if (allProblemsError) return <p>Error: {allProblemsError.message}</p>;
-
-  return <NoteForm />;
+  return (
+    <div className="container mt-5">
+      <h3 className="page-header mb-4">New Note</h3>
+      <NoteForm />
+    </div>
+  );
 };
 
 export default ProblemNoteCreatePage;

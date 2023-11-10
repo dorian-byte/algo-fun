@@ -1,6 +1,7 @@
 import Drawer from '../components/DrawerWrapper';
 import NoteForm from '../components/NoteForm';
 import SubmissionForm from '../components/SubmissionForm';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const SubmissionDetailPage = ({
   simplified,
@@ -9,6 +10,9 @@ const SubmissionDetailPage = ({
   simplified?: boolean;
   selectedSubmission?: any;
 }) => {
+  const navigate = useNavigate();
+  const { submissionId } = useParams();
+
   if (simplified) {
     return (
       <SubmissionForm
@@ -20,7 +24,15 @@ const SubmissionDetailPage = ({
   return (
     <div>
       <SubmissionForm />
-      <Drawer>
+      <button
+        className="btn btn-outline-primary mb-2"
+        onClick={() => {
+          navigate(`/submissions/${submissionId}/notes`);
+        }}
+      >
+        Notes
+      </button>
+      <Drawer buttonText="Add Note">
         <NoteForm />
       </Drawer>
     </div>

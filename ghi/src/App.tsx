@@ -7,7 +7,7 @@ import { client } from './apollo/client';
 import Nav from './components/Nav';
 import ProblemSearchPage from './pages/ProblemSearchPage';
 import ProblemListPage from './pages/ProblemListPage';
-import ProblemDetailPage from './pages/ProblemDetailPage';
+import ProblemHubPage from './pages/ProblemHubPage';
 import ProblemCreatePage from './pages/ProblemCreatePage';
 import SubmissionListPage from './pages/SubmissionListPage';
 import SubmissionDetailPage from './pages/SubmissionDetailPage';
@@ -66,7 +66,7 @@ function App() {
             <Route path="" element={<ProblemListPage />} />
             <Route path="new" element={<ProblemCreatePage />} />
             <Route path=":problemId">
-              <Route path="" element={<ProblemDetailPage />} />
+              <Route path="" element={<ProblemHubPage />} />
               <Route path="notes">
                 <Route path="" element={<ProblemNoteListPage />} />
                 {/* same page as above but passing in problemId */}

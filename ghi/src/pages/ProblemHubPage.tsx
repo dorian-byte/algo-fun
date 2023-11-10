@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import { dtToLocalISO16 } from '../utils/timeUtils';
@@ -71,7 +71,7 @@ const PROBLEM_BY_ID = gql`
   }
 `;
 
-const ProblemDetailPage = () => {
+const ProblemHubPage = () => {
   const { problemId } = useParams();
   const [problem, setProblem] = useState({} as any);
   const [submissions, setSubmissions] = useState([] as any[]);
@@ -150,6 +150,11 @@ const ProblemDetailPage = () => {
   const handleRightTabChange = (_e: React.SyntheticEvent, newValue: string) => {
     setRightTabValue(newValue);
   };
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    console.log('ref', ref?.current);
+  }, [ref]);
 
   if (error) return <p>Error :( {error.message}</p>;
   if (loading) return <p>Loading...</p>;
@@ -250,7 +255,9 @@ const ProblemDetailPage = () => {
             />
           </TabPanel>
           <TabPanel value="8">
-            <NoteForm />
+            <div className="pt-3">
+              <NoteForm />
+            </div>
           </TabPanel>
           <TabPanel value="9"></TabPanel>
         </TabContext>
@@ -271,4 +278,4 @@ const Openner = ({ cb }: { cb: () => void }) => {
   );
 };
 
-export default ProblemDetailPage;
+export default ProblemHubPage;

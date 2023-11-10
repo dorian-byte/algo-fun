@@ -4,7 +4,7 @@ import Drawer from '@mui/material/Drawer';
 
 export default function FormDrawer({
   width = '50vw',
-  buttonText = 'open drawer',
+  buttonText = 'Open Drawer',
   children,
   renderOpenner,
 }: {
