@@ -152,10 +152,14 @@ export const NotesCellRenderer = (props: any) => {
   return (
     <div className="d-flex justify-content-center align-items-center h-100">
       <button
-        className="btn btn-outline-primary btn-sm d-flex align-items-center fs-7 h-75"
+        className="btn btn-outline-primary btn-sm d-flex align-items-center fs-7 h-75 w-100"
+        style={{
+          opacity: props.data.hasNotes ? 1 : 0.5,
+        }}
         onClick={() => {
           navigate(`/submissions/${id}/notes`);
         }}
+        disabled={!props.data.hasNotes}
       >
         notes
       </button>
@@ -178,6 +182,10 @@ export const ResourcesCellRenderer = (props: any) => {
     <div className="d-flex justify-content-center align-items-center h-100">
       <button
         className="btn btn-outline-info btn-sm d-flex align-items-center fs-7 h-75"
+        disabled={!props.data.hasResources}
+        style={{
+          opacity: props.data.hasResources ? 1 : 0.5,
+        }}
         onClick={() => {
           navigate(`/submissions/${id}/resources`);
         }}

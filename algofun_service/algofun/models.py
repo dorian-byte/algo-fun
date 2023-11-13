@@ -1,3 +1,4 @@
+from django.db.models import Count, OuterRef, Exists, Sum
 from django.db import models
 from polymorphic.models import PolymorphicModel
 from django.utils import timezone
@@ -112,6 +113,52 @@ class Problem(models.Model):
     # this helps the frontend's Problem List page to load faster by reducing the number of queries
     # and enables faster display of the conditional button styles based on the counts of notes, submissions, and resources
 
+    def has_submissions(self):
+        return self.submissions.exists()
+
+    def submissions_count(self):
+        return self.submissions.count()
+
+    def has_notes(self):
+        return self.notes_count() > 0
+
+    def notes_count(self):
+        problem_notes_count = self.notes.count()
+
+        submissions_notes_count = (
+            self.submissions.annotate(notes_count=Count("notes")).aggregate(
+                total=Sum("notes_count")
+            )["total"]
+            or 0
+        )
+
+        return problem_notes_count + submissions_notes_count
+
+    def has_resources(self):
+        return self.resources_count() > 0
+
+    def resources_count(self):
+        problem_resources_count = self.resources.count()
+        submission_resources_count = (
+            self.submissions.annotate(resources_count=Count("resources")).aggregate(
+                total=Sum("resources_count")
+            )["total"]
+            or 0
+        )
+
+        problem_notes_resources_count = (
+            self.notes.annotate(resources_count=Count("resources")).aggregate(
+                total=Sum("resources_count")
+            )["total"]
+            or 0
+        )
+
+        return (
+            problem_resources_count
+            + submission_resources_count
+            + problem_notes_resources_count
+        )
+
     def tags(self):
         content_type = ContentType.objects.get_for_model(self)
         tagged_items = TaggedItem.objects.filter(
@@ -162,6 +209,16 @@ class Submission(models.Model):
         blank=True,
     )
     methods = models.ManyToManyField("Topic", blank=True)
+
+    def has_notes(self):
+        return self.notes.count() > 0
+
+    def notes_count(self):
+        return self.notes.count()
+
+    def has_resources(self):
+        notes_have_resources = self.notes.filter(resources__isnull=False).exists()
+        return self.resources.count() > 0 or notes_have_resources
 
     def passed(self):
         non_passing_levels = [

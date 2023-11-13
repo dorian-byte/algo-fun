@@ -12,6 +12,8 @@ import ChatMethodGenerator from './ChatMethodGenerator.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey } from '@fortawesome/free-solid-svg-icons';
 import { Edit } from '@mui/icons-material';
+import SubmissionFormSimplified from './SubmissionFormSimplified.tsx';
+import { Box } from '@mui/material';
 
 // NOTE: Despite our GraphQL schema defining the query as 'problem_by_id',
 // the server expects it in camelCase as 'problemById'.
@@ -141,8 +143,8 @@ const SubmissionForm = ({
     loading: submissionDetailLoading,
     error: submissionDetailError,
   } = useQuery(FETCH_SUBMISSION, {
-    skip: !submissionId,
-    variables: { id: submissionId ? +submissionId : 0 },
+    skip: !submissionId && !selectedSubmission?.id,
+    variables: { id: submissionId ? +submissionId : selectedSubmission?.id },
   });
 
   const {
@@ -177,6 +179,7 @@ const SubmissionForm = ({
     timeComplexity: '',
     spaceComplexity: '',
   });
+
   useEffect(() => {
     if (submissionDetailData) {
       setData({
@@ -193,9 +196,13 @@ const SubmissionForm = ({
           (method: any) => +method.id
         ),
       });
-      setLocalProblemId(submissionDetailData.submissionById.problem.id);
+      setLocalProblemId(null);
+    } else if (selectedSubmission) {
+      setData({
+        ...selectedSubmission,
+      });
     }
-  }, [submissionDetailData]);
+  }, [submissionDetailData, selectedSubmission]);
 
   const [createSubmission] = useMutation(CREATE_SUBMISSION);
 
@@ -288,54 +295,110 @@ const SubmissionForm = ({
       }
     }
   }, [problemData, allProblemsData]);
+  const [moreInfoOpacity, setMoreInfoOpacity] = useState(0.5);
 
   if (singleProblemLoading || allProblemsLoading) return <p>Loading...</p>;
   if (singleProblemError) return <p>Error: {singleProblemError.message}</p>;
   if (allProblemsError) return <p>Error: {allProblemsError.message}</p>;
 
   if (simplified) {
-    console.log('sS', selectedSubmission);
     return (
-      <div>
+      <div style={{ position: 'relative' }}>
         <CodeEditor
           width="100%"
-          height="300px"
+          height="60vh"
           language="python"
           value={selectedSubmission?.code}
           showLineNumbers={true}
           theme="vs-dark"
           readOnly={readOnly}
         />
-        <div>
-          @
-          {selectedSubmission?.submittedAt
-            ? dtStrToLocalShortStr(selectedSubmission?.submittedAt)
-            : ''}
-          , used {selectedSubmission?.duration}m
+        <div className="d-flex gap-1 align-items-center justify-content-between">
+          <Box
+            sx={{
+              display: selectedSubmission ? 'block' : 'none',
+              opacity: moreInfoOpacity,
+            }}
+            onMouseEnter={() => setMoreInfoOpacity(1)}
+            onMouseLeave={() => setMoreInfoOpacity(0.5)}
+          >
+            <SubmissionFormSimplified
+              position="top-start"
+              complexityOptions={Object.keys(BIG_O_COMPLEXITY_DISPLAY)}
+              proficiencyLevelOptions={Object.keys(PROFICIENCY_LEVEL_DISPLAY)}
+              submittedAt={data?.submittedAt}
+              setSubmittedAt={(newSubmittedAt: any) => {
+                setData((prev: any) => ({
+                  ...prev,
+                  submittedAt: newSubmittedAt,
+                }));
+              }}
+              duration={data?.duration}
+              setDuration={(newDuration: any) => {
+                setData((prev: any) => ({
+                  ...prev,
+                  duration: newDuration,
+                }));
+              }}
+              isSolution={data?.isSolution}
+              setIsSolution={(_: any) => {
+                setData((prev: any) => ({
+                  ...prev,
+                  isSolution: !prev.isSolution,
+                }));
+              }}
+              isWhiteboardMode={data?.isWhiteboardMode}
+              setIsWhiteboardMode={(_: any) => {
+                setData((prev: any) => ({
+                  ...prev,
+                  isWhiteboardMode: !prev.isWhiteboardMode,
+                }));
+              }}
+              isInterviewMode={data?.isInterviewMode}
+              setIsInterviewMode={(_: any) => {
+                setData((prev: any) => ({
+                  ...prev,
+                  isInterviewMode: !prev.isInterviewMode,
+                }));
+              }}
+              timeComplexity={data?.timeComplexity}
+              setTimeComplexity={(newTimeComplexity: any) => {
+                setData((prev: any) => ({
+                  ...prev,
+                  timeComplexity: newTimeComplexity,
+                }));
+              }}
+              spaceComplexity={data?.spaceComplexity}
+              setSpaceComplexity={(newSpaceComplexity: any) => {
+                setData((prev: any) => ({
+                  ...prev,
+                  spaceComplexity: newSpaceComplexity,
+                }));
+              }}
+              proficiencyLevel={data?.proficiencyLevel}
+              setProficiencyLevel={(newProficiencyLevel: any) => {
+                setData((prev: any) => ({
+                  ...prev,
+                  proficiencyLevel: newProficiencyLevel,
+                }));
+              }}
+            />
+          </Box>
+
+          <div>
+            <button className="btn btn-outline-primary btn-sm mt-2">
+              Notes
+            </button>
+            <button
+              className="btn btn-outline-primary btn-sm mt-2 ms-2"
+              onClick={() =>
+                navigate(`/submissions/${selectedSubmission?.id}/edit`)
+              }
+            >
+              +
+            </button>
+          </div>
         </div>
-        <div>
-          Big-O time: {selectedSubmission?.timeComplexity}, space:{' '}
-          {selectedSubmission?.spaceComplexity}
-        </div>
-        <button
-          className="btn btn-outline-success btn-sm mt-2"
-          onClick={() =>
-            navigate(`/submissions/${selectedSubmission?.id}/edit`)
-          }
-        >
-          Edit
-        </button>
-        <button className="btn btn-outline-primary btn-sm mt-2 ms-3">
-          Notes
-        </button>
-        <button
-          className="btn btn-outline-primary btn-sm mt-2 ms-2"
-          onClick={() =>
-            navigate(`/submissions/${selectedSubmission?.id}/edit`)
-          }
-        >
-          +
-        </button>
       </div>
     );
   }

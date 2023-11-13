@@ -26,64 +26,69 @@ import ResourceForm from './components/ResourceForm';
 import ResourceDetail from './components/ResourceDetail';
 import ResourceEditForm from './components/ResourceEditForm';
 
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 import TestPage from './pages/TestPage';
 
 function App() {
   return (
-    <ApolloProvider client={client}>
-      <BrowserRouter>
-        <Nav />
-        <div style={{ height: 60 }}></div>
-        <Routes>
-          <Route path="/" element={<ProblemSearchPage />} />
-          {/* FIXME: only for testing. Delete later. */}
-          <Route path="/resources">
-            <Route path="" element={<ResourceList />} />
-            <Route path="new" element={<ResourceForm />} />
-            <Route path=":resourceId">
-              <Route path="" element={<ResourceDetail />} />
-              <Route path="edit" element={<ResourceEditForm />} />
-            </Route>
-          </Route>
-          <Route path="/notes">
-            <Route path="" element={<NoteListPage />} />
-            <Route path="new" element={<NoteCreatePage />} />
-          </Route>
-          <Route path="/submissions">
-            <Route path="" element={<SubmissionListPage />} />
-            <Route path="new" element={<SubmissionCreatePage />} />
-            <Route path=":submissionId">
-              <Route path="" element={<SubmissionDetailPage />} />
-              <Route path="edit" element={<SubmissionCreatePage />} />
-              <Route path="notes">
-                <Route path="" element={<SubmissionNoteListPage />} />
-                {/* same page as above but passing in problemId */}
-                <Route path="new" element={<NoteCreatePage />} />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <ApolloProvider client={client}>
+        <BrowserRouter>
+          <Nav />
+          <div style={{ height: 60 }}></div>
+          <Routes>
+            <Route path="/" element={<ProblemSearchPage />} />
+            {/* FIXME: only for testing. Delete later. */}
+            <Route path="/resources">
+              <Route path="" element={<ResourceList />} />
+              <Route path="new" element={<ResourceForm />} />
+              <Route path=":resourceId">
+                <Route path="" element={<ResourceDetail />} />
+                <Route path="edit" element={<ResourceEditForm />} />
               </Route>
             </Route>
-          </Route>
-          <Route path="/problems">
-            <Route path="" element={<ProblemListPage />} />
-            <Route path="new" element={<ProblemCreatePage />} />
-            <Route path=":problemId">
-              <Route path="" element={<ProblemHubPage />} />
-              <Route path="notes">
-                <Route path="" element={<ProblemNoteListPage />} />
-                {/* same page as above but passing in problemId */}
-                <Route path="new" element={<NoteCreatePage />} />
-              </Route>
-              <Route path="submissions">
-                <Route path="" element={<ProblemSubmissionListPage />} />
-                {/* same page as above but passing in problemId */}
-                <Route path="new" element={<SubmissionCreatePage />} />
+            <Route path="/notes">
+              <Route path="" element={<NoteListPage />} />
+              <Route path="new" element={<NoteCreatePage />} />
+            </Route>
+            <Route path="/submissions">
+              <Route path="" element={<SubmissionListPage />} />
+              <Route path="new" element={<SubmissionCreatePage />} />
+              <Route path=":submissionId">
+                <Route path="" element={<SubmissionDetailPage />} />
+                <Route path="edit" element={<SubmissionCreatePage />} />
+                <Route path="notes">
+                  <Route path="" element={<SubmissionNoteListPage />} />
+                  {/* same page as above but passing in problemId */}
+                  <Route path="new" element={<NoteCreatePage />} />
+                </Route>
               </Route>
             </Route>
-          </Route>
-          <Route path="test" element={<TestPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </BrowserRouter>
-    </ApolloProvider>
+            <Route path="/problems">
+              <Route path="" element={<ProblemListPage />} />
+              <Route path="new" element={<ProblemCreatePage />} />
+              <Route path=":problemId">
+                <Route path="" element={<ProblemHubPage />} />
+                <Route path="notes">
+                  <Route path="" element={<ProblemNoteListPage />} />
+                  {/* same page as above but passing in problemId */}
+                  <Route path="new" element={<NoteCreatePage />} />
+                </Route>
+                <Route path="submissions">
+                  <Route path="" element={<ProblemSubmissionListPage />} />
+                  {/* same page as above but passing in problemId */}
+                  <Route path="new" element={<SubmissionCreatePage />} />
+                </Route>
+              </Route>
+            </Route>
+            <Route path="test" element={<TestPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </BrowserRouter>
+      </ApolloProvider>
+    </LocalizationProvider>
   );
 }
 

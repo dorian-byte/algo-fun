@@ -41,6 +41,12 @@ const ALL_PROBLEMS = gql`
       submissions {
         passed
       }
+      hasSubmissions
+      submissionsCount
+      hasNotes
+      hasResources
+      notesCount
+      resourcesCount
     }
   }
 `;

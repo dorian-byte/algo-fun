@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { hasPassed, allFailed } from '../utils/submissionStatusHelper';
 import { difficultyColor } from '../utils/difficultyColorHelper';
-import leetcode from '../assets/images/leetcode_icon.webp';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-enterprise';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -37,17 +36,24 @@ export const SubmissionsCellRenderer = (props: any) => {
   const id = props.data.id;
   const navigate = useNavigate();
   return (
-    <div className="d-flex justify-content-center align-items-center h-100">
+    <div className="d-flex justify-content-start align-items-center h-100">
       <button
         className="btn btn-outline-success btn-sm d-flex align-items-center fs-7 h-75"
+        disabled={props.data.hasSubmissions ? false : true}
+        style={{
+          opacity: props.data.hasSubmissions ? 1 : 0.5,
+        }}
         onClick={() => {
           navigate(`/problems/${id}/submissions`);
         }}
       >
-        submissions
+        submissions{' '}
+        {props.data.submissionsCount
+          ? `(${props.data.submissionsCount})`
+          : null}
       </button>
       <button
-        className="btn btn-outline-success btn-sm d-flex align-items-center fs-7 h-75 ms-2"
+        className="btn btn-outline-success btn-sm d-flex align-items-center fs-7 h-75 ms-1"
         onClick={() => {
           navigate(`/problems/${id}/submissions/new`);
         }}
@@ -62,14 +68,18 @@ export const NotesCellRenderer = (props: any) => {
   const id = props.data.id;
   const navigate = useNavigate();
   return (
-    <div className="d-flex justify-content-center align-items-center h-100">
+    <div className="d-flex justify-content-start align-items-center h-100">
       <button
         className="btn btn-outline-primary btn-sm d-flex align-items-center fs-7 h-75"
+        style={{
+          opacity: props.data.hasNotes ? 1 : 0.5,
+        }}
+        disabled={!props.data.hasNotes}
         onClick={() => {
           navigate(`/problems/${id}/notes`);
         }}
       >
-        notes
+        notes {props.data.notesCount ? `(${props.data.notesCount})` : null}
       </button>
       <button
         className="btn btn-outline-primary btn-sm d-flex align-items-center fs-7 h-75 ms-2"
@@ -90,11 +100,16 @@ export const ResourcesCellRenderer = (props: any) => {
     <div className="d-flex justify-content-center align-items-center h-100">
       <button
         className="btn btn-outline-info btn-sm d-flex align-items-center fs-7 h-75"
+        disabled={!props.data.hasResources}
+        style={{
+          opacity: props.data.hasResources ? 1 : 0.5,
+        }}
         onClick={() => {
           navigate(`/problems/${id}/resources`);
         }}
       >
-        resources
+        resources{' '}
+        {props.data.resourcesCount ? `(${props.data.resourcesCount})` : null}
       </button>
       <button
         className="btn btn-outline-info btn-sm d-flex align-items-center fs-7 h-75 ms-2"
@@ -178,7 +193,7 @@ const ProblemList = ({
       cellRenderer: SubmissionsCellRenderer,
       filter: false,
       sortable: false,
-      minWidth: 150,
+      minWidth: 180,
     },
     {
       field: 'notes',
@@ -186,7 +201,7 @@ const ProblemList = ({
       cellRenderer: NotesCellRenderer,
       filter: false,
       sortable: false,
-      minWidth: 120,
+      minWidth: 140,
     },
     {
       field: 'resources',
@@ -202,7 +217,8 @@ const ProblemList = ({
     flex: 1,
     sortable: true,
     resizable: true,
-    menuTabs: ['export'],
+    menutabs: ['filterMenuTab'],
+    // : ['export'],
     // filter: true,
   };
 

@@ -25,6 +25,9 @@ const ALL_SUBMISSIONS = gql`
       proficiencyLevel
       passed
       submittedAt
+      hasNotes
+      notesCount
+      hasResources
     }
   }
 `;

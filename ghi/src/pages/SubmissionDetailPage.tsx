@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import Drawer from '../components/DrawerWrapper';
 import NoteForm from '../components/NoteForm';
 import SubmissionForm from '../components/SubmissionForm';
@@ -15,10 +16,12 @@ const SubmissionDetailPage = ({
 
   if (simplified) {
     return (
-      <SubmissionForm
-        simplified={true}
-        selectedSubmission={selectedSubmission}
-      />
+      <Box>
+        <SubmissionForm
+          simplified={true}
+          selectedSubmission={selectedSubmission}
+        />
+      </Box>
     );
   }
   return (

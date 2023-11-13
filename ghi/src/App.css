@@ -320,7 +320,7 @@ label::after {
 input,
 select,
 textarea {
-  background-color: #773c24 !important;
+  /* background-color: #773c24 !important; */
   color: #b0b0b0 !important;
 }
 /* #isSolutionSwitch,
@@ -574,6 +574,19 @@ select::-webkit-scrollbar-thumb {
 }
 .text-orange {
   color: orange !important;
+}
+.border-true {
+  border-color: green !important;
+}
+.border-false {
+  border-color: red !important;
+}
+
+.text-false {
+  color: red !important;
+}
+.text-true {
+  color: green !important;
 }
 
 .bar-container {
