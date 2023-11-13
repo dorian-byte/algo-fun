@@ -7,7 +7,13 @@ import 'ag-grid-enterprise';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCheck,
+  faTimes,
+  faPaperPlane,
+  faBook,
+  faLink,
+} from '@fortawesome/free-solid-svg-icons';
 
 export const StatusCellRenderer = (props: any) => {
   return (
@@ -47,10 +53,8 @@ export const SubmissionsCellRenderer = (props: any) => {
           navigate(`/problems/${id}/submissions`);
         }}
       >
-        submissions{' '}
-        {props.data.submissionsCount
-          ? `(${props.data.submissionsCount})`
-          : null}
+        {props.data.submissionsCount ? `${props.data.submissionsCount}` : null}
+        <FontAwesomeIcon icon={faPaperPlane} className="ms-2" />
       </button>
       <button
         className="btn btn-outline-success btn-sm d-flex align-items-center fs-7 h-75 ms-1"
@@ -79,7 +83,8 @@ export const NotesCellRenderer = (props: any) => {
           navigate(`/problems/${id}/notes`);
         }}
       >
-        notes {props.data.notesCount ? `(${props.data.notesCount})` : null}
+        {props.data.notesCount ? `${props.data.notesCount}` : null}
+        <FontAwesomeIcon icon={faBook} className="ms-2" />
       </button>
       <button
         className="btn btn-outline-primary btn-sm d-flex align-items-center fs-7 h-75 ms-2"
@@ -108,8 +113,8 @@ export const ResourcesCellRenderer = (props: any) => {
           navigate(`/problems/${id}/resources`);
         }}
       >
-        resources{' '}
-        {props.data.resourcesCount ? `(${props.data.resourcesCount})` : null}
+        {props.data.resourcesCount ? `${props.data.resourcesCount}` : null}
+        <FontAwesomeIcon icon={faLink} className="ms-2" />
       </button>
       <button
         className="btn btn-outline-info btn-sm d-flex align-items-center fs-7 h-75 ms-2"
@@ -189,27 +194,27 @@ const ProblemList = ({
     },
     {
       field: 'submissions',
-      headerName: '',
+      headerName: 'Submissions',
       cellRenderer: SubmissionsCellRenderer,
       filter: false,
       sortable: false,
-      minWidth: 180,
+      minWidth: 110,
     },
     {
       field: 'notes',
-      headerName: '',
+      headerName: 'Notes',
       cellRenderer: NotesCellRenderer,
       filter: false,
       sortable: false,
-      minWidth: 140,
+      minWidth: 110,
     },
     {
       field: 'resources',
-      headerName: '',
+      headerName: 'Resources',
       cellRenderer: ResourcesCellRenderer,
       filter: false,
       sortable: false,
-      minWidth: 150,
+      minWidth: 120,
     },
   ];
 

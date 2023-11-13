@@ -13,6 +13,8 @@ import {
   faChalkboard,
   faUserTie,
   faKey,
+  faBook,
+  faLink,
 } from '@fortawesome/free-solid-svg-icons';
 import { dtStrToLocalShortStr } from '../utils/timeUtils';
 
@@ -161,7 +163,8 @@ export const NotesCellRenderer = (props: any) => {
         }}
         disabled={!props.data.hasNotes}
       >
-        notes
+        {props.data.notesCount ? `${props.data.notesCount}` : null}
+        <FontAwesomeIcon icon={faBook} className="ms-2" />
       </button>
       <button
         className="btn btn-outline-primary btn-sm d-flex align-items-center fs-7 h-75 ms-2"
@@ -190,7 +193,8 @@ export const ResourcesCellRenderer = (props: any) => {
           navigate(`/submissions/${id}/resources`);
         }}
       >
-        resources
+        {props.data.resourcesCount ? `${props.data.resourcesCount}` : null}
+        <FontAwesomeIcon icon={faLink} className="ms-2" />
       </button>
       <button
         className="btn btn-outline-info btn-sm d-flex align-items-center fs-7 h-75 ms-2"
@@ -310,19 +314,19 @@ const SubmissionList = ({
   if (!simplified) {
     columnDefs.push({
       field: 'notes',
-      headerName: '',
+      headerName: 'Notes',
       cellRenderer: NotesCellRenderer,
       filter: false,
       sortable: false,
-      minWidth: 120,
+      minWidth: 110,
     });
     columnDefs.push({
       field: 'resources',
-      headerName: '',
+      headerName: 'Resources',
       cellRenderer: ResourcesCellRenderer,
       filter: false,
       sortable: false,
-      minWidth: 150,
+      minWidth: 120,
     });
   }
 
