@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { dtToLocalISO16 } from '../utils/timeUtils';
-import { dtStrToLocalShortStr } from '../utils/timeUtils';
 import CodeEditor from './CodeEditor';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import Timer from '../components/Timer.tsx';
@@ -61,6 +60,32 @@ export const CREATE_SUBMISSION = gql`
   }
 `;
 
+const FETCH_SUBMISSION = gql`
+  query FetchSubmission($id: Int!) {
+    submissionById(id: $id) {
+      id
+      code
+      proficiencyLevel
+      passed
+      submittedAt
+      duration
+      isSolution
+      isInterviewMode
+      isWhiteboardMode
+      timeComplexity
+      spaceComplexity
+      methods {
+        id
+        name
+      }
+      problem {
+        id
+        title
+      }
+    }
+  }
+`;
+
 // class Complexity(models.TextChoices):
 //     O_1 = "o1", "o1"
 //     O_N_SQUARE_ROOT = "nsqrt", "nsqrt"
@@ -91,32 +116,6 @@ const BestSolutionKey = ({
     />
   );
 };
-
-const FETCH_SUBMISSION = gql`
-  query FetchSubmission($id: Int!) {
-    submissionById(id: $id) {
-      id
-      code
-      proficiencyLevel
-      passed
-      submittedAt
-      duration
-      isSolution
-      isInterviewMode
-      isWhiteboardMode
-      timeComplexity
-      spaceComplexity
-      methods {
-        id
-        name
-      }
-      problem {
-        id
-        title
-      }
-    }
-  }
-`;
 
 const SubmissionForm = ({
   simplified,
@@ -408,7 +407,11 @@ const SubmissionForm = ({
       <form className="d-flex flex-row gap-5" onSubmit={handleSubmit}>
         <div className="d-flex flex-column gap-2 flex-fill">
           <div className="d-flex flex-row align-items-baseline justify-content-start gap-3">
-            <h3 className="page-header">New Submission</h3>
+            <h3 className="page-header">
+              {submissionId
+                ? `${data?.problem?.id}. ${data?.problem?.title} - Submission Detail`
+                : 'New Submission'}{' '}
+            </h3>
             <BestSolutionKey
               isSolution={data?.isSolution}
               setIsSolution={() => {

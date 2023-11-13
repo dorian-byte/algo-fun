@@ -79,7 +79,7 @@ const ProblemDetail = ({
   return (
     <div>
       <div className="d-flex align-items-center justify-content-between">
-        <h4 className="mb-2">
+        <h4 className="page-header mb-2">
           <b>
             {problem.leetcodeNumber}. {problem.title}
           </b>
