@@ -318,6 +318,15 @@ class Note(PolymorphicModel):
     start_line_number = models.PositiveIntegerField(blank=True, null=True)
     end_line_number = models.PositiveIntegerField(blank=True, null=True)
 
+    @property
+    def note_level(self):
+        if isinstance(self, ProblemNote):
+            return "ProblemNote"
+        elif isinstance(self, SubmissionNote):
+            return "SubmissionNote"
+        else:
+            return "Unknown"
+
     def save(self, *args, **kwargs):
         # NOTE: Before saving the Note object, check if only start_line_number is provided.
         # If end_line_number is not provided, set end_line_number equal to start_line_number.

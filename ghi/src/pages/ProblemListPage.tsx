@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import ProblemList from '../components/ProblemList';
+import Breadcrumb from '../components/Breadcrumb';
 
 const ALL_PROBLEMS = gql`
   query AllProblems {

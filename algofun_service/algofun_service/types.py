@@ -12,6 +12,7 @@ from algofun.models import (
     ProblemResource,
     NoteResource,
     SubmissionResource,
+    Note,
 )
 from graphene_django import DjangoObjectType
 from django import forms
@@ -38,8 +39,13 @@ class SubmissionResourceType(DjangoObjectType):
 
 
 class ProblemNoteType(DjangoObjectType):
+    note_level = graphene.Field(graphene.String)
+
     class Meta:
         model = ProblemNote
+
+    def resolve_note_level(self, info):
+        return self.note_level
 
 
 class CompanyType(DjangoObjectType):
@@ -122,5 +128,15 @@ class TopicType(DjangoObjectType):
 
 
 class SubmissionNoteType(DjangoObjectType):
+    note_level = graphene.Field(graphene.String)
+
     class Meta:
         model = SubmissionNote
+
+    def resolve_note_level(self, info):
+        return self.note_level
+
+
+class NoteType(DjangoObjectType):
+    class Meta:
+        model = Note

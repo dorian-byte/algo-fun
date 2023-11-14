@@ -1,7 +1,7 @@
 import { LinkContainer } from 'react-router-bootstrap';
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import Logo from '../../public/journal-bookmark-icon-c9701d.svg';
-import Timer from './Timer';
+import Breadcrumb from './Breadcrumb';
 
 const Navigation = () => {
   return (
@@ -57,6 +57,7 @@ const Navigation = () => {
           </LinkContainer>
         </Nav>
       </Navbar.Collapse>
+      <Breadcrumb />
     </Navbar>
   );
 };

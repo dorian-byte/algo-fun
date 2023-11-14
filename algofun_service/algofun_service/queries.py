@@ -12,6 +12,7 @@ from algofun.models import (
     ProblemResource,
     NoteResource,
     SubmissionResource,
+    Note,
 )
 from graphene_django import DjangoObjectType
 from django import forms
@@ -28,6 +29,7 @@ from algofun_service.types import (
     SourceType,
     TopicType,
     SubmissionNoteType,
+    NoteType,
 )
 
 
@@ -52,6 +54,8 @@ class Query(graphene.ObjectType):
     all_problem_resources = graphene.List(ProblemResourceType)
     problem_resource_by_id = graphene.Field(ProblemResourceType, id=graphene.Int())
     all_submission_resources = graphene.List(SubmissionResourceType)
+    all_notes = graphene.List(NoteType)
+    note_by_id = graphene.Field(NoteType, id=graphene.Int())
     submission_resource_by_id = graphene.Field(
         SubmissionResourceType, id=graphene.Int()
     )
@@ -129,6 +133,12 @@ class Query(graphene.ObjectType):
 
     def resolve_note_resource_by_id(self, info, id):
         return NoteResource.objects.get(pk=id)
+
+    def resolve_all_notes(self, info):
+        return Note.objects.all()
+
+    def resolve_note_by_id(self, info, id):
+        return Note.objects.get(pk=id)
 
     # more queries like this isn't necessary
     # def resolve_submissions_by_problem_id(self, info, problem_id):
