@@ -80,6 +80,10 @@ function App() {
                   <Route path="" element={<ProblemSubmissionListPage />} />
                   {/* same page as above but passing in problemId */}
                   <Route path="new" element={<SubmissionCreatePage />} />
+                  <Route
+                    path=":submissionId"
+                    element={<SubmissionDetailPage />}
+                  />
                 </Route>
               </Route>
             </Route>
