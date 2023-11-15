@@ -35,6 +35,10 @@ const Breadcrumb = () => {
     { label: string; path?: string }[]
   >([]);
 
+  const capitalizeFirstLetter = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
   useEffect(() => {
     const c = [defaultCrumbs.home];
 
@@ -51,14 +55,14 @@ const Breadcrumb = () => {
 
     if (groups?.firstLevelAction) {
       c.push({
-        label: groups?.firstLevelAction,
+        label: capitalizeFirstLetter(groups?.firstLevelAction),
         path: `/${groups?.firstLevel}/${groups?.firstLevelAction}`,
       });
     }
 
     if (groups?.secondLevel) {
       c.push({
-        label: groups?.secondLevel,
+        label: capitalizeFirstLetter(groups?.secondLevel),
         path: `/${groups?.firstLevel}/${groups?.firstLevelId}/${groups?.secondLevel}`,
       });
     }
@@ -72,14 +76,14 @@ const Breadcrumb = () => {
 
     if (groups?.secondLevelAction) {
       c.push({
-        label: groups?.secondLevelAction,
+        label: capitalizeFirstLetter(groups?.secondLevelAction),
         path: `/${groups?.firstLevel}/${groups?.firstLevelId}/${groups?.secondLevel}/${groups?.secondLevelAction}`,
       });
     }
 
     if (groups?.thirdLevel) {
       c.push({
-        label: groups?.thirdLevel,
+        label: capitalizeFirstLetter(groups?.thirdLevel),
         path: `/${groups?.firstLevel}/${groups?.firstLevelId}/${groups?.secondLevel}/${groups?.secondLevelId}/${groups?.thirdLevel}`,
       });
     }
@@ -93,7 +97,7 @@ const Breadcrumb = () => {
 
     if (groups?.thirdLevelAction) {
       c.push({
-        label: groups?.thirdLevelAction,
+        label: capitalizeFirstLetter(groups?.thirdLevelAction),
         path: `/${groups?.firstLevel}/${groups?.firstLevelId}/${groups?.secondLevel}/${groups?.secondLevelId}/${groups?.thirdLevel}/${groups?.thirdLevelAction}`,
       });
     }
