@@ -36,7 +36,7 @@ const Breadcrumb = () => {
   >([]);
 
   useEffect(() => {
-    const c = [];
+    const c = [defaultCrumbs.home];
 
     if (groups?.firstLevel) {
       c.push(defaultCrumbs[groups?.firstLevel]);
@@ -102,7 +102,7 @@ const Breadcrumb = () => {
   }, [pathname]);
 
   return (
-    <nav aria-label="breadcrumb">
+    <div className="me-auto">
       <ol className="breadcrumb mt-3 ms-3">
         {crumbs.map((crumb, idx) => {
           const isLast = idx === crumbs.length - 1;
@@ -120,7 +120,7 @@ const Breadcrumb = () => {
           );
         })}
       </ol>
-    </nav>
+    </div>
   );
 };
 

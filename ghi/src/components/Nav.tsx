@@ -1,64 +1,58 @@
-import { LinkContainer } from 'react-router-bootstrap';
-import { Navbar, Nav } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import Logo from '../../public/journal-bookmark-icon-c9701d.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faPuzzlePiece,
+  faPaperPlane,
+  faBook,
+  faPlus,
+} from '@fortawesome/free-solid-svg-icons';
 import Breadcrumb from './Breadcrumb';
 
 const Navigation = () => {
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
-      <LinkContainer to="/">
-        <Navbar.Brand>
-          <img
-            src={Logo}
-            width="30"
-            height="30"
-            className="d-inline-block align-top"
-          />
-        </Navbar.Brand>
-      </LinkContainer>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
-          {/* <NavDropdown title="Submissions" id="submissionDropdown">
-            <LinkContainer to="/submissions">
-              <NavDropdown.Item>All Submissions</NavDropdown.Item>
-            </LinkContainer>
-            <LinkContainer to="/submissions/new">
-              <NavDropdown.Item>New Submission</NavDropdown.Item>
-            </LinkContainer>
-          </NavDropdown>
-
-          <NavDropdown title="Problems" id="problemDropdown">
-            <LinkContainer to="/problems">
-              <NavDropdown.Item>All Problems</NavDropdown.Item>
-            </LinkContainer>
-            <LinkContainer to="/problems/new">
-              <NavDropdown.Item>New Problem</NavDropdown.Item>
-            </LinkContainer>
-            <NavDropdown.Divider />
-            <LinkContainer to="/notes">
-              <NavDropdown.Item>View Notes</NavDropdown.Item>
-            </LinkContainer>
-            <LinkContainer to="/notes/new">
-              <NavDropdown.Item>New Note</NavDropdown.Item>
-            </LinkContainer>
-          </NavDropdown> */}
-          <LinkContainer to="/problems">
-            <Nav.Link>Problems</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to="/submissions">
-            <Nav.Link>Submissions</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to="/submissions/new">
-            <Nav.Link>New Submission</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to="/notes/new">
-            <Nav.Link>New Note</Nav.Link>
-          </LinkContainer>
-        </Nav>
-      </Navbar.Collapse>
-      <Breadcrumb />
-    </Navbar>
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div className="d-flex">
+        <Link to="/" className="navbar-brand">
+          <img src={Logo} width="30" height="30" alt="Logo" />
+        </Link>
+        {/* for collapsing
+      <button
+        className="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+      >
+        <span className="navbar-toggler-icon"></span>
+      </button> */}
+        <Breadcrumb />
+      </div>
+      <div className="collapse navbar-collapse" id="navbarNav">
+        <ul className="navbar-nav ms-auto">
+          <li className="nav-item">
+            <Link to="/problems" className="nav-link">
+              <FontAwesomeIcon icon={faPuzzlePiece} /> Problems
+            </Link>
+          </li>
+          <li className="nav-item d-flex align-items-center gap-1 ms-3">
+            <Link to="/submissions" style={{ textDecoration: 'None' }}>
+              <FontAwesomeIcon icon={faPaperPlane} /> Submissions
+            </Link>
+            <Link to="/submissions/new">
+              <FontAwesomeIcon icon={faPlus} />
+            </Link>
+          </li>
+          <li className="nav-item d-flex align-items-center gap-1 ms-4">
+            <Link to="/notes" style={{ textDecoration: 'None' }}>
+              <FontAwesomeIcon icon={faBook} /> Notes
+            </Link>
+            <Link to="/notes/new">
+              <FontAwesomeIcon icon={faPlus} />
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </nav>
   );
 };
 
