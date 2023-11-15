@@ -50,14 +50,14 @@ const ProblemSubmissionListPage = () => {
 
   return (
     <div>
-      <div className="container display-list-header d-flex flex-row justify-content-between align-items-center">
+      <div className="d-flex justify-content-between align-items-center">
         <h2 className="page-header">
           Submissions for {data?.problemById?.leetcodeNumber}
           {'. '}
           {data?.problemById?.title}
         </h2>
       </div>
-      <div className="main container container-list-part">
+      <div className="main container ">
         <SubmissionList submissions={submissions} />
       </div>
     </div>

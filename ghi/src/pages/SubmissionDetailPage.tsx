@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import Drawer from '../components/DrawerWrapper';
 import NoteForm from '../components/NoteForm';
 import SubmissionForm from '../components/SubmissionForm';
@@ -16,28 +15,34 @@ const SubmissionDetailPage = ({
 
   if (simplified) {
     return (
-      <Box>
-        <SubmissionForm
-          simplified={true}
-          selectedSubmission={selectedSubmission}
-        />
-      </Box>
+      <SubmissionForm
+        simplified={true}
+        selectedSubmission={selectedSubmission}
+      />
     );
   }
   return (
     <div>
-      <SubmissionForm />
-      <button
-        className="btn btn-outline-primary mb-2"
-        onClick={() => {
-          navigate(`/submissions/${submissionId}/notes`);
-        }}
+      <div
+        className="d-flex gap-3 justify-content-between align-items-center mt-5 mb-4"
+        style={{ marginLeft: '142px', marginRight: '142px' }}
       >
-        Notes
-      </button>
-      <Drawer buttonText="Add Note">
-        <NoteForm />
-      </Drawer>
+        <h3 className="page-header">Submission Detail</h3>
+        <div className="d-flex gap-3 justify-content-end align-items-center">
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              navigate(`/submissions/${submissionId}/notes`);
+            }}
+          >
+            Notes
+          </button>
+          <Drawer buttonText="Add Note">
+            <NoteForm />
+          </Drawer>
+        </div>
+      </div>
+      <SubmissionForm />
     </div>
   );
 };

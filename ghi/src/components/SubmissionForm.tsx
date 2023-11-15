@@ -9,8 +9,7 @@ import { PROFICIENCY_LEVEL_DISPLAY } from './SubmissionList';
 import { BIG_O_COMPLEXITY_DISPLAY } from './SubmissionList';
 import ChatMethodGenerator from './ChatMethodGenerator.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKey } from '@fortawesome/free-solid-svg-icons';
-import { Edit } from '@mui/icons-material';
+import { faKey, faEdit } from '@fortawesome/free-solid-svg-icons';
 import SubmissionFormSimplified from './SubmissionFormSimplified.tsx';
 import { Box } from '@mui/material';
 
@@ -80,6 +79,7 @@ const FETCH_SUBMISSION = gql`
       }
       problem {
         id
+        leetcodeNumber
         title
       }
     }
@@ -109,7 +109,7 @@ const BestSolutionKey = ({
       icon={faKey}
       style={{
         color: isSolution ? 'darkorange' : 'grey',
-        fontSize: '24px',
+        fontSize: '22px',
         cursor: 'pointer',
       }}
       onClick={setIsSolution}
@@ -407,10 +407,10 @@ const SubmissionForm = ({
       <form className="d-flex flex-row gap-5" onSubmit={handleSubmit}>
         <div className="d-flex flex-column gap-2 flex-fill">
           <div className="d-flex flex-row align-items-baseline justify-content-start gap-3">
-            <h3 className="page-header">
+            <h3 className="container-header">
               {submissionId
-                ? `${data?.problem?.id}. ${data?.problem?.title} - Submission Detail`
-                : 'New Submission'}{' '}
+                ? `${data?.problem?.leetcodeNumber}. ${data?.problem?.title}`
+                : 'Select Problem'}{' '}
             </h3>
             <BestSolutionKey
               isSolution={data?.isSolution}
@@ -701,12 +701,14 @@ const SubmissionForm = ({
             <label className="text-gray">Code</label>
             {!readOnly && <Timer />}
             {readOnly && (
-              <Edit
+              <FontAwesomeIcon
+                icon={faEdit}
                 onClick={() => {
                   setReadOnly(false);
                   navigate(`/submissions/${submissionId}/edit`);
                 }}
-                sx={{ cursor: 'pointer' }}
+                style={{ cursor: 'pointer', fontSize: '20px' }}
+                className="text-primary mb-3"
               />
             )}
           </div>

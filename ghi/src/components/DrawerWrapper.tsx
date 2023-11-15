@@ -33,10 +33,7 @@ export default function FormDrawer({
       <React.Fragment>
         {renderOpenner && renderOpenner(() => toggleDrawer(true))}
         {!renderOpenner && (
-          <button
-            className="btn btn-outline-primary"
-            onClick={toggleDrawer(true)}
-          >
+          <button className="btn btn-primary" onClick={toggleDrawer(true)}>
             {buttonText}
           </button>
         )}

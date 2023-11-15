@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import ProblemList from '../components/ProblemList';
-import Breadcrumb from '../components/Breadcrumb';
 
 const ALL_PROBLEMS = gql`
   query AllProblems {
@@ -134,9 +133,9 @@ const ProblemListPage = () => {
 
   return (
     <div>
-      <div className="container display-list-header d-flex flex-row justify-content-between align-items-center">
+      <div className="d-flex justify-content-between align-items-center">
         <h2 className="page-header">Problems</h2>
-        <div className="d-flex flex-row align-items-center gap-3">
+        <div className="d-flex align-items-center gap-3">
           <div className="dropdown">
             <button
               className="btn btn-outline-primary dropdown-toggle"
@@ -244,7 +243,7 @@ const ProblemListPage = () => {
           </button>
         </div>
       </div>
-      <div className="main container container-list-part">
+      <div className="main container">
         <ProblemList problems={filteredProblems} loading={loading} />
       </div>
     </div>

@@ -240,10 +240,7 @@ const ProblemList = ({
     if (gridApi && !loading) gridApi?.hideOverlay();
   }, [loading, gridApi]);
   return (
-    <div
-      className="d-flex justify-content-center align-items-center mt-4"
-      style={{ borderRadius: '12px !important' }}
-    >
+    <div className="d-flex justify-content-center align-items-center mt-4">
       <div style={containerStyle}>
         <div style={gridStyle} className="ag-theme-alpine-dark">
           <AgGridReact
