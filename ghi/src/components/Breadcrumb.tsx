@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { NAV_GET_PROBLEM_NAME_VIA_PROBLEM_ID } from '../queries/nav_queries';
 
 const Breadcrumb = () => {
   const { pathname } = useLocation();
@@ -35,9 +37,23 @@ const Breadcrumb = () => {
     { label: string; path?: string }[]
   >([]);
 
+  const { data: problemNameData, loading: problemNameLoading } = useQuery(
+    NAV_GET_PROBLEM_NAME_VIA_PROBLEM_ID,
+    {
+      variables: {
+        problemId: +groups?.firstLevelId,
+      },
+      skip: groups?.firstLevel !== 'problems' || !groups?.firstLevelId,
+    }
+  );
+
   const capitalizeFirstLetter = (str: string) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
+
+  useEffect(() => {
+    console.log('problemNameData', problemNameData);
+  }, [problemNameData]);
 
   useEffect(() => {
     const c = [defaultCrumbs.home];
@@ -47,8 +63,15 @@ const Breadcrumb = () => {
     }
 
     if (groups?.firstLevelId) {
+      let label = problemNameLoading
+        ? 'Loading...'
+        : problemNameData
+        ? problemNameData?.problemById?.leetcodeNumber +
+          '. ' +
+          problemNameData?.problemById?.title
+        : 'Submission Detail';
       c.push({
-        label: groups?.firstLevelId,
+        label: label,
         path: `/${groups?.firstLevel}/${groups?.firstLevelId}`,
       });
     }
@@ -103,7 +126,7 @@ const Breadcrumb = () => {
     }
 
     setCrumbs(c);
-  }, [pathname]);
+  }, [pathname, problemNameData, problemNameLoading]);
 
   return (
     <div className="me-auto">
