@@ -9,7 +9,7 @@ import {
   CREATE_SUBMISSION_NOTE,
   CREATE_PROBLEM_NOTE,
   FETCH_SUBMISSION,
-} from './NoteFormQueries';
+} from './NoteQueries';
 import { useQuery, useMutation } from '@apollo/client';
 import NoteFormTypeAhead from './NoteFormTypeAhead';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

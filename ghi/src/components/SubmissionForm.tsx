@@ -9,9 +9,9 @@ import { PROFICIENCY_LEVEL_DISPLAY } from './SubmissionList';
 import { BIG_O_COMPLEXITY_DISPLAY } from './SubmissionList';
 import ChatMethodGenerator from './ChatMethodGenerator.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKey, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faKey, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import SubmissionFormSimplified from './SubmissionFormSimplified.tsx';
-import { Box } from '@mui/material';
+import ConfirmationDialog from './ConfirmationDialog.tsx';
 
 // NOTE: Despite our GraphQL schema defining the query as 'problem_by_id',
 // the server expects it in camelCase as 'problemById'.
@@ -86,6 +86,14 @@ const FETCH_SUBMISSION = gql`
   }
 `;
 
+const DELETE_SUBMISSION = gql`
+  mutation DeleteSubmission($id: ID!) {
+    deleteSubmission(id: $id) {
+      ok
+    }
+  }
+`;
+
 // class Complexity(models.TextChoices):
 //     O_1 = "o1", "o1"
 //     O_N_SQUARE_ROOT = "nsqrt", "nsqrt"
@@ -128,6 +136,30 @@ const SubmissionForm = ({
   const { pathname } = useLocation();
   const [localProblemId, setLocalProblemId] = useState(null);
   const [readOnly, setReadOnly] = useState(false);
+  const [deleteSubmission] = useMutation(DELETE_SUBMISSION, {
+    variables: { id: submissionId },
+  });
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const handleDelete = () => {
+    setIsDialogOpen(true);
+  };
+  const handleConfirmDelete = () => {
+    deleteSubmission().then((res) => {
+      if (res.data.deleteSubmission.ok) {
+        console.log('deleted');
+        if (problemId) navigate(`/problems/${problemId}/submissions`);
+        else if (submissionId) navigate(`/submissions`);
+      } else {
+        console.log('error');
+        alert('error deleting submission: ' + submissionId);
+      }
+    });
+    setIsDialogOpen(false);
+  };
+  const handleCancel = () => {
+    setIsDialogOpen(false);
+  };
   useEffect(() => {
     if (pathname.includes('new') || pathname.includes('edit')) {
       setReadOnly(false);
@@ -195,11 +227,12 @@ const SubmissionForm = ({
           (method: any) => +method.id
         ),
       });
-      setLocalProblemId(null);
+      setLocalProblemId(submissionDetailData.submissionById.problem?.id);
     } else if (selectedSubmission) {
       setData({
         ...selectedSubmission,
       });
+      setLocalProblemId(selectedSubmission?.problem?.id);
     }
   }, [submissionDetailData, selectedSubmission]);
 
@@ -258,40 +291,24 @@ const SubmissionForm = ({
     }));
     setSelected(selectedProblem || []); // Ensures 'selected' is always an array
   }, []);
-  useEffect(() => {
-    console.log('data changed to: ', data);
-  }, [data]);
-  // useEffect(() => {
-  //   if (
-  //     allProblemsData?.allProblems &&
-  //     Array.isArray(allProblemsData?.allProblems)
-  //   ) {
-  //     setOptions(allProblemsData?.allProblems);
-  //   }
-  //   if (
-  //     problemData?.problemById &&
-  //     typeof problemData?.problemById === 'object'
-  //   ) {
-  //     setSelected([problemData?.problemById]);
-  //   }
-  // }, [allProblemsData?.allProblems, problemData?.problemById]);
 
   useEffect(() => {
     if (problemData) {
-      console.log('allProblemsData', allProblemsData);
-      console.log('problemData', problemData);
       setSelected(
         allProblemsData?.allProblems && allProblemsData?.allProblems.length > 0
           ? [{ id: '', leetcodeNumber: '', title: '' }]
           : [problemData?.problemById]
       );
       if (allProblemsData?.allProblems?.length > 0) {
-        console.log('tf');
+        console.log('no....');
         setOptions(allProblemsData?.allProblems);
       } else {
-        console.log('wtf');
+        console.log('nonono.....');
         setOptions([problemData?.problemById]);
       }
+    } else if (allProblemsData?.allProblems) {
+      setSelected([]);
+      setOptions(allProblemsData?.allProblems);
     }
   }, [problemData, allProblemsData]);
   const [moreInfoOpacity, setMoreInfoOpacity] = useState(0.5);
@@ -313,11 +330,12 @@ const SubmissionForm = ({
           readOnly={readOnly}
         />
         <div className="d-flex gap-1 align-items-center justify-content-between">
-          <Box
-            sx={{
+          <div
+            style={{
               display: selectedSubmission ? 'block' : 'none',
               opacity: moreInfoOpacity,
             }}
+            className="d-flex gap-2 align-items-center"
             onMouseEnter={() => setMoreInfoOpacity(1)}
             onMouseLeave={() => setMoreInfoOpacity(0.5)}
           >
@@ -382,7 +400,13 @@ const SubmissionForm = ({
                 }));
               }}
             />
-          </Box>
+            <FontAwesomeIcon
+              icon={faTrash}
+              onClick={handleDelete}
+              style={{ cursor: 'pointer', fontSize: '20px', marginTop: '10px' }}
+              className="text-primary ms-2"
+            />
+          </div>
 
           <div>
             <button className="btn btn-outline-primary btn-sm mt-2">
@@ -398,6 +422,13 @@ const SubmissionForm = ({
             </button>
           </div>
         </div>
+        <ConfirmationDialog
+          open={isDialogOpen}
+          title="Delete Submission"
+          message="Are you sure?"
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancel}
+        />
       </div>
     );
   }
@@ -701,15 +732,25 @@ const SubmissionForm = ({
             <label className="text-gray">Code</label>
             {!readOnly && <Timer />}
             {readOnly && (
-              <FontAwesomeIcon
-                icon={faEdit}
-                onClick={() => {
-                  setReadOnly(false);
-                  navigate(`/submissions/${submissionId}/edit`);
-                }}
-                style={{ cursor: 'pointer', fontSize: '20px' }}
-                className="text-primary mb-3"
-              />
+              <div className="d-flex gap-4">
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  onClick={() => {
+                    setReadOnly(false);
+                    navigate(`/submissions/${submissionId}/edit`);
+                  }}
+                  style={{ cursor: 'pointer', fontSize: '20px' }}
+                  className="text-primary mb-3"
+                />
+                <FontAwesomeIcon
+                  icon={faTrash}
+                  onClick={() => {
+                    handleDelete();
+                  }}
+                  style={{ cursor: 'pointer', fontSize: '20px' }}
+                  className="text-primary mb-3"
+                />
+              </div>
             )}
           </div>
           <CodeEditor
@@ -728,6 +769,13 @@ const SubmissionForm = ({
           />
         </div>
       </form>
+      <ConfirmationDialog
+        open={isDialogOpen}
+        title="Delete Submission"
+        message="Are you sure you want to delete this submission?"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancel}
+      />
     </div>
   );
 };

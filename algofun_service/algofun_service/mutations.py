@@ -53,6 +53,8 @@ class ProblemNoteMutation(DjangoModelFormMutation):
         model_operations = ["create", "update"]
         lookup_field = "id"
 
+    # Argmument fields are not supposed to be customized.
+    # They should be aligned with the fields in the model.(both name and data type)
     class Argument:
         id = graphene.ID(required=False)
         problem = graphene.String(required=False)

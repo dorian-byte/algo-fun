@@ -24,6 +24,7 @@ export const CREATE_PROBLEM_NOTE = gql`
   mutation CreateNote($input: ProblemNoteMutationInput!) {
     updateProblemNote(input: $input) {
       problemNote {
+        id
         problem {
           id
         }
@@ -43,6 +44,7 @@ export const CREATE_SUBMISSION_NOTE = gql`
   mutation CreateSubmissionNote($input: SubmissionNoteMutationInput!) {
     updateSubmissionNote(input: $input) {
       submissionNote {
+        id
         submission {
           id
         }
@@ -77,6 +79,64 @@ export const FETCH_SUBMISSION = gql`
       methods {
         id
         name
+      }
+    }
+  }
+`;
+
+export const DELETE_NOTE = gql`
+  mutation DeleteNote($id: ID!) {
+    deleteNote(id: $id) {
+      ok
+    }
+  }
+`;
+
+export const EDIT_PROBLEM_NOTE = gql`
+  mutation UpdateProblemNote($input: ProblemNoteMutationInput!) {
+    updateProblemNote(input: $input) {
+      problemNote {
+        id
+        problem {
+          id
+        }
+        title
+        content
+        submittedAt
+        isStarred
+        noteType
+        startLineNumber
+        endLineNumber
+        resources {
+          id
+          url
+          resourceType
+        }
+      }
+    }
+  }
+`;
+
+export const EDIT_SUBMISSION_NOTE = gql`
+  mutation UpdateSubmissionNote($input: SubmissionNoteMutationInput!) {
+    updateSubmissionNote(input: $input) {
+      submissionNote {
+        id
+        submission {
+          id
+        }
+        title
+        content
+        submittedAt
+        isStarred
+        noteType
+        startLineNumber
+        endLineNumber
+        resources {
+          id
+          url
+          resourceType
+        }
       }
     }
   }

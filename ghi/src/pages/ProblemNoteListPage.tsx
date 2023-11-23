@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import NoteDetailAccordion from '../components/NoteDetailAccordion';
-import ProblemNotesList from '../components/ProblemNotesList';
 
 const PROBLEM_NOTES = gql`
   query ProblemNotes($id: Int!) {
@@ -32,6 +31,9 @@ const PROBLEM_NOTES = gql`
         id
         passed
         notes {
+          submission {
+            id
+          }
           id
           title
           content
@@ -86,11 +88,6 @@ const ProblemNoteListPage = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
-  // return (
-  //   <>
-  //     <ProblemNotesList />
-  //   </>
-  // );
 
   return (
     <>
@@ -115,6 +112,8 @@ const ProblemNoteListPage = () => {
                   key={note.id}
                   note={note}
                   allOpen={allOpen}
+                  parentId={problemId as string}
+                  noteLevel="problem"
                 />
               ))}
             </div>
@@ -131,6 +130,8 @@ const ProblemNoteListPage = () => {
                   key={note.id}
                   note={note}
                   allOpen={allOpen}
+                  parentId={note?.submission?.id}
+                  noteLevel="submission"
                 />
               ))}
             </div>
