@@ -3,7 +3,7 @@ import { Note } from '../types';
 import { dtStrToLocalShortStr } from '../utils/timeUtils';
 import { VideoCard, ImageCard } from './Cards';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEdit, faStar } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationDialog from './ConfirmationDialog';
 import { useMutation } from '@apollo/client';
 import {
@@ -50,6 +50,7 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
       id: note?.id,
       title: note?.title,
       content: note?.content,
+      isStarred: note?.isStarred,
       noteType: note?.noteType.toLowerCase(),
       submittedAt: new Date().toISOString(),
     } as any;
@@ -101,7 +102,14 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
         className="card-header accordion-header"
         onClick={() => setOpen(!open)}
       >
-        <h5>{note?.title || note?.content?.split('\n')[0]}</h5>
+        <div className="d-flex">
+          <FontAwesomeIcon
+            icon={faStar}
+            className="me-2 mt-1"
+            color={note?.isStarred ? 'darkorange' : 'gray'}
+          />
+          <h5>{note?.title || note?.content?.split('\n')[0]}</h5>
+        </div>
         <span className="text-gray">
           <small>{dtStrToLocalShortStr(note?.submittedAt as string)}</small>
         </span>
@@ -172,9 +180,22 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
                 }}
               />
               {editable && (
-                <div className="ps-3">
+                <div className="d-flex gap-3 ps-3">
+                  <FontAwesomeIcon
+                    icon={faStar}
+                    className={note?.isStarred ? 'text-primary' : 'text-gray'}
+                    style={{
+                      marginTop: 7,
+                    }}
+                    onClick={() => {
+                      setNote({
+                        ...note,
+                        isStarred: !note?.isStarred,
+                      });
+                    }}
+                  />
                   <select
-                    className="form-select"
+                    className="form-select form-select-sm bg-transparent text-gray text-center text-capitalize border-primary"
                     aria-label="select type"
                     style={{ width: 150 }}
                     value={note?.noteType?.toLocaleLowerCase() || 'select type'}
@@ -194,6 +215,18 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
                       )
                     )}
                   </select>
+                  <input
+                    type="text"
+                    className="form-control form-control-sm"
+                    placeholder="new title"
+                    value={note?.title}
+                    onChange={(e) => {
+                      setNote({
+                        ...note,
+                        title: e.target.value,
+                      });
+                    }}
+                  />
                 </div>
               )}
             </div>

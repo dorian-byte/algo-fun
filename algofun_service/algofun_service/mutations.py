@@ -62,6 +62,7 @@ class ProblemNoteMutation(DjangoModelFormMutation):
         content = graphene.String(required=False)
         created_at = graphene.String(required=False)
         updated_at = graphene.String(required=False)
+        is_starred = graphene.Boolean(required=False)
         note_type = graphene.String(required=False)
         start_line_number = graphene.Int(required=False)
         end_line_number = graphene.Int(required=False)

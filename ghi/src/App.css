@@ -162,6 +162,10 @@ nav hr {
   margin-bottom: 0px !important;
 }
 
+.border-primary {
+  border: 1px dashed #f38960 !important;
+}
+
 /* .container-list-part {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
