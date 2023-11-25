@@ -41,7 +41,12 @@ const ProblemNoteListPage = () => {
   if (error) return <p>Error :(</p>;
 
   return (
-    <>
+    <div
+      className="scrollbar-hidden overflow-auto"
+      style={{
+        maxHeight: 'calc(100vh - 60px)',
+      }}
+    >
       <div className="d-flex justify-content-between">
         <h1 className="m-4 page-header">
           {data.problemById.leetcodeNumber}
@@ -57,7 +62,7 @@ const ProblemNoteListPage = () => {
         {problemNotes.length > 0 && (
           <>
             <h3 className="mb-3 text-center section-heading">Problem Notes</h3>
-            <div className="container">
+            <div className="container overflow-auto scrollbar-hidden">
               {problemNotes.map((note: any) => (
                 <NoteDetailAccordion
                   key={note.id}
@@ -75,7 +80,7 @@ const ProblemNoteListPage = () => {
             <h3 className="my-3 text-center section-heading">
               Submission Notes
             </h3>
-            <div className="container">
+            <div className="container overflow-auto scrollbar-hidden">
               {submissionNotes.map((note: any) => (
                 <NoteDetailAccordion
                   key={note.id}
@@ -89,7 +94,7 @@ const ProblemNoteListPage = () => {
           </>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

@@ -166,6 +166,10 @@ nav hr {
   border: 1px dashed #f38960 !important;
 }
 
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none !important;
+}
+
 /* .container-list-part {
   padding-top: 0 !important;
   padding-bottom: 0 !important;

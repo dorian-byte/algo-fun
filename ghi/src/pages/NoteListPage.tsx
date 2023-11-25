@@ -59,7 +59,7 @@ const NoteListPage = () => {
           {allOpen ? 'Collapse All' : 'Expand All'}
         </button>
       </div>
-      <div className="container">
+      <div className="container overflow-auto scrollbar-hidden">
         {allNotes
           .sort((a, b) => {
             const dateA = new Date(b.submittedAt as any).getTime();

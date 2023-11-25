@@ -64,7 +64,7 @@ const SubmissionNoteListPage = () => {
           {allOpen ? 'Collapse All' : 'Expand All'}
         </button>
       </div>
-      <div className="container mt-3 overflow-y-auto">
+      <div className="container overflow-auto scrollbar-hidden mt-3">
         {submissionNotes.map((note: any) => (
           <NoteDetailAccordion key={note.id} note={note} allOpen={allOpen} />
         ))}
