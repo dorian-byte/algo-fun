@@ -34,7 +34,7 @@ const SubmissionNoteListPage = () => {
   const { submissionId } = useParams();
   const [submissionNotes, setSubmissionNotes] = useState([]);
   const [allOpen, setAllOpen] = useState(true);
-  const { loading, error, data } = useQuery(SUBMISSION_NOTES, {
+  const { loading, error, data, refetch } = useQuery(SUBMISSION_NOTES, {
     variables: { id: submissionId ? +submissionId : 0 },
   });
 
@@ -44,6 +44,10 @@ const SubmissionNoteListPage = () => {
       setSubmissionNotes(data.submissionById.notes);
     }
   }, [data]);
+
+  useEffect(() => {
+    refetch();
+  }, [submissionId]);
 
   const toggleAll = () => {
     setAllOpen((prevState) => !prevState);

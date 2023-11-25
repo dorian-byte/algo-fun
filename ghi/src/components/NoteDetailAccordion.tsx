@@ -17,6 +17,7 @@ interface NoteDetailAccordionProps {
   allOpen: boolean;
   noteLevel: 'submission' | 'problem';
   parentId: number | string;
+  refresh?: () => void;
 }
 
 const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
@@ -24,6 +25,7 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
   allOpen,
   noteLevel,
   parentId,
+  refresh,
 }) => {
   const [open, setOpen] = useState(allOpen);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -38,14 +40,16 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
 
   const handleConfirmDelete = () => {
     deleteNote().then((res) => {
-      if (res.data.deletenote?.ok) {
-        // console.log('deleted');
+      if (res.data.deleteNote?.ok) {
+        console.log('res', res);
         setIsDeleteDialogOpen(false);
+        // window.location.reload();
+        refresh && refresh();
       }
     });
   };
 
-  const handleConfirmEdit = () => {
+  const handleSubmitEdit = () => {
     const input = {
       id: note?.id,
       title: note?.title,
@@ -89,6 +93,7 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
         });
       });
     }
+    setEditable(false);
   };
 
   useEffect(() => {
@@ -126,7 +131,7 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
                   bottom: 10,
                   right: 30,
                 }}
-                onClick={handleConfirmEdit}
+                onClick={handleSubmitEdit}
               >
                 submit
               </button>

@@ -9,7 +9,7 @@ const ProblemNoteListPage = () => {
   const [problemNotes, setProblemNotes] = useState([]);
   const [allOpen, setAllOpen] = useState(true);
   const [submissionNotes, setSubmissionNotes] = useState([]);
-  const { loading, error, data } = useQuery(ALL_NOTES_BY_PROBLEM_ID, {
+  const { loading, error, data, refetch } = useQuery(ALL_NOTES_BY_PROBLEM_ID, {
     variables: { id: problemId ? +problemId : 0 },
   });
 
@@ -25,6 +25,9 @@ const ProblemNoteListPage = () => {
     }
   }, [data]);
 
+  useEffect(() => {
+    refetch();
+  }, [problemId]);
   // useEffect(() => {
   //   console.log('pnotes', problemNotes);
   //   console.log('snotes', submissionNotes);

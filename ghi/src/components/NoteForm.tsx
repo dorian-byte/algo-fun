@@ -42,7 +42,8 @@ export const NoteType = {
   MEMO: ['memo', 'Memo'],
 };
 
-const NoteForm = ({ inDrawer = false, simplified = false, height }: any) => {
+// const NoteForm = ({ inDrawer = false, simplified = false, height }: any) => {
+const NoteForm = () => {
   const [starOpacity, setStarOpacity] = useState<number>(0.5);
   const [data, setData] = useState<any>({
     title: '',
@@ -58,8 +59,8 @@ const NoteForm = ({ inDrawer = false, simplified = false, height }: any) => {
   const { problemId, submissionId } = useParams();
   const {
     data: { allProblems } = { allProblems: [] },
-    loading: allProblemsLoading,
-    error: allProblemsError,
+    // loading: allProblemsLoading,
+    // error: allProblemsError,
   } = useQuery(FETCH_ALL_PROBLEMS);
 
   const { data: { problemById: problemDetails } = { problemDetails: {} } } =
@@ -109,22 +110,28 @@ const NoteForm = ({ inDrawer = false, simplified = false, height }: any) => {
 
     if (problemId) {
       console.log('has problemId');
-      createProblemNote();
+      createProblemNote().then((_) => navigate(`/problems/${problemId}/notes`));
     } else if (submissionId) {
       console.log('has submissionId');
       console.log('data', data);
-      createSubmissionNote();
+      createSubmissionNote().then((_) =>
+        navigate(`/submissions/${submissionId}/notes`)
+      );
     } else if (data?.problem) {
       console.log('has data.problem');
       console.log('data', data);
       createProblemNote()
-        .then((res) => console.log('res', res))
+        .then((res) => {
+          console.log('res', res);
+          // here data.problem's value is the problem id
+          navigate(`/problems/${data.problem}/notes`);
+        })
         .catch((err) => console.error(err));
     } else {
       console.log('no problem selected');
     }
 
-    problemId ? navigate(`/problems/${problemId}/notes`) : navigate(`/notes`);
+    // problemId ? navigate(`/problems/${problemId}/notes`) : navigate(`/notes`);
   };
 
   // useEffect(() => {

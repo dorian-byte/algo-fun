@@ -5,6 +5,7 @@ import {
   FETCH_ALL_PROBLEM_NOTES,
   FETCH_ALL_SUBMISSION_NOTES,
 } from '../components/NoteQueries';
+import { useLocation } from 'react-router-dom';
 
 const NoteListPage = () => {
   const [allNotes, setAllNotes] = useState<any[]>([]);
@@ -13,11 +14,13 @@ const NoteListPage = () => {
     data: allProblemNotesData,
     loading: allProblemNotesLoading,
     error: allProblemNotesError,
+    refetch: refetchAllProblemNotes,
   } = useQuery(FETCH_ALL_PROBLEM_NOTES);
   const {
     data: allSubmissionNotesData,
     loading: allSubmissionNotesLoading,
     error: allSubmissionNotesError,
+    refetch: refetchAllSubmissionNotes,
   } = useQuery(FETCH_ALL_SUBMISSION_NOTES);
   useEffect(() => {
     if (
@@ -31,6 +34,12 @@ const NoteListPage = () => {
     }
     console.log('allNotes', allNotes);
   }, [allProblemNotesData, allSubmissionNotesData]);
+
+  const { pathname } = useLocation();
+  useEffect(() => {
+    refetchAllProblemNotes();
+    refetchAllSubmissionNotes();
+  }, [pathname]);
 
   if (allProblemNotesLoading || allSubmissionNotesLoading) {
     return <div>Loading...</div>;
@@ -53,7 +62,9 @@ const NoteListPage = () => {
       <div className="container">
         {allNotes
           .sort((a, b) => {
-            return new Date(a.submittedAt) - new Date(b.submittedAt as any);
+            const dateA = new Date(b.submittedAt as any).getTime();
+            const dateB = new Date(a.submittedAt as any).getTime();
+            return dateB - dateA;
           })
           .map((note) => (
             <NoteDetailAccordion
@@ -70,6 +81,10 @@ const NoteListPage = () => {
                   ? 'problem'
                   : 'submission'
               }
+              refresh={() => {
+                refetchAllProblemNotes();
+                refetchAllSubmissionNotes();
+              }}
             />
           ))}
       </div>
