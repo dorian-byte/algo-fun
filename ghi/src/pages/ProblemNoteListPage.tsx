@@ -1,67 +1,15 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import NoteDetailAccordion from '../components/NoteDetailAccordion';
-
-const PROBLEM_NOTES = gql`
-  query ProblemNotes($id: Int!) {
-    problemById(id: $id) {
-      id
-      title
-      leetcodeNumber
-      notes {
-        id
-        title
-        content
-        createdAt
-        updatedAt
-        submittedAt
-        isStarred
-        noteType
-        startLineNumber
-        endLineNumber
-        resources {
-          id
-          title
-          url
-          resourceType
-        }
-      }
-      submissions {
-        id
-        passed
-        notes {
-          submission {
-            id
-          }
-          id
-          title
-          content
-          createdAt
-          updatedAt
-          submittedAt
-          isStarred
-          noteType
-          startLineNumber
-          endLineNumber
-          resources {
-            id
-            title
-            url
-            resourceType
-          }
-        }
-      }
-    }
-  }
-`;
+import { ALL_NOTES_BY_PROBLEM_ID } from '../components/NoteQueries';
 
 const ProblemNoteListPage = () => {
   const { problemId } = useParams();
   const [problemNotes, setProblemNotes] = useState([]);
   const [allOpen, setAllOpen] = useState(true);
   const [submissionNotes, setSubmissionNotes] = useState([]);
-  const { loading, error, data } = useQuery(PROBLEM_NOTES, {
+  const { loading, error, data } = useQuery(ALL_NOTES_BY_PROBLEM_ID, {
     variables: { id: problemId ? +problemId : 0 },
   });
 

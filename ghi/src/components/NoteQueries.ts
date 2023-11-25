@@ -20,6 +20,65 @@ export const FETCH_ALL_PROBLEMS = gql`
   }
 `;
 
+export const FETCH_ALL_PROBLEM_NOTES = gql`
+  query FETCH_ALL_PROBLEM_NOTES {
+    allProblemNotes {
+      problem {
+        id
+        title
+        leetcodeNumber
+      }
+      id
+      title
+      content
+      createdAt
+      updatedAt
+      submittedAt
+      isStarred
+      noteType
+      startLineNumber
+      endLineNumber
+      resources {
+        id
+        title
+        url
+        resourceType
+      }
+    }
+  }
+`;
+
+export const FETCH_ALL_SUBMISSION_NOTES = gql`
+  query FETCH_ALL_SUBMISSION_NOTES {
+    allSubmissionNotes {
+      submission {
+        id
+        problem {
+          id
+          title
+          leetcodeNumber
+        }
+      }
+      id
+      title
+      content
+      createdAt
+      updatedAt
+      submittedAt
+      isStarred
+      noteType
+      startLineNumber
+      endLineNumber
+      resources {
+        id
+        title
+        url
+        resourceType
+      }
+    }
+  }
+`;
+
 export const CREATE_PROBLEM_NOTE = gql`
   mutation CreateNote($input: ProblemNoteMutationInput!) {
     updateProblemNote(input: $input) {
@@ -136,6 +195,59 @@ export const EDIT_SUBMISSION_NOTE = gql`
           id
           url
           resourceType
+        }
+      }
+    }
+  }
+`;
+
+export const ALL_NOTES_BY_PROBLEM_ID = gql`
+  query ProblemNotes($id: Int!) {
+    problemById(id: $id) {
+      id
+      title
+      leetcodeNumber
+      notes {
+        id
+        title
+        content
+        createdAt
+        updatedAt
+        submittedAt
+        isStarred
+        noteType
+        startLineNumber
+        endLineNumber
+        resources {
+          id
+          title
+          url
+          resourceType
+        }
+      }
+      submissions {
+        id
+        passed
+        notes {
+          submission {
+            id
+          }
+          id
+          title
+          content
+          createdAt
+          updatedAt
+          submittedAt
+          isStarred
+          noteType
+          startLineNumber
+          endLineNumber
+          resources {
+            id
+            title
+            url
+            resourceType
+          }
         }
       }
     }
