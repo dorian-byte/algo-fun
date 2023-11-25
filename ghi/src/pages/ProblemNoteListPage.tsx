@@ -40,11 +40,11 @@ const ProblemNoteListPage = () => {
   return (
     <>
       <div className="d-flex justify-content-between">
-        <div className="m-4 page-header">
+        <h1 className="m-4 page-header">
           {data.problemById.leetcodeNumber}
           {'. '}
           {data.problemById.title}
-        </div>
+        </h1>
         <button onClick={toggleAll} className="btn btn-primary py-0 px-2">
           {allOpen ? 'Collapse All' : 'Expand All'}
         </button>
