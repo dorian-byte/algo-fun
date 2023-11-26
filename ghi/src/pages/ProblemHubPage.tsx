@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import { dtToLocalISO16 } from '../utils/timeUtils';
-import { CREATE_SUBMISSION } from '../components/SubmissionForm';
+import { CREATE_SUBMISSION } from '../graphql/submissionQueries';
 import { useMutation } from '@apollo/client';
 import SubmissionList from '../components/SubmissionList';
 import ChatSubmissionAnalyzer from '../components/ChatSubmissionAnalyzer';

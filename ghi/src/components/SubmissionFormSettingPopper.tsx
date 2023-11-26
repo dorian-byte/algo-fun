@@ -1,12 +1,13 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import Box from '@mui/material/Box';
 import Popper, { PopperPlacementType } from '@mui/material/Popper';
 import { ClickAwayListener, InputBase, List, ListItem } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+
 interface SimplifiedSubmissionFormProps {
+  submissionData?: any;
   popperTitle?: string;
   position?: PopperPlacementType | undefined;
   proficiencyLevel: string;
@@ -27,9 +28,11 @@ interface SimplifiedSubmissionFormProps {
   setIsInterviewMode: React.Dispatch<React.SetStateAction<boolean>>;
   complexityOptions: string[];
   proficiencyLevelOptions: string[];
+  handleSubmit: (e) => void;
 }
 
-export default function SubmissionFormSimplified({
+export default function SubmissionFormSettingPopper({
+  submissionData,
   popperTitle,
   position,
   proficiencyLevel,
@@ -50,6 +53,7 @@ export default function SubmissionFormSimplified({
   setIsInterviewMode,
   complexityOptions = [],
   proficiencyLevelOptions = [],
+  handleSubmit,
 }: SimplifiedSubmissionFormProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [proficiencyAnchor, setProficiencyAnchor] =
@@ -75,7 +79,7 @@ export default function SubmissionFormSimplified({
 
   const id = Boolean(anchorEl) ? 'popper-more-info' : undefined;
 
-  const data = {
+  const chipData = {
     'O-time': {
       options: complexityOptions,
       anchor: timeComplexityAnchor,
@@ -137,39 +141,24 @@ export default function SubmissionFormSimplified({
         placement={position ? position : 'bottom-end'}
       >
         <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
-          <Box
-            sx={{
-              borderRadius: 2,
-              border: 1,
-              p: 2,
-              bgcolor: 'background.paper',
+          <div
+            className="d-flex flex-column gap-2 bg-gray p-2 rounded-3"
+            style={{
               maxWidth: 'fit-content',
               maxHeight: 'fit-content',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 1,
             }}
           >
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            >
+            <div className="d-flex justify-content-between">
               <DateTimePicker
                 value={dayjs(submittedAt)}
                 label="submitted at"
                 onChange={(newValue) => {
-                  setSubmittedAt(newValue);
+                  setSubmittedAt(newValue as any);
                 }}
               />
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
+              <div
+                className="d-flex gap-2 justify-content-between align-items-center"
+                style={{
                   cursor: 'pointer',
                   userSelect: 'none',
                 }}
@@ -179,11 +168,11 @@ export default function SubmissionFormSimplified({
                   ['whiteboard', isWhiteboardMode, setIsWhiteboardMode],
                   ['interview', isInterviewMode, setIsInterviewMode],
                 ])}
-              </Box>
-            </Box>
-            <Box sx={{ display: 'flex' }}>
+              </div>
+            </div>
+            <div className="d-flex">
               <div className="badge badge-outlined text-true border border-true d-flex align-items-center">
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <div className="d-flex align-items-center justify-content-center">
                   Used
                   <InputBase
                     inputProps={{ min: 0, style: { textAlign: 'center' } }}
@@ -195,23 +184,32 @@ export default function SubmissionFormSimplified({
                     }}
                   />
                   min
-                </Box>
+                </div>
               </div>
-              {Object.keys(data).map((objKey: string) => {
+              {Object.keys(chipData).map((objKey: string) => {
                 return (
-                  <Box
+                  <div
+                    className="d-flex justify-content-center align-items-center ms-1"
                     key={objKey}
-                    sx={{ ml: 1, display: 'flex', alignItems: 'center' }}
                   >
                     {renderChip({
                       labelPrefix: objKey,
-                      ...data[objKey],
+                      ...chipData[objKey],
                     })}
-                  </Box>
+                  </div>
                 );
               })}
-            </Box>
-          </Box>
+            </div>
+            <button
+              className="btn btn-outline-primary"
+              onClick={(e) => {
+                handleSubmit(e);
+                setAnchorEl(null);
+              }}
+            >
+              submit
+            </button>
+          </div>
         </ClickAwayListener>
       </Popper>
     </div>

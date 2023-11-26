@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import NoteDetailAccordion from '../components/NoteDetailAccordion';
-import { ALL_NOTES_BY_PROBLEM_ID } from '../components/NoteQueries';
+import { ALL_NOTES_BY_PROBLEM_ID } from '../graphql/noteQueries';
 
 const ProblemNoteListPage = () => {
   const { problemId } = useParams();

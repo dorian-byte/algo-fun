@@ -4,7 +4,7 @@ import NoteDetailAccordion from '../components/NoteDetailAccordion';
 import {
   FETCH_ALL_PROBLEM_NOTES,
   FETCH_ALL_SUBMISSION_NOTES,
-} from '../components/NoteQueries';
+} from '../graphql/noteQueries';
 import { useLocation } from 'react-router-dom';
 
 const NoteListPage = () => {

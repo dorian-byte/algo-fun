@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
+import {
+  FETCH_PROBLEM,
+  FETCH_ALL_PROBLEMS,
+  FETCH_SUBMISSION,
+  CREATE_SUBMISSION,
+  DELETE_SUBMISSION,
+} from '../graphql/submissionQueries';
 import { dtToLocalISO16 } from '../utils/timeUtils';
 import CodeEditor from './CodeEditor';
 import { Typeahead } from 'react-bootstrap-typeahead';
@@ -10,100 +17,8 @@ import { BIG_O_COMPLEXITY_DISPLAY } from './SubmissionList';
 import ChatMethodGenerator from './ChatMethodGenerator.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import SubmissionFormSimplified from './SubmissionFormSimplified.tsx';
+import SubmissionFormSettingPopper from './SubmissionFormSettingPopper.tsx';
 import ConfirmationDialog from './ConfirmationDialog.tsx';
-
-// NOTE: Despite our GraphQL schema defining the query as 'problem_by_id',
-// the server expects it in camelCase as 'problemById'.
-const FETCH_PROBLEM = gql`
-  query FetchProblem($id: Int!) {
-    problemById(id: $id) {
-      id
-      title
-      leetcodeNumber
-    }
-  }
-`;
-
-const FETCH_ALL_PROBLEMS = gql`
-  query FetchAllProblems {
-    allProblems {
-      id
-      title
-      leetcodeNumber
-    }
-  }
-`;
-
-export const CREATE_SUBMISSION = gql`
-  mutation CreateSubmission($input: SubmissionMutationInput!) {
-    updateSubmission(input: $input) {
-      submission {
-        code
-        duration
-        isSolution
-        isWhiteboardMode
-        isInterviewMode
-        timeComplexity
-        spaceComplexity
-        problem {
-          id
-        }
-        methods {
-          name
-        }
-        proficiencyLevel
-        submittedAt
-      }
-    }
-  }
-`;
-
-const FETCH_SUBMISSION = gql`
-  query FetchSubmission($id: Int!) {
-    submissionById(id: $id) {
-      id
-      code
-      proficiencyLevel
-      passed
-      submittedAt
-      duration
-      isSolution
-      isInterviewMode
-      isWhiteboardMode
-      timeComplexity
-      spaceComplexity
-      methods {
-        id
-        name
-      }
-      problem {
-        id
-        leetcodeNumber
-        title
-      }
-    }
-  }
-`;
-
-const DELETE_SUBMISSION = gql`
-  mutation DeleteSubmission($id: ID!) {
-    deleteSubmission(id: $id) {
-      ok
-    }
-  }
-`;
-
-// class Complexity(models.TextChoices):
-//     O_1 = "o1", "o1"
-//     O_N_SQUARE_ROOT = "nsqrt", "nsqrt"
-//     O_LOGN = "logn", "logn"
-//     O_N = "n", "n"
-//     O_NLOGN = "nlogn", "nlogn"
-//     O_N2 = "n2", "n2"
-//     O_N3 = "n3", "n3"
-//     O_2N = "2n", "2n"
-//     O_N_FACTORIAL = "nfactorial", "nfactorial"
 
 const BestSolutionKey = ({
   isSolution,
@@ -175,7 +90,7 @@ const SubmissionForm = ({
     error: submissionDetailError,
   } = useQuery(FETCH_SUBMISSION, {
     skip: !submissionId && !selectedSubmission?.id,
-    variables: { id: submissionId ? +submissionId : selectedSubmission?.id },
+    variables: { id: submissionId ? +submissionId : +selectedSubmission?.id },
   });
 
   const {
@@ -236,7 +151,7 @@ const SubmissionForm = ({
     }
   }, [submissionDetailData, selectedSubmission]);
 
-  const [createSubmission] = useMutation(CREATE_SUBMISSION);
+  const [createOrEditSubmission] = useMutation(CREATE_SUBMISSION);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -255,14 +170,16 @@ const SubmissionForm = ({
     if (data?.id || submissionId) {
       input['id'] = data?.id || submissionId;
     }
-    createSubmission({
+    createOrEditSubmission({
       variables: { input },
-    }).then((res) => {
-      console.log('res', res);
-      showFixedProblemTitleInSelection
-        ? navigate(`/problems/${problemId || localProblemId}/submissions`)
-        : navigate(`/submissions`);
-    });
+    })
+      .then((res) => {
+        console.log('res', res);
+        showFixedProblemTitleInSelection
+          ? navigate(`/problems/${problemId || localProblemId}/submissions`)
+          : navigate(`/submissions`);
+      })
+      .catch((err) => console.error(err));
   };
 
   const handleDateTimeChange = (type: 'date' | 'time', value: string) => {
@@ -316,6 +233,9 @@ const SubmissionForm = ({
   if (singleProblemLoading || allProblemsLoading) return <p>Loading...</p>;
   if (singleProblemError) return <p>Error: {singleProblemError.message}</p>;
   if (allProblemsError) return <p>Error: {allProblemsError.message}</p>;
+  if (submissionDetailLoading) return <p>Loading...</p>;
+  if (submissionDetailError)
+    return <p>Error: {submissionDetailError.message}</p>;
 
   if (simplified) {
     return (
@@ -324,10 +244,15 @@ const SubmissionForm = ({
           width="100%"
           height="60vh"
           language="python"
-          value={selectedSubmission?.code}
+          value={data?.code}
+          onChange={(value: string) => {
+            setData((prev: any) => ({ ...prev, code: value }));
+          }}
+          // value={selectedSubmission?.code}
           showLineNumbers={true}
           theme="vs-dark"
-          readOnly={readOnly}
+          // readOnly={readOnly}
+          readOnly={false}
         />
         <div className="d-flex gap-1 align-items-center justify-content-between">
           <div
@@ -339,7 +264,7 @@ const SubmissionForm = ({
             onMouseEnter={() => setMoreInfoOpacity(1)}
             onMouseLeave={() => setMoreInfoOpacity(0.5)}
           >
-            <SubmissionFormSimplified
+            <SubmissionFormSettingPopper
               position="top-start"
               complexityOptions={Object.keys(BIG_O_COMPLEXITY_DISPLAY)}
               proficiencyLevelOptions={Object.keys(PROFICIENCY_LEVEL_DISPLAY)}
@@ -399,6 +324,7 @@ const SubmissionForm = ({
                   proficiencyLevel: newProficiencyLevel,
                 }));
               }}
+              handleSubmit={handleSubmit}
             />
             <FontAwesomeIcon
               icon={faTrash}
@@ -631,49 +557,8 @@ const SubmissionForm = ({
             <div className="w-50">
               <ChatMethodGenerator data={data} setData={setData} />
             </div>
-            {/* <div className="form-group" style={{ width: '40%' }}>
-              <label className="text-gray small mb-1">Methods</label>
-              <select
-                multiple
-                className="form-control"
-                value={data?.methods}
-                onChange={(e) => {
-                  const selectedOptions = Array.from(
-                    e.target.selectedOptions,
-                    (option) => option.value
-                  );
-                  setData((prev: any) => ({
-                    ...prev,
-                    methods: selectedOptions,
-                  }));
-                }}
-              >
-                {['method1', 'method2', 'method3'].map((method) => (
-                  <option key={method} value={method}>
-                    {method}
-                  </option>
-                ))}
-              </select>
-            </div> */}
 
             <div className="d-flex flex-column gap-1 mt-2">
-              {/* <div className="form-check form-switch">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="isSolutionSwitch"
-                  checked={data?.isSolution}
-                  onChange={(e) =>
-                    setData((prev: any) => ({
-                      ...prev,
-                      isSolution: e.target.checked,
-                    }))
-                  }
-                />
-                <label className="form-check-label" htmlFor="isSolutionSwitch">
-                  Best Solution
-                </label>
-              </div> */}
               <div className="form-check form-switch">
                 <input
                   className="form-check-input"
@@ -687,7 +572,6 @@ const SubmissionForm = ({
                     }))
                   }
                   disabled={readOnly}
-                  // readOnly={readOnly}
                 />
                 <label
                   className="form-check-label"

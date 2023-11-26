@@ -10,7 +10,7 @@ import {
   DELETE_NOTE,
   EDIT_PROBLEM_NOTE,
   EDIT_SUBMISSION_NOTE,
-} from './NoteQueries';
+} from '../graphql/noteQueries';
 
 interface NoteDetailAccordionProps {
   note: Note;

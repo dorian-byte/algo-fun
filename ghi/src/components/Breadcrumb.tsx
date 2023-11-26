@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { NAV_GET_PROBLEM_NAME_VIA_PROBLEM_ID } from '../queries/nav_queries';
+import { NAV_GET_PROBLEM_NAME_VIA_PROBLEM_ID } from '../graphql/navQueries';
 
 const Breadcrumb = () => {
   const { pathname } = useLocation();
