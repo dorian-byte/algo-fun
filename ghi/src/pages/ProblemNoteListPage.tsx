@@ -7,11 +7,11 @@ import { ALL_NOTES_BY_PROBLEM_ID } from '../graphql/noteQueries';
 const ProblemNoteListPage = () => {
   const { problemId } = useParams();
   const [problemNotes, setProblemNotes] = useState([]);
-  const [allOpen, setAllOpen] = useState(true);
   const [submissionNotes, setSubmissionNotes] = useState([]);
   const { loading, error, data, refetch } = useQuery(ALL_NOTES_BY_PROBLEM_ID, {
     variables: { id: problemId ? +problemId : 0 },
   });
+  const [allOpen, setAllOpen] = useState(true);
 
   useEffect(() => {
     if (data) {

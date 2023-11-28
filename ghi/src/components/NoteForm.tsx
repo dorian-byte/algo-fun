@@ -351,9 +351,9 @@ const NoteForm = () => {
       </div>
       <div className="d-flex flex-column flex-fill">
         <CodeEditor
-          width="100%"
+          width={'auto'}
           height={ref?.current?.clientHeight + 'px'}
-          language="python"
+          language="markdown"
           value={data?.content || '// Write your note here'}
           showLineNumbers={true}
           theme="vs-dark"

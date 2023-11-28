@@ -5,7 +5,7 @@ import {
   faPuzzlePiece,
   faPaperPlane,
   faBook,
-  faPlus,
+  faPlusCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import Breadcrumb from './Breadcrumb';
 
@@ -31,23 +31,28 @@ const Navigation = () => {
         <ul className="navbar-nav ms-auto">
           <li className="nav-item">
             <Link to="/problems" className="nav-link">
-              <FontAwesomeIcon icon={faPuzzlePiece} /> Problems
+              <FontAwesomeIcon icon={faPuzzlePiece} className="me-1" /> Problems
             </Link>
           </li>
-          <li className="nav-item d-flex align-items-center gap-1 ms-3">
+          <li className="nav-item d-flex align-items-center gap-2 ms-5">
             <Link to="/submissions" style={{ textDecoration: 'None' }}>
-              <FontAwesomeIcon icon={faPaperPlane} /> Submissions
+              <FontAwesomeIcon icon={faPaperPlane} className="me-1" />{' '}
+              Submissions
             </Link>
             <Link to="/submissions/new">
-              <FontAwesomeIcon icon={faPlus} />
+              <FontAwesomeIcon icon={faPlusCircle} fontSize={18} />
             </Link>
           </li>
-          <li className="nav-item d-flex align-items-center gap-1 ms-4">
+          <li className="nav-item d-flex align-items-center gap-2 ms-5">
             <Link to="/notes" style={{ textDecoration: 'None' }}>
-              <FontAwesomeIcon icon={faBook} /> Notes
+              <FontAwesomeIcon icon={faBook} className="me-1" /> Notes
             </Link>
             <Link to="/notes/new">
-              <FontAwesomeIcon icon={faPlus} />
+              <FontAwesomeIcon
+                icon={faPlusCircle}
+                fontSize={18}
+                className="me-2"
+              />
             </Link>
           </li>
         </ul>
