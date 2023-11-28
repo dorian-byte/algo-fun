@@ -21,10 +21,9 @@ const ProblemNoteListTab = () => {
   useEffect(() => {
     if (data) {
       setProblemNotes(data.problemById.notes);
-      setSubmissionNotes(
+      setSubmissionNotes(() =>
         data.problemById.submissions.reduce((acc: any, cur: any) => {
-          acc + cur.notes;
-          return acc;
+          return [...acc, ...cur.notes];
         }, [])
       );
     }
@@ -36,11 +35,14 @@ const ProblemNoteListTab = () => {
   if (error) return <p>Error :(</p>;
 
   return (
-    <div style={{ marginTop: -25 }}>
+    <div style={{ maxHeight: '75vh', overflowY: 'hidden' }}>
       <TabContext value={value}>
         <AppBar
           position="relative"
-          sx={{ bgcolor: 'transparent', boxShadow: 'none' }}
+          sx={{
+            bgcolor: 'transparent',
+            boxShadow: 'none',
+          }}
         >
           <Toolbar sx={{ justifyContent: 'space-between' }}>
             <TabList
@@ -82,26 +84,33 @@ const ProblemNoteListTab = () => {
           </Toolbar>
         </AppBar>
         <TabPanel value="1">
-          {problemNotes.map((note) => (
-            <NoteDetailAccordion
-              key={note?.id as string}
-              note={note}
-              allOpen={allOpen}
-              parentId={problemId as string}
-              noteLevel="problem"
-            />
-          ))}
+          <div
+            className="overflow-auto scrollbar-hidden"
+            style={{ height: '70vh' }}
+          >
+            {problemNotes.map((note) => (
+              <NoteDetailAccordion
+                key={note?.id as string}
+                note={note}
+                allOpen={allOpen}
+                parentId={problemId as string}
+                noteLevel="problem"
+              />
+            ))}
+          </div>
         </TabPanel>
         <TabPanel value="2">
-          {submissionNotes.map((note) => (
-            <NoteDetailAccordion
-              key={note?.id as string}
-              note={note}
-              allOpen={allOpen}
-              parentId={note?.submission?.id as string}
-              noteLevel="problem"
-            />
-          ))}
+          <div className="overflow-hidden">
+            {submissionNotes.map((note) => (
+              <NoteDetailAccordion
+                key={note?.id as string}
+                note={note}
+                allOpen={allOpen}
+                parentId={note?.submission?.id as string}
+                noteLevel="submission"
+              />
+            ))}
+          </div>
         </TabPanel>
       </TabContext>
     </div>

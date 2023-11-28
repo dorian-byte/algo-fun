@@ -216,7 +216,12 @@ const ProblemHubPage = () => {
               chatResponse={chatResponse}
             />
           </TabPanel>
-          <TabPanel value="5">
+          <TabPanel
+            value="5"
+            sx={{
+              padding: '0px',
+            }}
+          >
             <ProblemNoteListTab />
           </TabPanel>
         </TabContext>
