@@ -41,6 +41,8 @@ const NoteListPage = () => {
     refetchAllSubmissionNotes();
   }, [pathname]);
 
+  const [toggleButtonColor, setToggleButtonColor] = useState('');
+
   if (allProblemNotesLoading || allSubmissionNotesLoading) {
     return <div>Loading...</div>;
   }
@@ -50,16 +52,25 @@ const NoteListPage = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between">
-        <h1 className="m-4 page-header">All Notes</h1>
-        <button
-          className="btn btn-primary py-0 px-2"
+      <div className="d-flex justify-content-center">
+        <h1 className="page-header mt-5 mb-2">All Notes</h1>
+      </div>
+      <div className="container overflow-auto scrollbar-hidden position-relative">
+        <div
+          className="position-absolute"
+          style={{
+            right: 15,
+            top: 10,
+            color: toggleButtonColor,
+            cursor: 'pointer',
+            fontSize: '0.9rem',
+          }}
           onClick={() => setAllOpen((prevState) => !prevState)}
+          onMouseEnter={() => setToggleButtonColor('orange')}
+          onMouseLeave={() => setToggleButtonColor('')}
         >
           {allOpen ? 'Collapse All' : 'Expand All'}
-        </button>
-      </div>
-      <div className="container overflow-auto scrollbar-hidden">
+        </div>
         {allNotes
           .sort((a, b) => {
             const dateA = new Date(b.submittedAt as any).getTime();
