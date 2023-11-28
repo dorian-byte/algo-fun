@@ -24,22 +24,22 @@ const SubmissionDetailPage = ({
   return (
     <div>
       <div
-        className='d-flex gap-3 justify-content-between align-items-center mt-5 mb-4'
+        className="d-flex gap-3 justify-content-between align-items-center mt-5 mb-4"
         style={{ marginLeft: '142px', marginRight: '142px' }}
       >
-        <h3 className='page-header'>Submission Detail</h3>
-        <div className='d-flex gap-3 justify-content-end align-items-center'>
+        <h3 className="page-header">Submission Detail</h3>
+        <div className="d-flex gap-3 justify-content-end align-items-center">
           <button
-            className='btn btn-primary'
+            className="btn btn-primary"
             onClick={() => {
               navigate(`/submissions/${submissionId}/notes`);
             }}
           >
             Notes
           </button>
-          <Drawer buttonText='Add Note'>
-            <div className='p-2 vh-100 p-5'>
-              <NoteForm simplified={true} />
+          <Drawer buttonText="Add Note">
+            <div className="p-2 vh-100 p-5">
+              <NoteForm />
             </div>
           </Drawer>
         </div>
