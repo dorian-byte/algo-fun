@@ -101,6 +101,20 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
   }, [allOpen]);
   const [deleteMouseEnter, setDeleteMouseEnter] = useState(false);
 
+  const getDomainFromUrl = (url: string) => {
+    // check if url is from leetcode (either .com or .cn) and contains '/solutions/'
+    if (url.includes('leetcode.com') && url.includes('/solutions/')) {
+      return 'LeetCode';
+    } else if (url.includes('leetcode.cn') && url.includes('/solutions/')) {
+      return '力扣';
+    } else {
+      // if not a leetcode solutions post, extract the domain name
+      const regex = /^(?:https?:\/\/)?(?:www\.)?([^\/]+)/;
+      const match = url.match(regex);
+      return match ? match[1] : url;
+    }
+  };
+
   return (
     <div className={` mb-3 ${open ? 'accordion-toggle' : ''}`}>
       <div
@@ -235,27 +249,53 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
                 </div>
               )}
             </div>
-          </div>
-          {note?.resources?.some((r) => r.resourceType === 'VIDEO') && (
-            <h6 className="mb-2 text-gray">Videos</h6>
-          )}
-          <div className="row">
-            {note?.resources
-              ?.filter((r) => r.resourceType === 'VIDEO')
-              .map((resource) => (
-                <VideoCard videoURL={resource.url} />
-              ))}
-          </div>
+            {note?.resources?.some((r) => r.resourceType === 'VIDEO') && (
+              <h6 className="text-gray ms-2 mt-3 mb-2">Videos</h6>
+            )}
+            <div className="row ms-1">
+              {note?.resources
+                ?.filter((r) => r.resourceType === 'VIDEO')
+                .map((resource) => (
+                  <VideoCard videoURL={resource.url} />
+                ))}
+            </div>
 
-          {note?.resources?.some((r) => r.resourceType === 'IMAGE') && (
-            <h6 className="text-gray my-2">Images</h6>
-          )}
-          <div className="row">
-            {note?.resources
-              ?.filter((r) => r.resourceType === 'IMAGE')
-              .map((resource) => (
-                <ImageCard imageURL={resource.url} />
-              ))}
+            {note?.resources?.some((r) => r.resourceType === 'IMAGE') && (
+              <h6 className="text-gray ms-2 mt-3 mb-2">Images</h6>
+            )}
+            <div className="row ms-1">
+              {note?.resources
+                ?.filter((r) => r.resourceType === 'IMAGE')
+                .map((resource) => (
+                  <ImageCard imageURL={resource.url} />
+                ))}
+            </div>
+
+            {note?.resources?.some((r) => r.resourceType === 'ARTICLE') && (
+              <h6 className="text-gray ms-2 mt-3 mb-2">Articles</h6>
+            )}
+            <div className="row ms-1">
+              {note?.resources
+                ?.filter((r) => r.resourceType === 'ARTICLE')
+                .map((resource) => (
+                  <a href={resource.url} target="_blank">
+                    {getDomainFromUrl(resource.url)}
+                  </a>
+                ))}
+            </div>
+
+            {note?.resources?.some(
+              (r) => r.resourceType === 'SOLUTION_POST'
+            ) && <h6 className="text-gray ms-2 mt-3 mb-2">Solution Posts</h6>}
+            <div className="row ms-1">
+              {note?.resources
+                ?.filter((r) => r.resourceType === 'SOLUTION_POST')
+                .map((resource) => (
+                  <a href={resource.url} target="_blank">
+                    {getDomainFromUrl(resource.url)}
+                  </a>
+                ))}
+            </div>
           </div>
         </div>
       )}

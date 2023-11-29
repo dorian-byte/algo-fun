@@ -6,7 +6,7 @@ body {
       rgb(24, 199, 44, 0.75),
       rgba(255, 140, 0, 1)
     ),
-    url('assets/images/duotone_effect_hero2.png');
+    url('assets/images/bg.png');
   background-blend-mode: multiply;
   background-size: cover;
   background-repeat: no-repeat;

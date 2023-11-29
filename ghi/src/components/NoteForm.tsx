@@ -130,26 +130,7 @@ const NoteForm = () => {
     } else {
       console.log('no problem selected');
     }
-
-    // problemId ? navigate(`/problems/${problemId}/notes`) : navigate(`/notes`);
   };
-
-  // useEffect(() => {
-  //   if (problemId) {
-  //     setData((prev: any) => ({ ...prev, problem: problemId }));
-  //   }
-  //   if (submissionId) {
-  //     setData((prev: any) => ({ ...prev, submission: submissionId }));
-  //     setParsedProblemId(submissionDetails?.problem?.id);
-  //   }
-  //   // console.log(
-  //   //   'submissionDetails',
-  //   //   submissionDetails,
-  //   //   submissionId,
-  //   //   problemId,
-  //   //   parsedProblemId
-  //   // );
-  // }, [problemId, submissionId, submissionDetails, setParsedProblemId, setData]);
 
   const handleDateTimeChange = (type: 'date' | 'time', value: string) => {
     const [currentDate, currentTime] = data?.submittedAt?.split('T');
