@@ -65,22 +65,19 @@ class Problem(models.Model):
     difficulty = models.CharField(
         max_length=6,
         choices=Difficulty.choices,
-        default=Difficulty.EASY,
-        null=True,
+        # null=True,
         blank=True,
     )
     time_complexity_requirement = models.CharField(
         max_length=20,
         choices=Complexity.choices,
-        default=Complexity.O_N,
-        null=True,
+        # null=True,
         blank=True,
     )
     space_complexity_requirement = models.CharField(
         max_length=20,
         choices=Complexity.choices,
-        default=Complexity.O_N,
-        null=True,
+        # null=True,
         blank=True,
     )
 
@@ -189,7 +186,6 @@ class Submission(models.Model):
     proficiency_level = models.CharField(
         max_length=100,
         choices=ProficiencyLevel.choices,
-        default=ProficiencyLevel.NO_UNDERSTANDING,
     )
     submitted_at = models.DateTimeField(default=timezone.now)
     duration = models.PositiveIntegerField(blank=True, null=True)
@@ -199,13 +195,11 @@ class Submission(models.Model):
     time_complexity = models.CharField(
         max_length=20,
         choices=Complexity.choices,
-        default=Complexity.O_N,
         blank=True,
     )
     space_complexity = models.CharField(
         max_length=20,
         choices=Complexity.choices,
-        default=Complexity.O_N,
         blank=True,
     )
     methods = models.ManyToManyField("Topic", blank=True)
@@ -246,7 +240,6 @@ class Resource(PolymorphicModel):
     resource_type = models.CharField(
         max_length=100,
         choices=ResourceType.choices,
-        # default=ResourceType.SOLUTION_POST,
         blank=True,
     )
 
