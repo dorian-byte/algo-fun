@@ -50,6 +50,7 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
       title: note?.title,
       content: note?.content,
       isStarred: note?.isStarred,
+      noteType: note?.noteType.toLowerCase(),
       submittedAt: new Date().toISOString(),
     } as any;
     if (noteLevel === 'submission') {
@@ -195,6 +196,27 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
                       });
                     }}
                   />
+                  <select
+                    className="form-select form-select-sm bg-transparent text-gray text-center text-capitalize border-primary"
+                    aria-label="select type"
+                    style={{ width: 150 }}
+                    value={note?.noteType?.toLocaleLowerCase() || 'select type'}
+                    onChange={(e) => {
+                      setNote({
+                        ...note,
+                        noteType: e.target.value.toLowerCase(),
+                      });
+                    }}
+                  >
+                    <option disabled value="">
+                      select type
+                    </option>
+                    {['intuition', 'stuck_point', 'qna', 'err', 'memo'].map(
+                      (type) => (
+                        <option value={type}>{type}</option>
+                      )
+                    )}
+                  </select>
                   <input
                     type="text"
                     className="form-control form-control-sm"

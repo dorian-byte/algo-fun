@@ -40,6 +40,12 @@ export const FETCH_ALL_NOTES = gql`
       isStarred
       startLineNumber
       endLineNumber
+      resources {
+        id
+        title
+        url
+        resourceType
+      }
     }
   }
 `;

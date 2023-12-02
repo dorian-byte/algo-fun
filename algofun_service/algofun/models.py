@@ -210,8 +210,8 @@ class Submission(models.Model):
         return self.proficiency_level not in non_passing_levels
 
     def __str__(self):
-        submitted_date = self.submitted_at.strftime("%m/%y")
-        return f"id:{self.id} {submitted_date} #{self.problem.leetcode_number} {self.proficiency_level}"
+        submitted_date = self.submitted_at.strftime("%m/%d/%y")
+        return f"PID: {self.problem.id} {self.problem.title} - SID: {self.id} - {submitted_date} - {self.proficiency_level}"
 
 
 class ResourceType(models.TextChoices):
@@ -232,6 +232,9 @@ class Resource(models.Model):
     note = models.ForeignKey(
         "Note", on_delete=models.CASCADE, related_name="resources", default=4
     )
+
+    def __str__(self):
+        return f"PID: {self.note.submission.problem.id} {self.note.submission.problem.title} - SID: {self.note.submission.id} - NID: {self.note.id} {self.note.title} - RID: {self.id} - {self.title}"
 
 
 class Tag(models.Model):
@@ -281,7 +284,7 @@ class Note(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Note ID: {self.id}, Title: {self.title}"
+        return f"PID: {self.submission.problem.id} {self.submission.problem.title} - SID: {self.submission.id} - NID: {self.id} - {self.title}"
 
 
 class Company(models.Model):
