@@ -137,7 +137,7 @@ const Breadcrumb = () => {
             <React.Fragment key={idx}>
               <li className="breadcrumb-item">
                 {!isLast ? (
-                  <Link to={crumb?.path}>{crumb?.label}</Link>
+                  <Link to={crumb?.path as string}>{crumb?.label}</Link>
                 ) : (
                   <span className="text-light">{crumb?.label}</span>
                 )}

@@ -21,9 +21,6 @@ const ALL_PROBLEMS = gql`
       submissions {
         id
       }
-      notes {
-        id
-      }
       resources {
         id
       }

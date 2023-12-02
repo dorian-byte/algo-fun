@@ -178,36 +178,36 @@ export const NotesCellRenderer = (props: any) => {
   );
 };
 
-export const ResourcesCellRenderer = (props: any) => {
-  const id = props.data.id;
-  const navigate = useNavigate();
-  return (
-    <div className="d-flex justify-content-center align-items-center h-100">
-      <button
-        className="btn btn-outline-info btn-sm d-flex align-items-center fs-7 h-75"
-        disabled={!props.data.hasResources}
-        style={{
-          opacity: props.data.hasResources ? 1 : 0.5,
-        }}
-        onClick={() => {
-          navigate(`/submissions/${id}/resources`);
-        }}
-      >
-        {props.data.resourcesCount ? `${props.data.resourcesCount}` : null}
-        <FontAwesomeIcon icon={faLink} className="ms-2" />
-      </button>
-      <button
-        className="btn btn-outline-info btn-sm d-flex align-items-center fs-7 h-75 ms-2"
-        onClick={() => {
-          console.log(id);
-          navigate(`/submissions/${id}/resources/new`);
-        }}
-      >
-        +
-      </button>
-    </div>
-  );
-};
+// export const ResourcesCellRenderer = (props: any) => {
+//   const id = props.data.id;
+//   const navigate = useNavigate();
+//   return (
+//     <div className="d-flex justify-content-center align-items-center h-100">
+//       <button
+//         className="btn btn-outline-info btn-sm d-flex align-items-center fs-7 h-75"
+//         disabled={!props.data?.hasResources}
+//         style={{
+//           opacity: props.data?.hasResources ? 1 : 0.5,
+//         }}
+//         onClick={() => {
+//           navigate(`/submissions/${id}/resources`);
+//         }}
+//       >
+//         {props.data.resourcesCount ? `${props.data.resourcesCount}` : null}
+//         <FontAwesomeIcon icon={faLink} className="ms-2" />
+//       </button>
+//       <button
+//         className="btn btn-outline-info btn-sm d-flex align-items-center fs-7 h-75 ms-2"
+//         onClick={() => {
+//           console.log(id);
+//           navigate(`/submissions/${id}/resources/new`);
+//         }}
+//       >
+//         +
+//       </button>
+//     </div>
+//   );
+// };
 
 const SubmissionList = ({
   submissions,
@@ -320,14 +320,14 @@ const SubmissionList = ({
       sortable: false,
       minWidth: 110,
     });
-    columnDefs.push({
-      field: 'resources',
-      headerName: 'Resources',
-      cellRenderer: ResourcesCellRenderer,
-      filter: false,
-      sortable: false,
-      minWidth: 120,
-    });
+    // columnDefs.push({
+    //   field: 'resources',
+    //   headerName: 'Resources',
+    //   cellRenderer: ResourcesCellRenderer,
+    //   filter: false,
+    //   sortable: false,
+    //   minWidth: 120,
+    // });
   }
 
   const onGridReady = (params: any) => {

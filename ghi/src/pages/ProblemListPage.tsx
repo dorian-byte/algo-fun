@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import ProblemList from '../components/ProblemList';
 
+// FIXME: we can add back the resources when neccessary
 const ALL_PROBLEMS = gql`
   query AllProblems {
     allProblems {
@@ -19,12 +20,6 @@ const ALL_PROBLEMS = gql`
       timeComplexityRequirement
       spaceComplexityRequirement
       submissions {
-        id
-      }
-      notes {
-        id
-      }
-      resources {
         id
       }
       companies {
@@ -44,9 +39,7 @@ const ALL_PROBLEMS = gql`
       hasSubmissions
       submissionsCount
       hasNotes
-      hasResources
       notesCount
-      resourcesCount
     }
   }
 `;

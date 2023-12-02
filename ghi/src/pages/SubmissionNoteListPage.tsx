@@ -16,15 +16,8 @@ const SUBMISSION_NOTES = gql`
         updatedAt
         submittedAt
         isStarred
-        noteType
         startLineNumber
         endLineNumber
-        resources {
-          id
-          title
-          url
-          resourceType
-        }
       }
     }
   }

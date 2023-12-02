@@ -170,6 +170,7 @@ const SubmissionForm = ({
     if (data?.id || submissionId) {
       input['id'] = data?.id || submissionId;
     }
+    console.log('input', input);
     createOrEditSubmission({
       variables: { input },
     })
@@ -202,9 +203,10 @@ const SubmissionForm = ({
   }, [parentRef]);
   const handleSelectionChange = useCallback((selectedProblem: any) => {
     const selectedId = selectedProblem[0] ? selectedProblem[0].id : null;
+    console.log('selectedId', selectedId);
     setData((prev: any) => ({
       ...prev,
-      problem: selectedId,
+      problem: selectedProblem[0],
     }));
     setSelected(selectedProblem || []); // Ensures 'selected' is always an array
   }, []);

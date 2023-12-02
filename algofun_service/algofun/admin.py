@@ -8,15 +8,10 @@ from .models import (
     Submission,
     Source,
     Topic,
-    ProblemNote,
-    SubmissionNote,
     Company,
-    ProblemResource,
-    SubmissionResource,
-    NoteResource,
+    Resource,
     Tag,
     TaggedItem,
-    # Resource,
     Note,
 )
 
@@ -26,28 +21,8 @@ class ProblemSubmissionInline(admin.TabularInline):
     extra = 0
 
 
-class ProblemNoteInline(admin.TabularInline):
-    model = ProblemNote
-    extra = 0
-
-
-class ProblemResourceInline(admin.TabularInline):
-    model = ProblemResource
-    extra = 0
-
-
-class SubmissionNoteInline(admin.TabularInline):
-    model = SubmissionNote
-    extra = 0
-
-
-class SubmissionResourceInline(admin.TabularInline):
-    model = SubmissionResource
-    extra = 0
-
-
-class NoteResourceInline(admin.TabularInline):
-    model = NoteResource
+class ResourceInline(admin.TabularInline):
+    model = Resource
     extra = 0
 
 
@@ -66,8 +41,6 @@ class ProblemAdmin(admin.ModelAdmin):
     list_display = ["__str__"]
     inlines = [
         ProblemSubmissionInline,
-        ProblemResourceInline,
-        ProblemNoteInline,
         TaggedItemInline,
     ]
 
@@ -75,7 +48,6 @@ class ProblemAdmin(admin.ModelAdmin):
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ["__str__"]
-    inlines = [SubmissionResourceInline, SubmissionNoteInline]
 
 
 @admin.register(Topic)
@@ -83,16 +55,9 @@ class TopicAdmin(admin.ModelAdmin):
     list_display = ["__str__"]
 
 
-@admin.register(ProblemNote)
-class ProblemNoteAdmin(admin.ModelAdmin):
+@admin.register(Note)
+class NoteAdmin(admin.ModelAdmin):
     list_display = ["__str__"]
-    inlines = [NoteResourceInline]
-
-
-@admin.register(SubmissionNote)
-class SubmissionNoteAdmin(admin.ModelAdmin):
-    list_display = ["__str__"]
-    inlines = [NoteResourceInline]
 
 
 @admin.register(Company)
@@ -100,20 +65,8 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display = ["__str__"]
 
 
-@admin.register(ProblemResource)
-class ProblemResourceAdmin(admin.ModelAdmin):
-    list_display = ["__str__"]
-    inlines = [TaggedItemInline]
-
-
-@admin.register(SubmissionResource)
-class SubmissionResourceAdmin(admin.ModelAdmin):
-    list_display = ["__str__"]
-    inlines = [TaggedItemInline]
-
-
-@admin.register(NoteResource)
-class NoteResourceAdmin(admin.ModelAdmin):
+@admin.register(Resource)
+class ResourceAdmin(admin.ModelAdmin):
     list_display = ["__str__"]
     inlines = [TaggedItemInline]
 

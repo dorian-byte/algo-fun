@@ -1,6 +1,5 @@
-from django.db.models import Count, OuterRef, Exists, Sum
+from django.db.models import Count, Sum
 from django.db import models
-from polymorphic.models import PolymorphicModel
 from django.utils import timezone
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -120,8 +119,6 @@ class Problem(models.Model):
         return self.notes_count() > 0
 
     def notes_count(self):
-        problem_notes_count = self.notes.count()
-
         submissions_notes_count = (
             self.submissions.annotate(notes_count=Count("notes")).aggregate(
                 total=Sum("notes_count")
@@ -129,32 +126,7 @@ class Problem(models.Model):
             or 0
         )
 
-        return problem_notes_count + submissions_notes_count
-
-    def has_resources(self):
-        return self.resources_count() > 0
-
-    def resources_count(self):
-        problem_resources_count = self.resources.count()
-        submission_resources_count = (
-            self.submissions.annotate(resources_count=Count("resources")).aggregate(
-                total=Sum("resources_count")
-            )["total"]
-            or 0
-        )
-
-        problem_notes_resources_count = (
-            self.notes.annotate(resources_count=Count("resources")).aggregate(
-                total=Sum("resources_count")
-            )["total"]
-            or 0
-        )
-
-        return (
-            problem_resources_count
-            + submission_resources_count
-            + problem_notes_resources_count
-        )
+        return submissions_notes_count
 
     def tags(self):
         content_type = ContentType.objects.get_for_model(self)
@@ -163,17 +135,36 @@ class Problem(models.Model):
         )
         return [item.tag for item in tagged_items]
 
-    def resources(self):
-        return self.problemresource_set.all()
-
     def solutions(self):
         return self.submission_set.filter(is_solution=True)
 
-    def starred_notes(self):
-        return self.problemnote_set.filter(is_starred=True)
-
     def __str__(self):
         return str(self.leetcode_number) + " " + self.title
+
+    # def has_resources(self):
+    #     pass
+
+    # def resources_count(self):
+    #     problem_resources_count = self.resources.count()
+    #     submission_resources_count = (
+    #         self.submissions.annotate(resources_count=Count("resources")).aggregate(
+    #             total=Sum("resources_count")
+    #         )["total"]
+    #         or 0
+    #     )
+
+    #     problem_notes_resources_count = (
+    #         self.notes.annotate(resources_count=Count("resources")).aggregate(
+    #             total=Sum("resources_count")
+    #         )["total"]
+    #         or 0
+    #     )
+
+    #     return (
+    #         problem_resources_count
+    #         + submission_resources_count
+    #         + problem_notes_resources_count
+    #     )
 
 
 class Submission(models.Model):
@@ -210,10 +201,6 @@ class Submission(models.Model):
     def notes_count(self):
         return self.notes.count()
 
-    def has_resources(self):
-        notes_have_resources = self.notes.filter(resources__isnull=False).exists()
-        return self.resources.count() > 0 or notes_have_resources
-
     def passed(self):
         non_passing_levels = [
             ProficiencyLevel.NO_UNDERSTANDING,
@@ -234,13 +221,16 @@ class ResourceType(models.TextChoices):
     SOLUTION_POST = "solution_post", "solution post"
 
 
-class Resource(PolymorphicModel):
+class Resource(models.Model):
     title = models.CharField(max_length=100, blank=True)
     url = models.URLField(max_length=200, blank=True)
     resource_type = models.CharField(
         max_length=100,
         choices=ResourceType.choices,
         blank=True,
+    )
+    note = models.ForeignKey(
+        "Note", on_delete=models.CASCADE, related_name="resources", default=4
     )
 
 
@@ -261,69 +251,20 @@ class TaggedItem(models.Model):
         return f"{self.content_object} - {self.tag.name}"
 
 
-class ProblemResource(Resource):
-    problem = models.ForeignKey(
-        "Problem", on_delete=models.CASCADE, related_name="resources"
-    )
-
-
-class SubmissionResource(Resource):
-    submission = models.ForeignKey(
-        "Submission", on_delete=models.CASCADE, related_name="resources"
-    )
-
-
-class NoteResource(Resource):
-    note = models.ForeignKey("Note", on_delete=models.CASCADE, related_name="resources")
-
-
-class NoteType(models.TextChoices):
-    INTUITION = "intuition", "intuition"
-    STUCK_POINT = "stuck_point", "stuck point"
-    QNA = "qna", "qna"
-    ERR = "err", "err"
-    MEMO = "memo", "memo"
-
-
-class Note(PolymorphicModel):
+class Note(models.Model):
     # question is optional, answer isn't
+    submission = models.ForeignKey(
+        "Submission", on_delete=models.CASCADE, related_name="notes", default=4
+    )
     title = models.CharField(max_length=100, blank=True)
     content = models.TextField(null=False)
     submitted_at = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_starred = models.BooleanField(default=False)
-    is_review = models.BooleanField(default=False)
-    note_type = models.CharField(
-        max_length=100,
-        choices=NoteType.choices,
-        blank=True,
-    )
+
     start_line_number = models.PositiveIntegerField(blank=True, null=True)
     end_line_number = models.PositiveIntegerField(blank=True, null=True)
-    # mentioned_problem = models.ForeignKey(
-    #     "Problem",
-    #     on_delete=models.SET_NULL,
-    #     blank=True,
-    #     null=True,
-    #     related_name="notes_mentioning_this_problem",
-    # )
-    # mentioned_submission = models.ForeignKey(
-    #     "Submission",
-    #     on_delete=models.SET_NULL,
-    #     blank=True,
-    #     null=True,
-    #     related_name="notes_mentioning_this_submission",
-    # )
-
-    @property
-    def note_level(self):
-        if isinstance(self, ProblemNote):
-            return "ProblemNote"
-        elif isinstance(self, SubmissionNote):
-            return "SubmissionNote"
-        else:
-            return "Unknown"
 
     def tags(self):
         content_type = ContentType.objects.get_for_model(self)
@@ -341,24 +282,6 @@ class Note(PolymorphicModel):
 
     def __str__(self):
         return f"Note ID: {self.id}, Title: {self.title}"
-
-
-class ProblemNote(Note):
-    problem = models.ForeignKey(
-        "Problem", on_delete=models.CASCADE, related_name="notes"
-    )
-
-    def __str__(self):
-        return f"Note ID: {self.id}, Problem ID: {self.problem.id}, Title: {self.title}"
-
-
-class SubmissionNote(Note):
-    submission = models.ForeignKey(
-        "Submission", on_delete=models.CASCADE, related_name="notes"
-    )
-
-    def __str__(self):
-        return f"Note ID: {self.id}, Submission ID: {self.submission.id}, Problem ID: {self.submission.problem.id}, Title: {self.title}"
 
 
 class Company(models.Model):

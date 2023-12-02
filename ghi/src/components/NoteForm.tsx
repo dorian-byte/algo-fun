@@ -6,8 +6,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
   FETCH_PROBLEM,
   FETCH_ALL_PROBLEMS,
-  CREATE_SUBMISSION_NOTE,
-  CREATE_PROBLEM_NOTE,
+  CREATE_NOTE,
   FETCH_SUBMISSION,
 } from '../graphql/noteQueries';
 import { useQuery, useMutation } from '@apollo/client';
@@ -34,13 +33,6 @@ const StarNote = ({
     />
   );
 };
-export const NoteType = {
-  INTUITION: ['intuition', 'Intuition'],
-  STUCK_POINT: ['stuck_point', 'Stuck point'],
-  QNA: ['qna', 'Q&A'],
-  ERR: ['err', 'Error'],
-  MEMO: ['memo', 'Memo'],
-};
 
 // const NoteForm = ({ inDrawer = false, simplified = false, height }: any) => {
 const NoteForm = () => {
@@ -50,7 +42,6 @@ const NoteForm = () => {
     content: '',
     submittedAt: dtToLocalISO16(new Date()),
     isStarred: false,
-    noteType: '',
     startLineNumber: 0,
     endLineNumber: 0,
   });
@@ -81,19 +72,7 @@ const NoteForm = () => {
   // if !submissionId && !problemId then select problem
   // otherwise, show problem title
 
-  const [createProblemNote] = useMutation(CREATE_PROBLEM_NOTE, {
-    variables: {
-      input: {
-        ...data,
-        startLineNumber: +data?.startLineNumber,
-        endLineNumber: +data?.endLineNumber,
-        submittedAt: new Date(data?.submittedAt + ':00'),
-        problem: +data.problem || (problemId ? (+problemId as number) : 0),
-      },
-    },
-  });
-
-  const [createSubmissionNote] = useMutation(CREATE_SUBMISSION_NOTE, {
+  const [createSubmissionNote] = useMutation(CREATE_NOTE, {
     variables: {
       input: {
         ...data,
@@ -110,7 +89,7 @@ const NoteForm = () => {
 
     if (problemId) {
       console.log('has problemId');
-      createProblemNote().then((_) => navigate(`/problems/${problemId}/notes`));
+      console.error('problem notes no longer exist');
     } else if (submissionId) {
       console.log('has submissionId');
       console.log('data', data);
@@ -120,13 +99,7 @@ const NoteForm = () => {
     } else if (data?.problem) {
       console.log('has data.problem');
       console.log('data', data);
-      createProblemNote()
-        .then((res) => {
-          console.log('res', res);
-          // here data.problem's value is the problem id
-          navigate(`/problems/${data.problem}/notes`);
-        })
-        .catch((err) => console.error(err));
+      console.log('create problem note function no longer available');
     } else {
       console.log('no problem selected');
     }
@@ -211,7 +184,7 @@ const NoteForm = () => {
         {submissionId && (
           <CodeEditor
             width={'auto'}
-            height={ref?.current?.clientHeight + 'px'}
+            height={'300px'}
             language="markdown"
             value={data?.content || '// Write your note here'}
             showLineNumbers={true}
@@ -261,30 +234,6 @@ const NoteForm = () => {
                   }));
                 }}
               />
-            </div>
-
-            <div className="form-floating flex-fill">
-              <select
-                className="form-control"
-                value={data?.noteType || ''}
-                onChange={(e) => {
-                  setData((prev: any) => ({
-                    ...prev,
-                    noteType: e.target.value,
-                  }));
-                }}
-              >
-                <option disabled value=""></option>
-                {Object.values(NoteType).map((level) => (
-                  <option key={level[0]} value={level[0]}>
-                    {level[1]}
-                  </option>
-                ))}
-              </select>
-              <label>
-                Note Type
-                <span className="required-asterisk"> *</span>
-              </label>
             </div>
           </div>
         </div>
@@ -360,7 +309,7 @@ const NoteForm = () => {
         <div className="d-flex flex-column flex-fill">
           <CodeEditor
             width={'auto'}
-            height={ref?.current?.clientHeight + 'px'}
+            height={'300px'}
             language="markdown"
             value={data?.content || '// Write your note here'}
             showLineNumbers={true}

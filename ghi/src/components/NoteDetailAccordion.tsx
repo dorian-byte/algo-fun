@@ -6,11 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit, faStar } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationDialog from './ConfirmationDialog';
 import { useMutation } from '@apollo/client';
-import {
-  DELETE_NOTE,
-  EDIT_PROBLEM_NOTE,
-  EDIT_SUBMISSION_NOTE,
-} from '../graphql/noteQueries';
+import { DELETE_NOTE, EDIT_NOTE } from '../graphql/noteQueries';
 
 interface NoteDetailAccordionProps {
   note: Note;
@@ -32,8 +28,7 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
   const [deleteNote] = useMutation(DELETE_NOTE, {
     variables: { id: nt?.id },
   });
-  const [updateProblemNote] = useMutation(EDIT_PROBLEM_NOTE);
-  const [updateSubmissionNote] = useMutation(EDIT_SUBMISSION_NOTE);
+  const [updateNote] = useMutation(EDIT_NOTE);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [editable, setEditable] = useState(false);
   const [note, setNote] = useState(nt as Note);
@@ -55,7 +50,6 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
       title: note?.title,
       content: note?.content,
       isStarred: note?.isStarred,
-      noteType: note?.noteType.toLowerCase(),
       submittedAt: new Date().toISOString(),
     } as any;
     if (noteLevel === 'submission') {
@@ -65,13 +59,13 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
     }
 
     if (noteLevel === 'submission') {
-      updateSubmissionNote({
+      updateNote({
         variables: {
           input,
         },
       }).then((res) => {
         console.log('returned results', res);
-        const returnedNote = res?.data?.updateSubmissionNote?.submissionNote;
+        const returnedNote = res?.data?.updateNote?.submissionNote;
         console.log('returnedNote', returnedNote);
         setNote({
           ...returnedNote,
@@ -79,19 +73,7 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
         });
       });
     } else if (noteLevel === 'problem') {
-      updateProblemNote({
-        variables: {
-          input,
-        },
-      }).then((res) => {
-        console.log('returned results', res);
-        const returnedNote = res?.data?.updateProblemNote?.problemNote;
-        console.log('returnedNote', returnedNote);
-        setNote({
-          ...returnedNote,
-          problem: returnedNote?.problem?.id as number,
-        });
-      });
+      console.error('problem note function no longer available');
     }
     setEditable(false);
   };
@@ -213,27 +195,6 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
                       });
                     }}
                   />
-                  <select
-                    className="form-select form-select-sm bg-transparent text-gray text-center text-capitalize border-primary"
-                    aria-label="select type"
-                    style={{ width: 150 }}
-                    value={note?.noteType?.toLocaleLowerCase() || 'select type'}
-                    onChange={(e) => {
-                      setNote({
-                        ...note,
-                        noteType: e.target.value.toLowerCase(),
-                      });
-                    }}
-                  >
-                    <option disabled value="">
-                      select type
-                    </option>
-                    {['intuition', 'stuck_point', 'qna', 'err', 'memo'].map(
-                      (type) => (
-                        <option value={type}>{type}</option>
-                      )
-                    )}
-                  </select>
                   <input
                     type="text"
                     className="form-control form-control-sm"

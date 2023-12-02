@@ -16,7 +16,6 @@ import { requestWrapper } from '../components/ChatSubmissionAnalyzer';
 import SubmissionFormInTab from '../components/SubmissionFormInTab';
 import SubmissionDetailPage from './SubmissionDetailPage';
 import ProblemDetail from '../components/ProblemDetail';
-import NoteForm from '../components/NoteForm';
 import ProblemNoteListTab from '../components/ProblemNoteListTab';
 
 const PROBLEM_BY_ID = gql`
@@ -238,7 +237,7 @@ const ProblemHubPage = () => {
               >
                 <Tab label="New Submission" value="6" />
                 <Tab label="Submission Detail" value="7" />
-                <Tab label="New Note" value="8" />
+                <Tab label="TBD" value="8" />
                 <Tab label="undefined 2" value="9" />
               </TabList>
             </Toolbar>
@@ -260,9 +259,7 @@ const ProblemHubPage = () => {
             />
           </TabPanel>
           <TabPanel value="8">
-            <div className="pt-3">
-              <NoteForm />
-            </div>
+            <div className="pt-3">TBD</div>
           </TabPanel>
           <TabPanel value="9"></TabPanel>
         </TabContext>

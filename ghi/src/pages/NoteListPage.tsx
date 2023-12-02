@@ -1,52 +1,33 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import NoteDetailAccordion from '../components/NoteDetailAccordion';
-import {
-  FETCH_ALL_PROBLEM_NOTES,
-  FETCH_ALL_SUBMISSION_NOTES,
-} from '../graphql/noteQueries';
+import { FETCH_ALL_NOTES } from '../graphql/noteQueries';
 import { useLocation } from 'react-router-dom';
 
 const NoteListPage = () => {
   const [allNotes, setAllNotes] = useState<any[]>([]);
   const [allOpen, setAllOpen] = useState(true);
   const {
-    data: allProblemNotesData,
-    loading: allProblemNotesLoading,
-    error: allProblemNotesError,
-    refetch: refetchAllProblemNotes,
-  } = useQuery(FETCH_ALL_PROBLEM_NOTES);
-  const {
-    data: allSubmissionNotesData,
-    loading: allSubmissionNotesLoading,
-    error: allSubmissionNotesError,
-    refetch: refetchAllSubmissionNotes,
-  } = useQuery(FETCH_ALL_SUBMISSION_NOTES);
+    data: allNotesData,
+    loading: allNotesLoading,
+    error: allNotesError,
+    refetch: refetchAllNotes,
+  } = useQuery(FETCH_ALL_NOTES);
   useEffect(() => {
-    if (
-      allProblemNotesData?.allProblemNotes &&
-      allSubmissionNotesData?.allSubmissionNotes
-    ) {
-      setAllNotes([
-        ...allProblemNotesData?.allProblemNotes,
-        ...allSubmissionNotesData?.allSubmissionNotes,
-      ]);
+    if (allNotesData?.allNotes) {
+      setAllNotes([...allNotesData.allNotes]);
     }
     console.log('allNotes', allNotes);
-  }, [allProblemNotesData, allSubmissionNotesData]);
+  }, [allNotesData]);
 
   const { pathname } = useLocation();
   useEffect(() => {
-    refetchAllProblemNotes();
-    refetchAllSubmissionNotes();
+    refetchAllNotes();
   }, [pathname]);
 
   const [toggleButtonColor, setToggleButtonColor] = useState('');
 
-  if (allProblemNotesLoading || allSubmissionNotesLoading) {
-    return <div>Loading...</div>;
-  }
-  if (allProblemNotesError || allSubmissionNotesError) {
+  if (allNotesError) {
     return <div>Error!</div>;
   }
 
@@ -93,8 +74,7 @@ const NoteListPage = () => {
                   : 'submission'
               }
               refresh={() => {
-                refetchAllProblemNotes();
-                refetchAllSubmissionNotes();
+                refetchAllNotes();
               }}
             />
           ))}

@@ -51,7 +51,6 @@ function App() {
             </Route>
             <Route path="/notes">
               <Route path="" element={<NoteListPage />} />
-              <Route path="new" element={<NoteCreatePage />} />
             </Route>
             <Route path="/submissions">
               <Route path="" element={<SubmissionListPage />} />
@@ -61,7 +60,6 @@ function App() {
                 <Route path="edit" element={<SubmissionCreatePage />} />
                 <Route path="notes">
                   <Route path="" element={<SubmissionNoteListPage />} />
-                  {/* same page as above but passing in problemId */}
                   <Route path="new" element={<NoteCreatePage />} />
                 </Route>
               </Route>
@@ -73,8 +71,6 @@ function App() {
                 <Route path="" element={<ProblemHubPage />} />
                 <Route path="notes">
                   <Route path="" element={<ProblemNoteListPage />} />
-                  {/* same page as above but passing in problemId */}
-                  <Route path="new" element={<NoteCreatePage />} />
                 </Route>
                 <Route path="submissions">
                   <Route path="" element={<ProblemSubmissionListPage />} />

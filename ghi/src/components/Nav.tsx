@@ -47,13 +47,6 @@ const Navigation = () => {
             <Link to="/notes" style={{ textDecoration: 'None' }}>
               <FontAwesomeIcon icon={faBook} className="me-1" /> Notes
             </Link>
-            <Link to="/notes/new">
-              <FontAwesomeIcon
-                icon={faPlusCircle}
-                fontSize={18}
-                className="me-2"
-              />
-            </Link>
           </li>
         </ul>
       </div>

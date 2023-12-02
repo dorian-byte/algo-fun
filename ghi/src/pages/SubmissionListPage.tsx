@@ -26,7 +26,6 @@ const ALL_SUBMISSIONS = gql`
       submittedAt
       hasNotes
       notesCount
-      hasResources
     }
   }
 `;

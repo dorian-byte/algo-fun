@@ -86,48 +86,40 @@ export const NotesCellRenderer = (props: any) => {
         {props.data.notesCount ? `${props.data.notesCount}` : null}
         <FontAwesomeIcon icon={faBook} className="ms-2" />
       </button>
-      <button
-        className="btn btn-outline-primary btn-sm d-flex align-items-center fs-7 h-75 ms-2"
-        onClick={() => {
-          navigate(`/problems/${id}/notes/new`);
-        }}
-      >
-        +
-      </button>
     </div>
   );
 };
 
-export const ResourcesCellRenderer = (props: any) => {
-  const id = props.data.id;
-  const navigate = useNavigate();
-  return (
-    <div className="d-flex justify-content-center align-items-center h-100">
-      <button
-        className="btn btn-outline-info btn-sm d-flex align-items-center fs-7 h-75"
-        disabled={!props.data.hasResources}
-        style={{
-          opacity: props.data.hasResources ? 1 : 0.5,
-        }}
-        onClick={() => {
-          navigate(`/problems/${id}/resources`);
-        }}
-      >
-        {props.data.resourcesCount ? `${props.data.resourcesCount}` : null}
-        <FontAwesomeIcon icon={faLink} className="ms-2" />
-      </button>
-      <button
-        className="btn btn-outline-info btn-sm d-flex align-items-center fs-7 h-75 ms-2"
-        onClick={() => {
-          console.log(id);
-          navigate(`/problems/${id}/resources/new`);
-        }}
-      >
-        +
-      </button>
-    </div>
-  );
-};
+// export const ResourcesCellRenderer = (props: any) => {
+//   const id = props.data.id;
+//   const navigate = useNavigate();
+//   return (
+//     <div className="d-flex justify-content-center align-items-center h-100">
+//       <button
+//         className="btn btn-outline-info btn-sm d-flex align-items-center fs-7 h-75"
+//         disabled={!props.data.hasResources}
+//         style={{
+//           opacity: props.data.hasResources ? 1 : 0.5,
+//         }}
+//         onClick={() => {
+//           navigate(`/problems/${id}/resources`);
+//         }}
+//       >
+//         {props.data.resourcesCount ? `${props.data.resourcesCount}` : null}
+//         <FontAwesomeIcon icon={faLink} className="ms-2" />
+//       </button>
+//       <button
+//         className="btn btn-outline-info btn-sm d-flex align-items-center fs-7 h-75 ms-2"
+//         onClick={() => {
+//           console.log(id);
+//           navigate(`/problems/${id}/resources/new`);
+//         }}
+//       >
+//         +
+//       </button>
+//     </div>
+//   );
+// };
 
 const ProblemList = ({
   problems,
@@ -206,16 +198,16 @@ const ProblemList = ({
       cellRenderer: NotesCellRenderer,
       filter: false,
       sortable: false,
-      minWidth: 110,
+      minWidth: 100,
     },
-    {
-      field: 'resources',
-      headerName: 'Resources',
-      cellRenderer: ResourcesCellRenderer,
-      filter: false,
-      sortable: false,
-      minWidth: 120,
-    },
+    // {
+    //   field: 'resources',
+    //   headerName: 'Resources',
+    //   cellRenderer: ResourcesCellRenderer,
+    //   filter: false,
+    //   sortable: false,
+    //   minWidth: 120,
+    // },
   ];
 
   const defaultColDef = {
@@ -239,6 +231,7 @@ const ProblemList = ({
   useEffect(() => {
     if (gridApi && !loading) gridApi?.hideOverlay();
   }, [loading, gridApi]);
+  console.log('rowData', rowData);
   return (
     <div className="d-flex justify-content-center align-items-center mt-4">
       <div style={containerStyle}>

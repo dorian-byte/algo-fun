@@ -20,37 +20,9 @@ export const FETCH_ALL_PROBLEMS = gql`
   }
 `;
 
-export const FETCH_ALL_PROBLEM_NOTES = gql`
-  query FETCH_ALL_PROBLEM_NOTES {
-    allProblemNotes {
-      problem {
-        id
-        title
-        leetcodeNumber
-      }
-      id
-      title
-      content
-      createdAt
-      updatedAt
-      submittedAt
-      isStarred
-      noteType
-      startLineNumber
-      endLineNumber
-      resources {
-        id
-        title
-        url
-        resourceType
-      }
-    }
-  }
-`;
-
-export const FETCH_ALL_SUBMISSION_NOTES = gql`
-  query FETCH_ALL_SUBMISSION_NOTES {
-    allSubmissionNotes {
+export const FETCH_ALL_NOTES = gql`
+  query FETCH_ALL_NOTES {
+    allNotes {
       submission {
         id
         problem {
@@ -66,43 +38,16 @@ export const FETCH_ALL_SUBMISSION_NOTES = gql`
       updatedAt
       submittedAt
       isStarred
-      noteType
       startLineNumber
       endLineNumber
-      resources {
-        id
-        title
-        url
-        resourceType
-      }
     }
   }
 `;
 
-export const CREATE_PROBLEM_NOTE = gql`
-  mutation CreateNote($input: ProblemNoteMutationInput!) {
-    updateProblemNote(input: $input) {
-      problemNote {
-        id
-        problem {
-          id
-        }
-        title
-        content
-        submittedAt
-        isStarred
-        noteType
-        startLineNumber
-        endLineNumber
-      }
-    }
-  }
-`;
-
-export const CREATE_SUBMISSION_NOTE = gql`
-  mutation CreateSubmissionNote($input: SubmissionNoteMutationInput!) {
-    updateSubmissionNote(input: $input) {
-      submissionNote {
+export const CREATE_NOTE = gql`
+  mutation CreateNote($input: NoteMutationInput!) {
+    updateNote(input: $input) {
+      note {
         id
         submission {
           id
@@ -111,7 +56,6 @@ export const CREATE_SUBMISSION_NOTE = gql`
         content
         submittedAt
         isStarred
-        noteType
         startLineNumber
         endLineNumber
       }
@@ -151,35 +95,10 @@ export const DELETE_NOTE = gql`
   }
 `;
 
-export const EDIT_PROBLEM_NOTE = gql`
-  mutation UpdateProblemNote($input: ProblemNoteMutationInput!) {
-    updateProblemNote(input: $input) {
-      problemNote {
-        id
-        problem {
-          id
-        }
-        title
-        content
-        submittedAt
-        isStarred
-        noteType
-        startLineNumber
-        endLineNumber
-        resources {
-          id
-          url
-          resourceType
-        }
-      }
-    }
-  }
-`;
-
-export const EDIT_SUBMISSION_NOTE = gql`
-  mutation UpdateSubmissionNote($input: SubmissionNoteMutationInput!) {
-    updateSubmissionNote(input: $input) {
-      submissionNote {
+export const EDIT_NOTE = gql`
+  mutation UpdateNote($input: NoteMutationInput!) {
+    updateNote(input: $input) {
+      note {
         id
         submission {
           id
@@ -188,7 +107,6 @@ export const EDIT_SUBMISSION_NOTE = gql`
         content
         submittedAt
         isStarred
-        noteType
         startLineNumber
         endLineNumber
         resources {
@@ -207,24 +125,7 @@ export const ALL_NOTES_BY_PROBLEM_ID = gql`
       id
       title
       leetcodeNumber
-      notes {
-        id
-        title
-        content
-        createdAt
-        updatedAt
-        submittedAt
-        isStarred
-        noteType
-        startLineNumber
-        endLineNumber
-        resources {
-          id
-          title
-          url
-          resourceType
-        }
-      }
+
       submissions {
         id
         passed
@@ -239,15 +140,8 @@ export const ALL_NOTES_BY_PROBLEM_ID = gql`
           updatedAt
           submittedAt
           isStarred
-          noteType
           startLineNumber
           endLineNumber
-          resources {
-            id
-            title
-            url
-            resourceType
-          }
         }
       }
     }

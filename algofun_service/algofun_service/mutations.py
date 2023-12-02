@@ -5,11 +5,6 @@ from algofun.models import (
     Submission,
     Source,
     Topic,
-    ProblemNote,
-    SubmissionNote,
-    ProblemResource,
-    SubmissionResource,
-    NoteResource,
     Company,
     Tag,
     Resource,
@@ -41,46 +36,15 @@ class SourceMutation(DjangoModelFormMutation):
         return super().mutate(root, info, input)
 
 
-class ProblemNoteForm(forms.ModelForm):
+class NoteForm(forms.ModelForm):
     class Meta:
-        model = ProblemNote
+        model = Note
         fields = "__all__"
 
 
-class ProblemNoteMutation(DjangoModelFormMutation):
+class NoteMutation(DjangoModelFormMutation):
     class Meta:
-        form_class = ProblemNoteForm
-        model_operations = ["create", "update"]
-        lookup_field = "id"
-
-    # Argmument fields are not supposed to be customized.
-    # They should be aligned with the fields in the model.(both name and data type)
-    class Argument:
-        id = graphene.ID(required=False)
-        problem = graphene.String(required=False)
-        title = graphene.String(required=False)
-        content = graphene.String(required=False)
-        created_at = graphene.String(required=False)
-        updated_at = graphene.String(required=False)
-        is_starred = graphene.Boolean(required=False)
-        note_type = graphene.String(required=False)
-        start_line_number = graphene.Int(required=False)
-        end_line_number = graphene.Int(required=False)
-
-    @classmethod
-    def mutate(cls, root, info, input):
-        return super().mutate(root, info, input)
-
-
-class SubmissionNoteForm(forms.ModelForm):
-    class Meta:
-        model = SubmissionNote
-        fields = "__all__"
-
-
-class SubmissionNoteMutation(DjangoModelFormMutation):
-    class Meta:
-        form_class = SubmissionNoteForm
+        form_class = NoteForm
         model_operations = ["create", "update"]
         lookup_field = "id"
 
@@ -122,15 +86,15 @@ class TagMutation(DjangoModelFormMutation):
         return super().mutate(root, info, input)
 
 
-class ProblemResourceForm(forms.ModelForm):
+class ResourceForm(forms.ModelForm):
     class Meta:
-        model = ProblemResource
+        model = Resource
         fields = "__all__"
 
 
-class ProblemResourceMutation(DjangoModelFormMutation):
+class ResourceMutation(DjangoModelFormMutation):
     class Meta:
-        form_class = ProblemResourceForm
+        form_class = ResourceForm
         model_operations = ["create", "update"]
         lookup_field = "id"
 
@@ -140,54 +104,7 @@ class ProblemResourceMutation(DjangoModelFormMutation):
         title = graphene.String(required=False)
         url = graphene.String(required=False)
         resource_type = graphene.String(required=False)
-
-    @classmethod
-    def mutate(cls, root, info, input):
-        return super().mutate(root, info, input)
-
-
-class NoteResourceForm(forms.ModelForm):
-    class Meta:
-        model = NoteResource
-        fields = "__all__"
-
-
-class NoteResourceMutation(DjangoModelFormMutation):
-    class Meta:
-        form_class = NoteResourceForm
-        model_operations = ["create", "update"]
-        lookup_field = "id"
-
-    class Argument:
-        id = graphene.ID(required=False)
-        problem = graphene.String(required=False)
-        title = graphene.String(required=False)
-        url = graphene.String(required=False)
-        resource_type = graphene.String(required=False)
-
-    @classmethod
-    def mutate(cls, root, info, input):
-        return super().mutate(root, info, input)
-
-
-class SubmissionResourceForm(forms.ModelForm):
-    class Meta:
-        model = SubmissionResource
-        fields = "__all__"
-
-
-class SubmissionResourceMutation(DjangoModelFormMutation):
-    class Meta:
-        form_class = SubmissionResourceForm
-        model_operations = ["create", "update"]
-        lookup_field = "id"
-
-    class Argument:
-        id = graphene.ID(required=False)
-        submission = graphene.String(required=False)
-        title = graphene.String(required=False)
-        url = graphene.String(required=False)
-        resource_type = graphene.String(required=False)
+        note = graphene.String(required=False)
 
     @classmethod
     def mutate(cls, root, info, input):
@@ -423,15 +340,11 @@ class Mutation(graphene.ObjectType):
     update_problem = ProblemMutation.Field()
     update_company = CompanyMutation.Field()
     update_tag = TagMutation.Field()
-    update_problem_resource = ProblemResourceMutation.Field()
     update_submission = SubmissionMutation.Field()
-    update_problem_resource = ProblemResourceMutation.Field()
-    update_note_resource = NoteResourceMutation.Field()
-    update_submission_resource = SubmissionResourceMutation.Field()
+    update_resource = ResourceMutation.Field()
     update_topic = TopicMutation.Field()
     update_source = SourceMutation.Field()
-    update_problem_note = ProblemNoteMutation.Field()
-    update_submission_note = SubmissionNoteMutation.Field()
+    update_note = NoteMutation.Field()
     delete_topic = DeleteTopic.Field()
     delete_resource = DeleteResource.Field()
     delete_note = DeleteNote.Field()

@@ -5,14 +5,10 @@ from algofun.models import (
     Submission,
     Source,
     Topic,
-    ProblemNote,
-    SubmissionNote,
     Company,
     Tag,
-    ProblemResource,
-    NoteResource,
-    SubmissionResource,
     Note,
+    Resource,
 )
 from graphene_django import DjangoObjectType
 from django import forms
@@ -23,29 +19,9 @@ class TagType(DjangoObjectType):
         model = Tag
 
 
-class ProblemResourceType(DjangoObjectType):
+class ResourceType(DjangoObjectType):
     class Meta:
-        model = ProblemResource
-
-
-class NoteResourceType(DjangoObjectType):
-    class Meta:
-        model = NoteResource
-
-
-class SubmissionResourceType(DjangoObjectType):
-    class Meta:
-        model = SubmissionResource
-
-
-class ProblemNoteType(DjangoObjectType):
-    note_level = graphene.Field(graphene.String)
-
-    class Meta:
-        model = ProblemNote
-
-    def resolve_note_level(self, info):
-        return self.note_level
+        model = Resource
 
 
 class CompanyType(DjangoObjectType):
@@ -58,11 +34,8 @@ class ProblemType(DjangoObjectType):
         model = Problem
 
     companies = graphene.List(CompanyType)
-    starred_notes = graphene.List(ProblemNoteType)
-    note = graphene.Field(ProblemNoteType)
     has_notes = graphene.Boolean()
     notes_count = graphene.Int()
-    has_resources = graphene.Boolean()
     resources_count = graphene.Int()
     has_submissions = graphene.Boolean()
     submissions_count = graphene.Int()
@@ -82,9 +55,6 @@ class ProblemType(DjangoObjectType):
     def resolve_notes_count(self, info):
         return self.notes_count()
 
-    def resolve_has_resources(self, info):
-        return self.has_resources()
-
     def resolve_resources_count(self, info):
         return self.resources_count()
 
@@ -99,7 +69,6 @@ class SubmissionType(DjangoObjectType):
     passed = graphene.Boolean()
     has_notes = graphene.Boolean()
     notes_count = graphene.Int()
-    has_resources = graphene.Boolean()
 
     class Meta:
         model = Submission
@@ -113,9 +82,6 @@ class SubmissionType(DjangoObjectType):
     def resolve_notes_count(self, info):
         return self.notes_count()
 
-    def resolve_has_resources(self, info):
-        return self.has_resources()
-
 
 class SourceType(DjangoObjectType):
     class Meta:
@@ -125,16 +91,6 @@ class SourceType(DjangoObjectType):
 class TopicType(DjangoObjectType):
     class Meta:
         model = Topic
-
-
-class SubmissionNoteType(DjangoObjectType):
-    note_level = graphene.Field(graphene.String)
-
-    class Meta:
-        model = SubmissionNote
-
-    def resolve_note_level(self, info):
-        return self.note_level
 
 
 class NoteType(DjangoObjectType):

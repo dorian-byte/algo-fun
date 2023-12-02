@@ -1,34 +1,23 @@
 import graphene
-from graphene_django.forms.mutation import DjangoModelFormMutation
 from algofun.models import (
     Problem,
     Submission,
     Source,
     Topic,
-    ProblemNote,
-    SubmissionNote,
     Company,
     Tag,
-    ProblemResource,
-    NoteResource,
-    SubmissionResource,
     Note,
+    Resource,
 )
-from graphene_django import DjangoObjectType
-from django import forms
 
 from algofun_service.types import (
-    ProblemNoteType,
     CompanyType,
     TagType,
-    ProblemResourceType,
-    NoteResourceType,
-    SubmissionResourceType,
+    ResourceType,
     ProblemType,
     SubmissionType,
     SourceType,
     TopicType,
-    SubmissionNoteType,
     NoteType,
 )
 
@@ -43,29 +32,20 @@ class Query(graphene.ObjectType):
     source_by_id = graphene.Field(SourceType, id=graphene.Int())
     all_topics = graphene.List(TopicType)
     topic_by_id = graphene.Field(TopicType, id=graphene.Int())
-    all_problem_notes = graphene.List(ProblemNoteType)
-    problem_note_by_id = graphene.Field(ProblemNoteType, id=graphene.Int())
-    all_submission_notes = graphene.List(SubmissionNoteType)
-    submission_note_by_id = graphene.Field(SubmissionNoteType, id=graphene.Int())
+    all_notes = graphene.List(NoteType)
+    note_by_id = graphene.Field(NoteType, id=graphene.Int())
     all_companies = graphene.List(CompanyType)
     company_by_id = graphene.Field(CompanyType, id=graphene.Int())
     all_tags = graphene.List(TagType)
     tag_by_id = graphene.Field(TagType, id=graphene.Int())
-    all_problem_resources = graphene.List(ProblemResourceType)
-    problem_resource_by_id = graphene.Field(ProblemResourceType, id=graphene.Int())
-    all_submission_resources = graphene.List(SubmissionResourceType)
     all_notes = graphene.List(NoteType)
     note_by_id = graphene.Field(NoteType, id=graphene.Int())
-    submission_resource_by_id = graphene.Field(
-        SubmissionResourceType, id=graphene.Int()
-    )
-    all_note_resources = graphene.List(NoteResourceType)
-    note_resource_by_id = graphene.Field(NoteResourceType, id=graphene.Int())
+    all_resources = graphene.List(ResourceType)
+    resource_by_id = graphene.Field(ResourceType, id=graphene.Int())
     # more queries like this isn't necessary because can just use problem_by_id and then get submissions
     # submissions_by_problem_id = graphene.List(SubmissionType, problem_id=graphene.Int())
 
-    all_problem_notes = graphene.List(ProblemNoteType)
-    all_submission_notes = graphene.List(SubmissionNoteType)
+    all_notes = graphene.List(NoteType)
 
     # basic queries
 
@@ -95,17 +75,11 @@ class Query(graphene.ObjectType):
     def resolve_topic_by_id(self, info, id):
         return Topic.objects.get(pk=id)
 
-    def resolve_all_problem_notes(self, info):
-        return ProblemNote.objects.all()
+    def resolve_all_notes(self, info):
+        return Note.objects.all()
 
-    def resolve_problem_note_by_id(self, info, id):
-        return ProblemNote.objects.get(pk=id)
-
-    def resolve_all_submission_notes(self, info):
-        return SubmissionNote.objects.all()
-
-    def resolve_submission_note_by_id(self, info, id):
-        return SubmissionNote.objects.get(pk=id)
+    def resolve_note_by_id(self, info, id):
+        return Note.objects.get(pk=id)
 
     def resolve_all_companies(self, info):
         return Company.objects.all()
@@ -119,35 +93,14 @@ class Query(graphene.ObjectType):
     def resolve_tag_by_id(self, info, id):
         return Tag.objects.get(pk=id)
 
-    def resolve_all_problem_resources(self, info):
-        return ProblemResource.objects.all()
+    def resolve_all_resources(self, info):
+        return Resource.objects.all()
 
-    def resolve_problem_resource_by_id(self, info, id):
-        return ProblemResource.objects.get(pk=id)
-
-    def resolve_all_submission_resources(self, info):
-        return SubmissionResource.objects.all()
-
-    def resolve_submission_resource_by_id(self, info, id):
-        return SubmissionResource.objects.get(pk=id)
-
-    def resolve_all_note_resources(self, info):
-        return NoteResource.objects.all()
-
-    def resolve_note_resource_by_id(self, info, id):
-        return NoteResource.objects.get(pk=id)
-
-    def resolve_all_notes(self, info):
-        return Note.objects.all()
+    def resolve_resource_by_id(self, info, id):
+        return Resource.objects.get(pk=id)
 
     def resolve_note_by_id(self, info, id):
         return Note.objects.get(pk=id)
-
-    def resolve_all_problem_notes(self, info):
-        return ProblemNote.objects.all()
-
-    def resolve_all_submission_notes(self, info):
-        return SubmissionNote.objects.all()
 
     # more queries like this isn't necessary
     # def resolve_submissions_by_problem_id(self, info, problem_id):

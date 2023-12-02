@@ -6,7 +6,6 @@ import { ALL_NOTES_BY_PROBLEM_ID } from '../graphql/noteQueries';
 
 const ProblemNoteListPage = () => {
   const { problemId } = useParams();
-  const [problemNotes, setProblemNotes] = useState([]);
   const [submissionNotes, setSubmissionNotes] = useState([]);
   const { loading, error, data, refetch } = useQuery(ALL_NOTES_BY_PROBLEM_ID, {
     variables: { id: problemId ? +problemId : 0 },
@@ -16,7 +15,6 @@ const ProblemNoteListPage = () => {
   useEffect(() => {
     if (data) {
       // console.log(data);
-      setProblemNotes(data.problemById.notes);
       setSubmissionNotes(
         data.problemById.submissions.reduce((acc: any, cur: any) => {
           return [...acc, ...cur.notes];
@@ -59,7 +57,7 @@ const ProblemNoteListPage = () => {
       </div>
 
       <div className="accordion mb-4">
-        {problemNotes.length > 0 && (
+        {/* {problemNotes.length > 0 && (
           <>
             <h3 className="mb-3 text-center section-heading">Problem Notes</h3>
             <div className="container overflow-auto scrollbar-hidden">
@@ -74,7 +72,7 @@ const ProblemNoteListPage = () => {
               ))}
             </div>
           </>
-        )}
+        )} */}
         {submissionNotes.length > 0 && (
           <>
             <h3 className="my-3 text-center section-heading">
