@@ -269,6 +269,21 @@ class Note(models.Model):
     start_line_number = models.PositiveIntegerField(blank=True, null=True)
     end_line_number = models.PositiveIntegerField(blank=True, null=True)
 
+    mentioned_problem = models.ForeignKey(
+        "Problem",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="notes_mentioning_this_problem",
+    )
+    mentioned_submission = models.ForeignKey(
+        "Submission",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="notes_mentioning_this_submission",
+    )
+
     def tags(self):
         content_type = ContentType.objects.get_for_model(self)
         tagged_items = TaggedItem.objects.filter(
