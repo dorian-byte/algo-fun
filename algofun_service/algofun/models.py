@@ -243,16 +243,6 @@ class Resource(PolymorphicModel):
         blank=True,
     )
 
-    def tags(self):
-        content_type = ContentType.objects.get_for_model(self)
-        tagged_items = TaggedItem.objects.filter(
-            content_type=content_type, object_id=self.id
-        )
-        return [item.tag for item in tagged_items]
-
-    def __str__(self):
-        return self.title
-
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -303,6 +293,7 @@ class Note(PolymorphicModel):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_starred = models.BooleanField(default=False)
+    is_review = models.BooleanField(default=False)
     note_type = models.CharField(
         max_length=100,
         choices=NoteType.choices,
@@ -310,6 +301,20 @@ class Note(PolymorphicModel):
     )
     start_line_number = models.PositiveIntegerField(blank=True, null=True)
     end_line_number = models.PositiveIntegerField(blank=True, null=True)
+    # mentioned_problem = models.ForeignKey(
+    #     "Problem",
+    #     on_delete=models.SET_NULL,
+    #     blank=True,
+    #     null=True,
+    #     related_name="notes_mentioning_this_problem",
+    # )
+    # mentioned_submission = models.ForeignKey(
+    #     "Submission",
+    #     on_delete=models.SET_NULL,
+    #     blank=True,
+    #     null=True,
+    #     related_name="notes_mentioning_this_submission",
+    # )
 
     @property
     def note_level(self):
@@ -320,12 +325,22 @@ class Note(PolymorphicModel):
         else:
             return "Unknown"
 
+    def tags(self):
+        content_type = ContentType.objects.get_for_model(self)
+        tagged_items = TaggedItem.objects.filter(
+            content_type=content_type, object_id=self.id
+        )
+        return [item.tag for item in tagged_items]
+
     def save(self, *args, **kwargs):
         # NOTE: Before saving the Note object, check if only start_line_number is provided.
         # If end_line_number is not provided, set end_line_number equal to start_line_number.
         if self.start_line_number is not None and self.end_line_number is None:
             self.end_line_number = self.start_line_number
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Note ID: {self.id}, Title: {self.title}"
 
 
 class ProblemNote(Note):
