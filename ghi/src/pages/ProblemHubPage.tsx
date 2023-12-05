@@ -17,6 +17,7 @@ import SubmissionFormInTab from '../components/SubmissionFormInTab';
 import SubmissionDetailPage from './SubmissionDetailPage';
 import ProblemDetail from '../components/ProblemDetail';
 import ProblemNoteListTab from '../components/ProblemNoteListTab';
+import ProblemDashboard from '../components/ProblemDashboard';
 
 const PROBLEM_BY_ID = gql`
   query ProblemById($id: Int!) {
@@ -172,7 +173,7 @@ const ProblemHubPage = () => {
                 TabIndicatorProps={{ style: { background: '#fff' } }}
               >
                 <Tab label="Description" value="1" />
-                <Tab label="Solutions" value="2" />
+                <Tab label="Submission Notes" value="2" />
                 <Tab label="Submissions" value="3" />
                 <Tab label="Submission Analysis" value="4" />
                 <Tab label="Problem Notes" value="5" />
@@ -188,26 +189,20 @@ const ProblemHubPage = () => {
             />
           </TabPanel>
           <TabPanel value="2">
-            <SubmissionList
-              submissions={submissions.filter((sb) => sb.isSolution)}
-              simplified={true}
-              rowClickCallback={(params: any) => {
-                setRightTabValue('7');
-                console.log('p', params);
-                setSelectedSubmission(params);
-              }}
-            />
+            <h1>Submission Notes</h1>
           </TabPanel>
           <TabPanel value="3">
             <SubmissionList
               submissions={submissions}
               simplified={true}
               rowClickCallback={(row: any) => {
-                setRightTabValue('7');
+                setRightTabValue('8');
                 console.log('p', row);
                 setSelectedSubmission(row);
               }}
             />
+            {/* FIXME: toggle to show only solutions */}
+            {/* <button className="btn btn-primary btn-sm"> Solution </button> */}
           </TabPanel>
           <TabPanel value="4">
             <ChatSubmissionAnalyzer
@@ -235,14 +230,18 @@ const ProblemHubPage = () => {
                 textColor="inherit"
                 TabIndicatorProps={{ style: { background: '#fff' } }}
               >
-                <Tab label="New Submission" value="6" />
-                <Tab label="Submission Detail" value="7" />
-                <Tab label="TBD" value="8" />
-                <Tab label="undefined 2" value="9" />
+                <Tab label="Problem Dashboard" value="6" />
+                <Tab label="New Submission" value="7" />
+                <Tab label="Submission Detail" value="8" />
               </TabList>
             </Toolbar>
           </AppBar>
           <TabPanel value="6">
+            <div className="pt-3">
+              <ProblemDashboard />
+            </div>
+          </TabPanel>
+          <TabPanel value="7">
             <SubmissionFormInTab
               submissionData={submissionData}
               setSubmissionData={setSubmissionData}
@@ -252,16 +251,12 @@ const ProblemHubPage = () => {
               openner={Openner}
             />
           </TabPanel>
-          <TabPanel value="7">
+          <TabPanel value="8">
             <SubmissionDetailPage
               simplified={true}
               selectedSubmission={selectedSubmission}
             />
           </TabPanel>
-          <TabPanel value="8">
-            <div className="pt-3">TBD</div>
-          </TabPanel>
-          <TabPanel value="9"></TabPanel>
         </TabContext>
       </div>
     </div>

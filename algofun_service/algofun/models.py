@@ -3,6 +3,8 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 
 
 class Difficulty(models.TextChoices):
@@ -38,18 +40,23 @@ class ProficiencyLevel(models.TextChoices):
     SMOOTH_OPTIMAL_PASS = "smooth_optimal_pass", "smooth optimal pass"
 
 
-class Topic(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+class NoteType(models.TextChoices):
+    RED = "red", "Red"
+    GREEN = "green", "Green"
+    BLUE = "blue", "Blue"
+    PURPLE = "purple", "Purple"
+    PINK = "pink", "Pink"
+    # BROWN = "brown", "Brown"
+    # ORANGE = "orange", "Orange"
+    # YELLOW = "yellow", "Yellow"
+    GRAY = "gray", "Gray"
 
-    def __str__(self):
-        return self.name
 
-
-class Source(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.name
+class ResourceType(models.TextChoices):
+    IMAGE = "image", "image"
+    VIDEO = "video", "video"
+    ARTICLE = "article", "article"
+    SOLUTION_POST = "solution_post", "solution post"
 
 
 class Problem(models.Model):
@@ -175,7 +182,7 @@ class Submission(models.Model):
     code = models.TextField(blank=True)
     # passed = models.BooleanField()
     proficiency_level = models.CharField(
-        max_length=100,
+        max_length=30,
         choices=ProficiencyLevel.choices,
     )
     submitted_at = models.DateTimeField(default=timezone.now)
@@ -214,46 +221,6 @@ class Submission(models.Model):
         return f"PID: {self.problem.id} {self.problem.title} - SID: {self.id} - {submitted_date} - {self.proficiency_level}"
 
 
-class ResourceType(models.TextChoices):
-    IMAGE = "image", "image"
-    VIDEO = "video", "video"
-    ARTICLE = "article", "article"
-    SOLUTION_POST = "solution_post", "solution post"
-
-
-class Resource(models.Model):
-    title = models.CharField(max_length=100, blank=True)
-    url = models.URLField(max_length=200, blank=True)
-    resource_type = models.CharField(
-        max_length=100,
-        choices=ResourceType.choices,
-        blank=True,
-    )
-    note = models.ForeignKey(
-        "Note", on_delete=models.CASCADE, related_name="resources", default=4
-    )
-
-    def __str__(self):
-        return f"PID: {self.note.submission.problem.id} {self.note.submission.problem.title} - SID: {self.note.submission.id} - NID: {self.note.id} {self.note.title} - RID: {self.id} - {self.title}"
-
-
-class Tag(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
-class TaggedItem(models.Model):
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="tagged_items")
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey("content_type", "object_id")
-
-    def __str__(self):
-        return f"{self.content_object} - {self.tag.name}"
-
-
 class Note(models.Model):
     # question is optional, answer isn't
     submission = models.ForeignKey(
@@ -261,6 +228,11 @@ class Note(models.Model):
     )
     title = models.CharField(max_length=100, blank=True)
     content = models.TextField(null=False)
+    note_type = models.CharField(
+        max_length=30,
+        choices=NoteType.choices,
+        default=NoteType.GRAY,
+    )
     submitted_at = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -291,6 +263,14 @@ class Note(models.Model):
         )
         return [item.tag for item in tagged_items]
 
+    def _has_tags(self):
+        # check if this instance is already saved and has associated tags
+        if self.pk:  # pk is None if instance is not yet saved
+            return TaggedItem.objects.filter(
+                content_type=ContentType.objects.get_for_model(self), object_id=self.pk
+            ).exists()
+        return False
+
     def save(self, *args, **kwargs):
         # NOTE: Before saving the Note object, check if only start_line_number is provided.
         # If end_line_number is not provided, set end_line_number equal to start_line_number.
@@ -298,11 +278,71 @@ class Note(models.Model):
             self.end_line_number = self.start_line_number
         super().save(*args, **kwargs)
 
+        if not self.content and not self._has_tags():
+            raise ValidationError("Note must have either content or at least one tag")
+
     def __str__(self):
         return f"PID: {self.submission.problem.id} {self.submission.problem.title} - SID: {self.submission.id} - NID: {self.id} - {self.title}"
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        slugified_name = slugify(self.name)
+        # check if the slugified name is different from the original
+        if slugified_name != self.name:
+            raise ValidationError("Tag name must be in slug format")
+        # proceed only if name is already a slug
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
+class TaggedItem(models.Model):
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="tagged_items")
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+
+    def __str__(self):
+        return f"{self.content_object} - {self.tag.name}"
+
+
+class Resource(models.Model):
+    title = models.CharField(max_length=100, blank=True)
+    url = models.URLField(max_length=200, blank=True)
+    resource_type = models.CharField(
+        max_length=100,
+        choices=ResourceType.choices,
+        blank=True,
+    )
+    note = models.ForeignKey(
+        "Note", on_delete=models.CASCADE, related_name="resources", default=4
+    )
+
+    def __str__(self):
+        return f"PID: {self.note.submission.problem.id} {self.note.submission.problem.title} - SID: {self.note.submission.id} - NID: {self.note.id} {self.note.title} - RID: {self.id} - {self.title}"
+
+
 class Company(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Topic(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Source(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
