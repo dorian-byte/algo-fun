@@ -256,6 +256,9 @@ class Note(models.Model):
         related_name="notes_mentioning_this_submission",
     )
 
+    def has_resources(self):
+        return self.resources.count() > 0
+
     def tags(self):
         content_type = ContentType.objects.get_for_model(self)
         tagged_items = TaggedItem.objects.filter(
@@ -263,7 +266,7 @@ class Note(models.Model):
         )
         return [item.tag for item in tagged_items]
 
-    def _has_tags(self):
+    def has_tags(self):
         # check if this instance is already saved and has associated tags
         if self.pk:  # pk is None if instance is not yet saved
             return TaggedItem.objects.filter(
@@ -278,7 +281,7 @@ class Note(models.Model):
             self.end_line_number = self.start_line_number
         super().save(*args, **kwargs)
 
-        if not self.content and not self._has_tags():
+        if not self.content and not self.has_tags():
             raise ValidationError("Note must have either content or at least one tag")
 
     def __str__(self):

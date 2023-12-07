@@ -18,6 +18,7 @@ import SubmissionDetailPage from './SubmissionDetailPage';
 import ProblemDetail from '../components/ProblemDetail';
 import ProblemNoteListTab from '../components/ProblemNoteListTab';
 import ProblemDashboard from '../components/ProblemDashboard';
+import SubmissionNoteCRUDPage from './SubmissionNoteCRUDPage';
 
 const PROBLEM_BY_ID = gql`
   query ProblemById($id: Int!) {
@@ -189,7 +190,7 @@ const ProblemHubPage = () => {
             />
           </TabPanel>
           <TabPanel value="2">
-            <h1>Submission Notes</h1>
+            <SubmissionNoteCRUDPage />
           </TabPanel>
           <TabPanel value="3">
             <SubmissionList

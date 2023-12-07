@@ -18,7 +18,6 @@ body {
   height: 100vh;
 }
 
-body,
 h1,
 h2,
 h3,
@@ -32,8 +31,13 @@ p,
 .h4,
 .h5,
 .h6 {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   font-family: 'Lato', sans-serif !important;
   /* color: #b0b0b0 !important; */
+}
+
+body {
+  font-family: 'Lato', sans-serif !important;
 }
 
 .main {
@@ -209,6 +213,10 @@ a:hover {
 }
 
 /* Buttons */
+.btn,
+.icon {
+  transition: all 0.3s ease;
+}
 
 /* Button Primary */
 .btn-primary {
@@ -310,7 +318,10 @@ a:hover {
   background-color: #303030 !important;
 }
 
-.form-control {
+.form-control,
+input,
+select,
+textarea {
   background-color: #212121 !important;
   border: 1px solid #f38960 !important;
   border-radius: 5px !important;
@@ -322,6 +333,14 @@ a:hover {
   margin-bottom: 5px !important;
   color: #b0b0b0 !important;
 }
+
+/* .is-invalid {
+  border-color: #dc3545 !important;
+}
+
+.invalid-feedback {
+  display: block;
+} */
 
 /* Form: Floating Label */
 
@@ -339,12 +358,11 @@ label::after {
 /* Form: Toggle Switch */
 
 /* this background-color also takes care of the toggle switch background */
-input,
+/* input,
 select,
 textarea {
-  /* background-color: #773c24 !important; */
   color: #b0b0b0 !important;
-}
+} */
 /* #isSolutionSwitch,
 #isWhiteboardModeSwitch,
 #isInterviewModeSwitch {
@@ -635,4 +653,90 @@ select::-webkit-scrollbar-thumb {
 .breadcrumb-separator {
   margin-left: 0.5em !important;
   margin-right: 0.5em !important;
+}
+
+/* Scrollbar in general */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #303030;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f38960;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b35640;
+}
+
+/* Hover state of links */
+a:hover {
+  color: #ffd700 !important;
+}
+
+/* Note Detail CRUD */
+.note-detail-inside-frame {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  color: #b0b0b0;
+  border: 1px solid white;
+  padding: 10px;
+  width: 200px;
+  min-height: 300px;
+}
+
+.note-detail-inside-frame:hover {
+  border: 1px solid #f58220;
+}
+
+/* Note Detail CRUD - Grid */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+/* Note Detail CRUD - Forms that mimic a Bootstrap list group style */
+.form-like-list-group {
+  border: 1px solid #f58220;
+  border-radius: 0.25rem;
+  width: 100%;
+}
+
+.form-like-list-group .form-control {
+  border: none;
+  border-bottom: 1px solid #ddd;
+  border-radius: 0;
+  padding: 0.75rem 1.25rem;
+}
+.form-like-list-group .form-control {
+  border: none;
+  box-shadow: none; /* Removes the box-shadow */
+  padding: 0.75rem 1.25rem;
+}
+
+.no-border {
+  border: none !important;
+  outline: none !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+}
+.no-border:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+.no-border:placeholder {
+  color: gray;
+}
+.customized-border {
+  border: 0.5px solid #f38960 !important;
+}
+
+.form-like-list-group .form-control:last-child {
+  border-bottom: 0;
 }

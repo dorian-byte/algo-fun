@@ -94,5 +94,18 @@ class TopicType(DjangoObjectType):
 
 
 class NoteType(DjangoObjectType):
+    tags = graphene.List(TagType)
+    has_tags = graphene.Boolean()
+    has_resources = graphene.Boolean()
+
     class Meta:
         model = Note
+
+    def resolve_tags(self, info):
+        return [tagged_item.tag for tagged_item in self.tags()]
+
+    def resolve_has_tags(self, info):
+        return self.has_tags()
+
+    def resolve_has_resources(self, info):
+        return self.has_resources()
