@@ -8,6 +8,7 @@ import {
   faTimes,
   faExpand,
   faCompress,
+  faPlusCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons';
 
@@ -264,8 +265,8 @@ const NoteDetailCRUD: React.FC<NoteDetailCRUDProps> = ({
           ) : (
             <div style={{ width: 25 }}></div>
           )}
-          <div className="d-flex justify-content-center align-items-center flex-fill">
-            {(isNoteExpanded ? notes : notes.slice(0, 10)).map((note, idx) => (
+          <div className="d-flex justify-content-center align-items-baseline flex-fill">
+            {(isNoteExpanded ? notes : notes.slice(0, 8)).map((note, idx) => (
               <span
                 key={idx}
                 style={{
@@ -292,6 +293,14 @@ const NoteDetailCRUD: React.FC<NoteDetailCRUDProps> = ({
                 }}
               ></span>
             ))}
+            <Box sx={{ opacity: 0.5, '&:hover': { opacity: 1 } }}>
+              <FontAwesomeIcon
+                icon={faPlusCircle}
+                className="text-primary ms-1"
+                fontSize={12}
+                style={{ cursor: 'pointer' }}
+              />
+            </Box>
           </div>
           <div
             className="caption ms-auto"
