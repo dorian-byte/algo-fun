@@ -701,7 +701,7 @@ a:hover {
   gap: 10px;
 }
 
-/* Note Detail CRUD - Forms that mimic a Bootstrap list group style */
+/* Note Detail CRUD */
 .form-like-list-group {
   border: 1px solid #f58220;
   border-radius: 0.25rem;
@@ -716,7 +716,7 @@ a:hover {
 }
 .form-like-list-group .form-control {
   border: none;
-  box-shadow: none; /* Removes the box-shadow */
+  box-shadow: none;
   padding: 0.75rem 1.25rem;
 }
 
@@ -739,4 +739,52 @@ a:hover {
 
 .form-like-list-group .form-control:last-child {
   border-bottom: 0;
+}
+
+/* Pagination */
+.custom-pagination .page-item .page-link {
+  background-color: #303030;
+  color: #f38960;
+  border-color: #7f5b62;
+}
+
+.custom-pagination .page-item.active .page-link,
+.custom-pagination .page-item .page-link:hover .page-link:focus {
+  background-color: #564242;
+  color: #212121;
+  border-color: #f38960;
+}
+
+.custom-pagination .page-item.disabled .page-link {
+  color: #968282;
+}
+
+/* Pagination - tag search */
+#tag-search.form-control:focus {
+  box-shadow: none !important;
+}
+
+.custom-pagination * {
+  box-shadow: none !important;
+}
+
+/* Toast Styles: overwriting Bootstrap's Toast styles  */
+.toast {
+  background-color: #303030;
+  color: #f38960;
+  border: 1px solid #f38960;
+  border-radius: 5px;
+  padding: 10px;
+  font-family: 'Lato', sans-serif;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.toast-header {
+  background-color: #303030;
+  color: #f38960;
+  border-bottom: 1px solid #f38960;
+}
+
+.toast-body {
+  color: #b0b0b0;
 }

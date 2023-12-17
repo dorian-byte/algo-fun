@@ -108,7 +108,7 @@ export const StatusRenderer = (props: any) => {
   const { passed } = props.data;
   return (
     <div className="d-flex align-items-center h-100">
-      {passed ? (
+      {Math.random() > 0.5 ? (
         <div className="text-success">
           <FontAwesomeIcon icon={faCheck} />
         </div>

@@ -17,6 +17,7 @@ import NoteCreatePage from './pages/NoteCreatePage';
 import ProblemSubmissionListPage from './pages/ProblemSubmissionListPage';
 import ProblemNoteListPage from './pages/ProblemNoteListPage';
 import SubmissionNoteListPage from './pages/SubmissionNoteListPage';
+import TagCRUDListPage from './pages/TagCRUDListPage';
 import NotFoundPage from './pages/NotFoundPage';
 {
   /* FIXME: only for testing. Delete later. */
@@ -49,6 +50,7 @@ function App() {
                 <Route path="edit" element={<ResourceEditForm />} />
               </Route>
             </Route>
+            <Route path="/tags" element={<TagCRUDListPage />} />
             <Route path="/notes">
               <Route path="" element={<NoteListPage />} />
             </Route>

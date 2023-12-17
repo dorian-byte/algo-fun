@@ -70,9 +70,10 @@
 
 // import SimplePopper from '../components/SubmissionFormSettingPopper';
 
+import TagCRUDListPage from './TagCRUDListPage';
+
 const TestPage = () => {
-  return <div className="abc">abc</div>;
-  // return <SimplePopper />;
+  return <TagCRUDListPage />;
 };
 
 export default TestPage;

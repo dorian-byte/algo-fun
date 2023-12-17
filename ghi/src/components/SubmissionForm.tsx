@@ -5,7 +5,7 @@ import {
   FETCH_PROBLEM,
   FETCH_ALL_PROBLEMS,
   FETCH_SUBMISSION,
-  CREATE_SUBMISSION,
+  CREATE_OR_UPDATE_SUBMISSION,
   DELETE_SUBMISSION,
 } from '../graphql/submissionQueries';
 import { dtToLocalISO16 } from '../utils/timeUtils';
@@ -151,7 +151,7 @@ const SubmissionForm = ({
     }
   }, [submissionDetailData, selectedSubmission]);
 
-  const [createOrEditSubmission] = useMutation(CREATE_SUBMISSION);
+  const [createOrUpdateSubmission] = useMutation(CREATE_OR_UPDATE_SUBMISSION);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -171,7 +171,7 @@ const SubmissionForm = ({
       input['id'] = data?.id || submissionId;
     }
     console.log('input', input);
-    createOrEditSubmission({
+    createOrUpdateSubmission({
       variables: { input },
     })
       .then((res) => {

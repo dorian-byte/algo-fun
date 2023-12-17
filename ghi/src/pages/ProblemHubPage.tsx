@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import { dtToLocalISO16 } from '../utils/timeUtils';
-import { CREATE_SUBMISSION } from '../graphql/submissionQueries';
+import { CREATE_OR_UPDATE_SUBMISSION } from '../graphql/submissionQueries';
 import { useMutation } from '@apollo/client';
 import SubmissionList from '../components/SubmissionList';
 import ChatSubmissionAnalyzer from '../components/ChatSubmissionAnalyzer';
@@ -90,7 +90,7 @@ const ProblemHubPage = () => {
     timeComplexity: '',
     spaceComplexity: '',
   });
-  const [createSubmission] = useMutation(CREATE_SUBMISSION, {
+  const [createSubmission] = useMutation(CREATE_OR_UPDATE_SUBMISSION, {
     variables: {
       input: {
         ...submissionData,

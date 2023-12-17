@@ -6,6 +6,7 @@ import {
   faPaperPlane,
   faBook,
   faPlusCircle,
+  faTags,
 } from '@fortawesome/free-solid-svg-icons';
 import Breadcrumb from './Breadcrumb';
 
@@ -46,6 +47,11 @@ const Navigation = () => {
           <li className="nav-item d-flex align-items-center gap-2 ms-5">
             <Link to="/notes" style={{ textDecoration: 'None' }}>
               <FontAwesomeIcon icon={faBook} className="me-1" /> Notes
+            </Link>
+          </li>
+          <li className="nav-item d-flex align-items-center gap-2 ms-5">
+            <Link to="/tags" style={{ textDecoration: 'None' }}>
+              <FontAwesomeIcon icon={faTags} className="me-1" /> Tags
             </Link>
           </li>
         </ul>
