@@ -17,7 +17,6 @@ const SUBMISSION_NOTES = gql`
         tags {
           name
         }
-        hasTags
         hasResources
         createdAt
         updatedAt
@@ -29,6 +28,8 @@ const SUBMISSION_NOTES = gql`
     }
   }
 `;
+// FIXME
+// removed hastags
 
 const SubmissionNoteCRUDListPage = () => {
   const { submissionId } = useParams();
@@ -37,7 +38,7 @@ const SubmissionNoteCRUDListPage = () => {
   }>({});
   const { loading, error, data } = useQuery(SUBMISSION_NOTES, {
     // FIXME
-    variables: { id: 4 },
+    variables: { id: 1 },
   });
   useEffect(() => {
     if (data) {

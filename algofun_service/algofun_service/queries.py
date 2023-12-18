@@ -51,7 +51,8 @@ class Query(graphene.ObjectType):
 
     def resolve_all_problems(self, info):
         # FIXME: change back after adding pagination
-        return Problem.objects.all()[:50]
+        # sort by the leetcode_number, and only return the first 100
+        return Problem.objects.all().order_by("leetcode_number")[:100]
         # return Problem.objects.all()
 
     def resolve_problem_by_id(self, info, id):

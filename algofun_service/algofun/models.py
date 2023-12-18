@@ -5,6 +5,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
+from django.contrib.contenttypes.fields import GenericRelation
 
 
 class Difficulty(models.TextChoices):
@@ -50,6 +51,31 @@ class NoteType(models.TextChoices):
     # ORANGE = "orange", "Orange"
     # YELLOW = "yellow", "Yellow"
     GRAY = "gray", "Gray"
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        slugified_name = slugify(self.name)
+        if slugified_name != self.name:
+            raise ValidationError("Tag name must be in slug format")
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
+class TaggedItem(models.Model):
+    tag = models.ForeignKey(Tag, related_name="tagged_items", on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+
+    def __str__(self):
+        return f"{self.content_object} - {self.tag.name}"
 
 
 class ResourceType(models.TextChoices):
@@ -116,6 +142,8 @@ class Problem(models.Model):
     # this helps the frontend's Problem List page to load faster by reducing the number of queries
     # and enables faster display of the conditional button styles based on the counts of notes, submissions, and resources
 
+    tags = GenericRelation(TaggedItem)
+
     def has_submissions(self):
         return self.submissions.exists()
 
@@ -135,12 +163,12 @@ class Problem(models.Model):
 
         return submissions_notes_count
 
-    def tags(self):
-        content_type = ContentType.objects.get_for_model(self)
-        tagged_items = TaggedItem.objects.filter(
-            content_type=content_type, object_id=self.id
-        )
-        return [item.tag for item in tagged_items]
+    # def tags(self):
+    #     content_type = ContentType.objects.get_for_model(self)
+    #     tagged_items = TaggedItem.objects.filter(
+    #         content_type=content_type, object_id=self.id
+    #     )
+    #     return [item.tag for item in tagged_items]
 
     def solutions(self):
         return self.submission_set.filter(is_solution=True)
@@ -256,23 +284,25 @@ class Note(models.Model):
         related_name="notes_mentioning_this_submission",
     )
 
+    tags = GenericRelation(TaggedItem)
+
     def has_resources(self):
         return self.resources.count() > 0
 
-    def tags(self):
-        content_type = ContentType.objects.get_for_model(self)
-        tagged_items = TaggedItem.objects.filter(
-            content_type=content_type, object_id=self.id
-        )
-        return [item.tag for item in tagged_items]
+    # def tags(self):
+    #     content_type = ContentType.objects.get_for_model(self)
+    #     tagged_items = TaggedItem.objects.filter(
+    #         content_type=content_type, object_id=self.id
+    #     )
+    #     return [item.tag for item in tagged_items]
 
-    def has_tags(self):
-        # check if this instance is already saved and has associated tags
-        if self.pk:  # pk is None if instance is not yet saved
-            return TaggedItem.objects.filter(
-                content_type=ContentType.objects.get_for_model(self), object_id=self.pk
-            ).exists()
-        return False
+    # def has_tags(self):
+    #     # check if this instance is already saved and has associated tags
+    #     if self.pk:  # pk is None if instance is not yet saved
+    #         return TaggedItem.objects.filter(
+    #             content_type=ContentType.objects.get_for_model(self), object_id=self.pk
+    #         ).exists()
+    #     return False
 
     def save(self, *args, **kwargs):
         # NOTE: Before saving the Note object, check if only start_line_number is provided.
@@ -281,38 +311,21 @@ class Note(models.Model):
             self.end_line_number = self.start_line_number
         super().save(*args, **kwargs)
 
-        if not self.content and not self.has_tags():
-            raise ValidationError("Note must have either content or at least one tag")
+        # if not self.content and not self.has_tags():
+        #     raise ValidationError("Note must have either content or at least one tag")
 
     def __str__(self):
         return f"PID: {self.submission.problem.id} {self.submission.problem.title} - SID: {self.submission.id} - NID: {self.id} - {self.title}"
 
 
-class Tag(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+# class TaggedItem(models.Model):
+#     tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="tagged_items")
+#     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+#     object_id = models.PositiveIntegerField()
+#     content_object = GenericForeignKey("content_type", "object_id")
 
-    def save(self, *args, **kwargs):
-        slugified_name = slugify(self.name)
-        # check if the slugified name is different from the original
-        if slugified_name != self.name:
-            raise ValidationError("Tag name must be in slug format")
-        # proceed only if name is already a slug
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
-
-
-class TaggedItem(models.Model):
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="tagged_items")
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey("content_type", "object_id")
-
-    def __str__(self):
-        return f"{self.content_object} - {self.tag.name}"
+#     def __str__(self):
+#         return f"{self.content_object} - {self.tag.name}"
 
 
 class Resource(models.Model):

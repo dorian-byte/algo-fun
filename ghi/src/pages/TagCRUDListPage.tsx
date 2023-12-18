@@ -9,12 +9,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faPlus,
-  faPlusCircle,
-  faSearch,
-  faSearchPlus,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -45,12 +40,15 @@ function a11yProps(index: number) {
   };
 }
 
-const BasicTabs = () => {
+const ThreeTabView = ({ selectedTags }: { selectedTags: any }) => {
   const [value, setValue] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+  useEffect(() => {
+    console.log('selected tags', selectedTags);
+  }, [selectedTags]);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -68,13 +66,22 @@ const BasicTabs = () => {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        Problems with this tag
+        Problems with this tag{' '}
+        {selectedTags.map((tag: any) => (
+          <li>{tag.name}</li>
+        ))}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         Submissions with this tag
+        {selectedTags.map((tag: any) => (
+          <li>{tag.name}</li>
+        ))}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Notes with this tag
+        {selectedTags.map((tag: any) => (
+          <li>{tag.name}</li>
+        ))}
       </CustomTabPanel>
     </Box>
   );
@@ -113,12 +120,14 @@ const TagAgGrid = ({
   handleDelete,
   setToastMessage,
   setShowToast,
+  setSelectedTags,
 }: {
   rowData: any;
   createOrUpdateTag: any;
   handleDelete: any;
   setToastMessage: any;
   setShowToast: any;
+  setSelectedTags: any;
 }) => {
   const containerStyle = { height: '100%', flex: 1 };
   const gridStyle = { height: '100%', width: '100%' };
@@ -153,24 +162,24 @@ const TagAgGrid = ({
     params.api.sizeColumnsToFit();
   };
 
-  const onCellEditingStarted = (params: any) => {
-    console.log('params', params);
-    console.log('cellEditingStarted');
-  };
+  const onCellEditingStarted = (params: any) => {};
 
   const onCellEditingEnded = (params: any) => {
-    console.log('cellEditingEnded');
-    console.log('params', params);
     createOrUpdateTag({
       variables: { input: { id: params.data.id, name: params.newValue } },
     }).then((res: any) => {
-      console.log('res', res);
       if (res.data?.updateTag?.tag) {
         setToastMessage('Tag updated successfully!');
         setShowToast(true);
       }
     });
   };
+  const onSelectionChanged = (params: any) => {
+    const selectedNodes = params.api.getSelectedNodes();
+    const selectedData = selectedNodes.map((node: any) => node.data);
+    setSelectedTags(selectedData);
+  };
+
   return (
     <div style={containerStyle}>
       <div style={gridStyle} className="ag-theme-alpine-dark">
@@ -197,6 +206,7 @@ const TagAgGrid = ({
           onCellEditingStarted={onCellEditingStarted}
           onCellEditingStopped={onCellEditingEnded}
           rowMultiSelectWithClick={true}
+          onSelectionChanged={onSelectionChanged}
         />
       </div>
     </div>
@@ -209,7 +219,6 @@ const TagCRUDListPage = () => {
   const [deleteTag] = useMutation(DELETE_TAG);
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [isAdding, setIsAdding] = useState(false);
@@ -217,25 +226,33 @@ const TagCRUDListPage = () => {
   const [newTagName, setNewTagName] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [editingTagId, setEditingTagId] = useState('');
-  const itemsPerPage = 8;
+  const [selectedTags, setSelectedTags] = useState<any[]>([]);
+  const [rowData, setRowData] = useState<any[]>([]);
 
-  const filteredTags = data?.allTags?.filter((tag) =>
-    tag.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    setRowData(
+      data?.allTags
+        ?.filter((tag: any) =>
+          tag.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .map((tag: any) => ({ id: tag.id, name: tag.name }))
+    );
+  }, [searchTerm]);
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredTags?.slice(indexOfFirstItem, indexOfLastItem);
+  useEffect(() => {
+    if (data?.allTags) {
+      setRowData(
+        data.allTags.map((tag: any) => ({ id: tag.id, name: tag.name }))
+      );
+    }
+  }, [data]);
+
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (isAdding && inputRef.current) {
       inputRef.current.focus();
     }
   }, [isAdding]);
-  const rowData = filteredTags?.map((tag) => ({
-    id: tag.id,
-    name: tag.name,
-  }));
 
   const handleDelete = (id: any) => {
     deleteTag({
@@ -370,6 +387,7 @@ const TagCRUDListPage = () => {
           handleDelete={handleDelete}
           setToastMessage={setToastMessage}
           setShowToast={setShowToast}
+          setSelectedTags={setSelectedTags}
         />
         <div
           className="bg-dark overflow-y-auto p-2"
@@ -381,7 +399,7 @@ const TagCRUDListPage = () => {
             borderRadius: 10,
           }}
         >
-          <BasicTabs />
+          <ThreeTabView selectedTags={selectedTags} />
         </div>
       </div>
       <Toast

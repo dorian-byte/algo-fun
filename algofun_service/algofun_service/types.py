@@ -9,14 +9,10 @@ from algofun.models import (
     Tag,
     Note,
     Resource,
+    TaggedItem,
 )
 from graphene_django import DjangoObjectType
-from django import forms
-
-
-class TagType(DjangoObjectType):
-    class Meta:
-        model = Tag
+from django.contrib.contenttypes.models import ContentType
 
 
 class ResourceType(DjangoObjectType):
@@ -29,6 +25,33 @@ class CompanyType(DjangoObjectType):
         model = Company
 
 
+class TaggedItemType(DjangoObjectType):
+    class Meta:
+        model = TaggedItem
+
+
+class TagType(DjangoObjectType):
+    class Meta:
+        model = Tag
+
+    # Define a field to get tagged items
+    tagged_items = graphene.List(lambda: ProblemNoteUnion)
+
+    def resolve_tagged_items(self, info):
+        # Fetch related problems and notes through TaggedItem
+        content_type_problem = ContentType.objects.get_for_model(Problem)
+        content_type_note = ContentType.objects.get_for_model(Note)
+
+        related_problems = Problem.objects.filter(
+            tags__content_type=content_type_problem, tags__tag_id=self.id
+        )
+        related_notes = Note.objects.filter(
+            tags__content_type=content_type_note, tags__tag_id=self.id
+        )
+
+        return list(related_problems) + list(related_notes)
+
+
 class ProblemType(DjangoObjectType):
     class Meta:
         model = Problem
@@ -39,6 +62,13 @@ class ProblemType(DjangoObjectType):
     resources_count = graphene.Int()
     has_submissions = graphene.Boolean()
     submissions_count = graphene.Int()
+    tags = graphene.List(TagType)
+
+    def resolve_tags(self, info):
+        return Tag.objects.filter(
+            tagged_items__content_type=ContentType.objects.get_for_model(Problem),
+            tagged_items__object_id=self.id,
+        )
 
     def resolve_companies(self, info):
         return self.companies.all()
@@ -94,18 +124,23 @@ class TopicType(DjangoObjectType):
 
 
 class NoteType(DjangoObjectType):
-    tags = graphene.List(TagType)
-    has_tags = graphene.Boolean()
     has_resources = graphene.Boolean()
 
     class Meta:
         model = Note
 
-    def resolve_tags(self, info):
-        return [tagged_item.tag for tagged_item in self.tags()]
+    tags = graphene.List(TagType)
 
-    def resolve_has_tags(self, info):
-        return self.has_tags()
+    def resolve_tags(self, info):
+        return Tag.objects.filter(
+            tagged_items__content_type=ContentType.objects.get_for_model(Note),
+            tagged_items__object_id=self.id,
+        )
 
     def resolve_has_resources(self, info):
         return self.has_resources()
+
+
+class ProblemNoteUnion(graphene.Union):
+    class Meta:
+        types = (ProblemType, NoteType)

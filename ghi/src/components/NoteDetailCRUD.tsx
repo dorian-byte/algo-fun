@@ -30,7 +30,7 @@ export type Note = {
   content: string;
   noteType: string;
   tags: { name: string }[];
-  hasTags: boolean;
+  // hasTags: boolean;
   hasResources: boolean;
   createdAt: string;
   updatedAt: string;
@@ -115,16 +115,16 @@ const NoteDetailCRUD: React.FC<NoteDetailCRUDProps> = ({
         <Box
           className="note-detail-inside-frame position-relative"
           sx={{
-            borderColor: NoteType[noteType][1],
+            borderColor: NoteType[noteType]?.[1],
             borderWidth: 3,
             backgroundColor: '#0f0f0f',
             boxShadow: isFocusedNote
-              ? `0 0 0 2px ${NoteType[noteType][1]}`
+              ? `0 0 0 2px ${NoteType[noteType]?.[1]}`
               : 'none',
             '&:hover': {
               borderWidth: 3,
-              borderColor: NoteType[noteType][1],
-              boxShadow: `0 0 0 2px ${NoteType[noteType][1]}`,
+              borderColor: NoteType[noteType]?.[1],
+              boxShadow: `0 0 0 2px ${NoteType[noteType]?.[1]}`,
             },
             ...extraCss2(isNoteExpanded),
           }}
@@ -194,7 +194,7 @@ const NoteDetailCRUD: React.FC<NoteDetailCRUDProps> = ({
               />
             )}
           </div>
-          <hr style={{ borderColor: NoteType[noteType][1] }} />
+          <hr style={{ borderColor: NoteType[noteType]?.[1] }} />
           <textarea
             className="form-control no-border"
             rows={3}
@@ -207,7 +207,7 @@ const NoteDetailCRUD: React.FC<NoteDetailCRUDProps> = ({
           <div className="my-2">
             <div
               style={{
-                border: `1px solid ${NoteType[noteType][1]}`,
+                border: `1px solid ${NoteType[noteType]?.[1]}`,
               }}
             ></div>
           </div>
@@ -237,7 +237,7 @@ const NoteDetailCRUD: React.FC<NoteDetailCRUDProps> = ({
                 <div
                   className="badge rounded-pill text-dark"
                   style={{
-                    backgroundColor: NoteType[noteType][1],
+                    backgroundColor: NoteType[noteType]?.[1],
                   }}
                 >
                   {tag.name}

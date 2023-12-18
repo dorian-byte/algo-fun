@@ -14,7 +14,7 @@ const Toast = ({ message, show, onClose, duration = 3000 }) => {
     <div
       aria-live="polite"
       aria-atomic="true"
-      className="position-relative"
+      className="position-absolute bottom-0 end-0 p-3"
       style={{ minHeight: '100px' }}
     >
       <div
@@ -22,7 +22,6 @@ const Toast = ({ message, show, onClose, duration = 3000 }) => {
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
-        style={{ position: 'absolute', top: 0, right: 0 }}
       >
         <div className="toast-header">
           <strong className="me-auto">Notification</strong>

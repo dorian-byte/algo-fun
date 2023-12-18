@@ -58,6 +58,7 @@ class TopicAdmin(admin.ModelAdmin):
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):
     list_display = ["__str__"]
+    inlines = [TaggedItemInline]
 
 
 @admin.register(Company)
@@ -68,10 +69,9 @@ class CompanyAdmin(admin.ModelAdmin):
 @admin.register(Resource)
 class ResourceAdmin(admin.ModelAdmin):
     list_display = ["__str__"]
-    inlines = [TaggedItemInline]
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ["__str__"]
-    search_fields = ["name"]  # optional, for easy searching in the admin
+    search_fields = ["name"]
