@@ -76,12 +76,23 @@ function App() {
                 </Route>
                 <Route path="submissions">
                   <Route path="" element={<ProblemSubmissionListPage />} />
-                  {/* same page as above but passing in problemId */}
-                  <Route path="new" element={<SubmissionCreatePage />} />
                   <Route
-                    path=":submissionId"
-                    element={<SubmissionDetailPage />}
+                    path="new"
+                    // element={<SubmissionCreatePage />}
+                    element={<ProblemHubPage />}
                   />
+                  <Route path=":submissionId">
+                    <Route
+                      path=""
+                      // element={<SubmissionDetailPage />}
+                      element={<ProblemHubPage />}
+                    />
+                    <Route
+                      path="notes"
+                      // element={<SubmissionNoteListPage />}
+                      element={<ProblemHubPage />}
+                    />
+                  </Route>
                 </Route>
               </Route>
             </Route>

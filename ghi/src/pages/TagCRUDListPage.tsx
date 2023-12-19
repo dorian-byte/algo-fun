@@ -40,12 +40,42 @@ function a11yProps(index: number) {
   };
 }
 
-const ThreeTabView = ({ selectedTags }: { selectedTags: any }) => {
+const ThreeTabView = ({
+  selectedTags,
+  allTags,
+}: {
+  selectedTags: any;
+  allTags: any[];
+}) => {
   const [value, setValue] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  const [problems, setProblems] = useState<any[]>([]);
+  const [notes, setNotes] = useState<any[]>([]);
+
+  useEffect(() => {
+    const prbs = [] as any[];
+    const nts = [] as any[];
+    const selectedTagIds = selectedTags.map((tag: any) => tag.id);
+    allTags?.forEach((tag: any) => {
+      const taggedItems = tag.taggedItems;
+      if (taggedItems && selectedTagIds.includes(tag.id)) {
+        taggedItems.forEach((item: any) => {
+          if (item.__typename === 'ProblemType') {
+            prbs.push(item);
+          } else if (item.__typename === 'NoteType') {
+            nts.push(item);
+          }
+        });
+      }
+    });
+    setProblems(prbs as any[]);
+    setNotes(nts as any[]);
+  }, [selectedTags]);
+
   useEffect(() => {
     console.log('selected tags', selectedTags);
   }, [selectedTags]);
@@ -67,20 +97,29 @@ const ThreeTabView = ({ selectedTags }: { selectedTags: any }) => {
       </Box>
       <CustomTabPanel value={value} index={0}>
         Problems with this tag{' '}
-        {selectedTags.map((tag: any) => (
-          <li>{tag.name}</li>
+        {problems.map((problem: any) => (
+          <ul>
+            <li>{problem.title}</li>
+            <li>{problem.description}</li>
+          </ul>
         ))}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         Submissions with this tag
-        {selectedTags.map((tag: any) => (
-          <li>{tag.name}</li>
+        {notes.map((note: any) => (
+          <ul>
+            <li>{note.submission?.id}</li>
+            <li>{note.submission?.code}</li>
+          </ul>
         ))}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Notes with this tag
-        {selectedTags.map((tag: any) => (
-          <li>{tag.name}</li>
+        {notes.map((note: any) => (
+          <ul>
+            <li>{note.title}</li>
+            <li>{note.content}</li>
+          </ul>
         ))}
       </CustomTabPanel>
     </Box>
@@ -92,6 +131,24 @@ export const FETCH_ALL_TAGS = gql`
     allTags {
       id
       name
+      taggedItems {
+        ... on ProblemType {
+          id
+          title
+          description
+          __typename
+        }
+        ... on NoteType {
+          id
+          title
+          content
+          __typename
+          submission {
+            id
+            code
+          }
+        }
+      }
     }
   }
 `;
@@ -399,7 +456,7 @@ const TagCRUDListPage = () => {
             borderRadius: 10,
           }}
         >
-          <ThreeTabView selectedTags={selectedTags} />
+          <ThreeTabView selectedTags={selectedTags} allTags={data?.allTags} />
         </div>
       </div>
       <Toast

@@ -63,7 +63,10 @@ const SubmissionNoteCRUDListPage = () => {
   return (
     <div className="d-flex flex-wrap gap-2 justify-content-around align-items-around position-relative">
       {Object.keys(submissionNotes).map((nt: string) => (
-        <NoteDetailCRUD notes={submissionNotes[nt] as Note[]} />
+        <NoteDetailCRUD
+          notes={submissionNotes[nt] as Note[]}
+          noteColorType={nt}
+        />
       ))}
     </div>
   );

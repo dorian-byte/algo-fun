@@ -96,6 +96,7 @@ class ProblemType(DjangoObjectType):
 
 
 class SubmissionType(DjangoObjectType):
+    id = graphene.ID()
     passed = graphene.Boolean()
     has_notes = graphene.Boolean()
     notes_count = graphene.Int()

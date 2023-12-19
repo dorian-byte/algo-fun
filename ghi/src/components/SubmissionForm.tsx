@@ -253,8 +253,7 @@ const SubmissionForm = ({
           // value={selectedSubmission?.code}
           showLineNumbers={true}
           theme="vs-dark"
-          // readOnly={readOnly}
-          readOnly={false}
+          readOnly={readOnly}
         />
         <div className="d-flex gap-1 align-items-center justify-content-between">
           <div

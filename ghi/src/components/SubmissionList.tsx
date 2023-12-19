@@ -14,7 +14,6 @@ import {
   faUserTie,
   faKey,
   faBook,
-  faLink,
 } from '@fortawesome/free-solid-svg-icons';
 import { dtStrToLocalShortStr } from '../utils/timeUtils';
 

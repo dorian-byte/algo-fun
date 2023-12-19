@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import { dtToLocalISO16 } from '../utils/timeUtils';
 import { CREATE_OR_UPDATE_SUBMISSION } from '../graphql/submissionQueries';
@@ -72,11 +72,50 @@ const PROBLEM_BY_ID = gql`
   }
 `;
 
+const GET_SELECTED_SUBMISSION = gql`
+  query GetSelectedSubmission($id: Int!) {
+    submissionById(id: $id) {
+      id
+      code
+      proficiencyLevel
+      submittedAt
+      duration
+      isSolution
+      isWhiteboardMode
+      isInterviewMode
+      timeComplexity
+      spaceComplexity
+    }
+  }
+`;
+
 const ProblemHubPage = () => {
-  const { problemId } = useParams();
+  const navigate = useNavigate();
+  const { problemId, submissionId } = useParams();
   const [problem, setProblem] = useState({} as any);
   const [submissions, setSubmissions] = useState([] as any[]);
   const [selectedSubmission, setSelectedSubmission] = useState();
+  const [submissionParsedFromUrl, setSubmissionParsedFromUrl] = useState();
+
+  const { data: submissionParsedFromUrlData } = useQuery(
+    GET_SELECTED_SUBMISSION,
+    {
+      variables: { id: submissionId ? +submissionId : 0 },
+      skip: !submissionId,
+    }
+  );
+  useEffect(() => {
+    if (submissionParsedFromUrlData) {
+      setSubmissionParsedFromUrl(submissionParsedFromUrlData.submissionById);
+    }
+  }, [submissionParsedFromUrlData]);
+
+  useEffect(() => {
+    if (submissionParsedFromUrl) {
+      setSelectedSubmission(submissionParsedFromUrl);
+      setRightTabValue('8');
+    }
+  }, [submissionParsedFromUrl]);
   const [submissionData, setSubmissionData] = useState<any>({
     code: '',
     proficiencyLevel: '',
@@ -113,9 +152,14 @@ const ProblemHubPage = () => {
     e.preventDefault();
     createSubmission()
       .then((res) => {
-        console.log('res', res);
+        //swap content with newly created submission before switching to display the "submission detail" tab
+        navigate(
+          `/problems/${problemId}/submissions/${res.data.updateSubmission.submission.id}`
+        );
       })
       .catch((err) => console.error(err));
+    setLeftTabValue('2');
+    setRightTabValue('8');
   };
   const handleAnalyze = (e: any) => {
     e.preventDefault();
@@ -196,10 +240,12 @@ const ProblemHubPage = () => {
             <SubmissionList
               submissions={submissions}
               simplified={true}
+              //NOTE: this part is a little bit tricky, we need to pass the callback function to the child component,
+              // and then the child component will call the callback function with the row data as the argument
               rowClickCallback={(row: any) => {
                 setRightTabValue('8');
-                console.log('p', row);
-                setSelectedSubmission(row);
+                console.log('row', row);
+                navigate(`/problems/${problemId}/submissions/${row.id}`);
               }}
             />
             {/* FIXME: toggle to show only solutions */}
@@ -233,7 +279,13 @@ const ProblemHubPage = () => {
               >
                 <Tab label="Problem Dashboard" value="6" />
                 <Tab label="New Submission" value="7" />
-                <Tab label="Submission Detail" value="8" />
+                {selectedSubmission && (
+                  <Tab
+                    label="Submission Detail"
+                    value="8"
+                    disabled={!selectedSubmission}
+                  />
+                )}
               </TabList>
             </Toolbar>
           </AppBar>
@@ -252,12 +304,14 @@ const ProblemHubPage = () => {
               openner={Openner}
             />
           </TabPanel>
-          <TabPanel value="8">
-            <SubmissionDetailPage
-              simplified={true}
-              selectedSubmission={selectedSubmission}
-            />
-          </TabPanel>
+          {selectedSubmission && (
+            <TabPanel value="8">
+              <SubmissionDetailPage
+                simplified={true}
+                selectedSubmission={selectedSubmission}
+              />
+            </TabPanel>
+          )}
         </TabContext>
       </div>
     </div>

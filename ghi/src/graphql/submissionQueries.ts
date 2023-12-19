@@ -26,6 +26,7 @@ export const CREATE_OR_UPDATE_SUBMISSION = gql`
   mutation CreateSubmission($input: SubmissionMutationInput!) {
     updateSubmission(input: $input) {
       submission {
+        id
         code
         duration
         isSolution
