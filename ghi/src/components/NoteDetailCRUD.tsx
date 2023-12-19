@@ -56,21 +56,25 @@ export const NoteType = {
 const NoteDetailCRUD = ({
   notes,
   noteColorType,
+  expandedNoteType,
+  setExpandedNoteType,
 }: {
   notes: Note[];
   noteColorType: string;
+  expandedNoteType: string;
+  setExpandedNoteType: any;
 }) => {
   const [currNoteIdxInType, setCurrNoteIdxInType] = useState(0);
   const [note, setNote] = useState(notes[currNoteIdxInType]);
   const [noteTitle, setNoteTitle] = useState(note?.title || '');
   const [noteContent, setNoteContent] = useState(note?.content || '');
   const [noteTags, setNoteTags] = useState(note?.tags || []);
-  const [noteType, setNoteType] = useState(note?.noteType || 'gray');
+  const [noteType, setNoteType] = useState(note?.noteType || noteColorType);
   const [isStarred, setIsStarred] = useState(note?.isStarred || false);
   const [hasResource, setHasResource] = useState(note?.hasResources || false);
   const [currTag, setCurrTag] = useState('#');
   const [isFocusedNote, setIsFocusedNote] = useState(false);
-  const [isNoteExpanded, setIsNoteExpanded] = useState(false);
+  // const [isNoteExpanded, setIsNoteExpanded] = useState(false);
   useEffect(() => {
     // debounce save
     const timeout = setTimeout(() => {
@@ -94,9 +98,11 @@ const NoteDetailCRUD = ({
     return exp
       ? {
           width: '100%',
-          height: '70vh',
+          height: 'calc(100vh - 230px)',
         }
-      : {};
+      : {
+          height: '30vh',
+        };
   };
 
   useEffect(() => {
@@ -109,11 +115,14 @@ const NoteDetailCRUD = ({
   return (
     <div
       style={{
-        position: isNoteExpanded ? 'absolute' : 'inherit',
-        ...extraCss(isNoteExpanded),
+        position: expandedNoteType === noteType ? 'absolute' : 'inherit',
+        ...extraCss(expandedNoteType === noteType),
+        display:
+          expandedNoteType && expandedNoteType !== noteType ? 'none' : 'block',
       }}
     >
-      <div className="mb-4">
+      {/* <div className="mb-4"> */}
+      <div className="">
         <Box
           className="note-detail-inside-frame position-relative"
           sx={{
@@ -133,7 +142,7 @@ const NoteDetailCRUD = ({
                 NoteType[noteType]?.[1] || NoteType[noteColorType]?.[1]
               }`,
             },
-            ...extraCss2(isNoteExpanded),
+            ...extraCss2(expandedNoteType === noteType),
           }}
         >
           <Box
@@ -147,10 +156,15 @@ const NoteDetailCRUD = ({
                 opacity: 1,
               },
             }}
-            onClick={() => setIsNoteExpanded((prev) => !prev)}
+            onClick={() =>
+              setExpandedNoteType((prev: string) => {
+                if (prev === noteType) return '';
+                return noteType;
+              })
+            }
           >
             <FontAwesomeIcon
-              icon={isNoteExpanded ? faCompress : faExpand}
+              icon={expandedNoteType === noteType ? faCompress : faExpand}
               className="text-primary"
             />
           </Box>
@@ -174,7 +188,10 @@ const NoteDetailCRUD = ({
                   },
                 }}
                 key={index}
-                onClick={() => setNoteType(type)}
+                onClick={() => {
+                  if (expandedNoteType === noteType) return;
+                  setNoteType(type);
+                }}
               ></Box>
             ))}
           </div>
@@ -245,9 +262,10 @@ const NoteDetailCRUD = ({
               onBlur={() => setIsFocusedNote(false)}
             />
             <div
-              className={`d-flex gap-2 flex-wrap user-select-none overflow-auto ${
-                isNoteExpanded ? '' : 'h-25'
-              }`}
+              className={`d-flex gap-2 flex-wrap user-select-none overflow-auto`}
+              style={{
+                height: expandedNoteType === noteType ? 'auto' : '10%',
+              }}
             >
               {noteTags.map((tag) => (
                 <div
@@ -283,33 +301,35 @@ const NoteDetailCRUD = ({
             <div style={{ width: 25 }}></div>
           )}
           <div className="d-flex justify-content-center align-items-baseline flex-fill">
-            {(isNoteExpanded ? notes : notes.slice(0, 8)).map((note, idx) => (
-              <span
-                key={idx}
-                style={{
-                  height: '10px',
-                  width: '10px',
-                  backgroundColor:
-                    idx === currNoteIdxInType
-                      ? NoteType[note.noteType][0]
-                      : 'rgba(0, 0, 0, 0.2)',
-                  borderRadius: '50%',
-                  display: 'inline-block',
-                  margin: '0 2px',
-                  cursor: 'pointer',
-                }}
-                onClick={() => {
-                  const nt = notes[idx];
-                  setNoteTitle(nt.title);
-                  setNoteContent(nt.content);
-                  setNoteType(nt.noteType);
-                  setNoteTags(nt.tags);
-                  setIsStarred(nt.isStarred);
-                  setHasResource(nt.hasResources);
-                  setCurrNoteIdxInType(idx);
-                }}
-              ></span>
-            ))}
+            {(expandedNoteType === noteType ? notes : notes.slice(0, 8)).map(
+              (note, idx) => (
+                <span
+                  key={idx}
+                  style={{
+                    height: '10px',
+                    width: '10px',
+                    backgroundColor:
+                      idx === currNoteIdxInType
+                        ? NoteType[note.noteType][0]
+                        : 'rgba(0, 0, 0, 0.2)',
+                    borderRadius: '50%',
+                    display: 'inline-block',
+                    margin: '0 2px',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => {
+                    const nt = notes[idx];
+                    setNoteTitle(nt.title);
+                    setNoteContent(nt.content);
+                    setNoteType(nt.noteType);
+                    setNoteTags(nt.tags);
+                    setIsStarred(nt.isStarred);
+                    setHasResource(nt.hasResources);
+                    setCurrNoteIdxInType(idx);
+                  }}
+                ></span>
+              )
+            )}
             <Box sx={{ opacity: 0.5, '&:hover': { opacity: 1 } }}>
               <FontAwesomeIcon
                 icon={faPlusCircle}

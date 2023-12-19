@@ -70,12 +70,21 @@ function App() {
               <Route path="" element={<ProblemListPage />} />
               <Route path="new" element={<ProblemCreatePage />} />
               <Route path=":problemId">
+                <Route path="description" element={<ProblemHubPage />} />
                 <Route path="" element={<ProblemHubPage />} />
                 <Route path="notes">
-                  <Route path="" element={<ProblemNoteListPage />} />
+                  <Route
+                    path=""
+                    element={<ProblemHubPage />}
+                    // element={<ProblemNoteListPage />}
+                  />
                 </Route>
                 <Route path="submissions">
-                  <Route path="" element={<ProblemSubmissionListPage />} />
+                  <Route
+                    path=""
+                    // element={<ProblemSubmissionListPage />}
+                    element={<ProblemHubPage />}
+                  />
                   <Route
                     path="new"
                     // element={<SubmissionCreatePage />}

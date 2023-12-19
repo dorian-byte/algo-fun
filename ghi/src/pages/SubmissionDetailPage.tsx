@@ -6,9 +6,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 const SubmissionDetailPage = ({
   simplified,
   selectedSubmission,
+  reloadSubmissions,
 }: {
   simplified?: boolean;
   selectedSubmission?: any;
+  reloadSubmissions?: () => void;
 }) => {
   const navigate = useNavigate();
   const { submissionId } = useParams();
@@ -18,6 +20,7 @@ const SubmissionDetailPage = ({
       <SubmissionForm
         simplified={true}
         selectedSubmission={selectedSubmission}
+        reloadSubmissions={reloadSubmissions}
       />
     );
   }

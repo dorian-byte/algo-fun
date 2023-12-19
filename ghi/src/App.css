@@ -788,3 +788,7 @@ a:hover {
 .toast-body {
   color: #b0b0b0;
 }
+
+h2.MuiTypography-root.MuiTypography-h6.MuiDialogTitle-root.css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
+  text-shadow: none;
+}

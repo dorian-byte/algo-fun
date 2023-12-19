@@ -43,9 +43,11 @@ const BestSolutionKey = ({
 const SubmissionForm = ({
   simplified,
   selectedSubmission,
+  reloadSubmissions,
 }: {
   simplified?: boolean;
   selectedSubmission?: any;
+  reloadSubmissions?: () => void;
 }) => {
   const { problemId, submissionId } = useParams() as any;
   const { pathname } = useLocation();
@@ -63,7 +65,10 @@ const SubmissionForm = ({
     deleteSubmission().then((res) => {
       if (res.data.deleteSubmission.ok) {
         console.log('deleted');
-        if (problemId) navigate(`/problems/${problemId}/submissions`);
+        if (problemId && submissionId) {
+          navigate(`/problems/${problemId}`);
+          reloadSubmissions && reloadSubmissions();
+        } else if (problemId) navigate(`/problems/${problemId}/submissions`);
         else if (submissionId) navigate(`/submissions`);
       } else {
         console.log('error');

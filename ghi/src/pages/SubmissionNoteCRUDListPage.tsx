@@ -38,7 +38,8 @@ const SubmissionNoteCRUDListPage = () => {
   }>({});
   const { loading, error, data } = useQuery(SUBMISSION_NOTES, {
     // FIXME
-    variables: { id: 1 },
+    variables: { id: submissionId ? +submissionId : 0 },
+    skip: !submissionId,
   });
   useEffect(() => {
     if (data) {
@@ -58,12 +59,15 @@ const SubmissionNoteCRUDListPage = () => {
   useEffect(() => {
     console.log('submissionNotes', submissionNotes);
   }, [submissionNotes]);
+  const [expandedNoteType, setExpandedNoteType] = useState('');
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
   return (
     <div className="d-flex flex-wrap gap-2 justify-content-around align-items-around position-relative">
       {Object.keys(submissionNotes).map((nt: string) => (
         <NoteDetailCRUD
+          expandedNoteType={expandedNoteType}
+          setExpandedNoteType={setExpandedNoteType}
           notes={submissionNotes[nt] as Note[]}
           noteColorType={nt}
         />

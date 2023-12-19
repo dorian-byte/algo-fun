@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import { dtToLocalISO16 } from '../utils/timeUtils';
 import { CREATE_OR_UPDATE_SUBMISSION } from '../graphql/submissionQueries';
@@ -67,6 +67,7 @@ const PROBLEM_BY_ID = gql`
         isInterviewMode
         timeComplexity
         spaceComplexity
+        passed
       }
     }
   }
@@ -90,12 +91,32 @@ const GET_SELECTED_SUBMISSION = gql`
 `;
 
 const ProblemHubPage = () => {
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const { problemId, submissionId } = useParams();
   const [problem, setProblem] = useState({} as any);
   const [submissions, setSubmissions] = useState([] as any[]);
   const [selectedSubmission, setSelectedSubmission] = useState();
   const [submissionParsedFromUrl, setSubmissionParsedFromUrl] = useState();
+
+  const [leftTabValue, setLeftTabValue] = useState<string>('1');
+  const [rightTabValue, setRightTabValue] = useState('6');
+
+  useEffect(() => {
+    if (rightTabValue === '7') {
+      setSelectedSubmission(null);
+      setLeftTabValue('1');
+      history.pushState(null, '', `/problems/${problemId}/submissions/new`);
+    } else if (rightTabValue === '8') {
+      history.pushState(
+        null,
+        '',
+        `/problems/${problemId}/submissions/${submissionId}`
+      );
+    } else if (rightTabValue === '6') {
+      history.pushState(null, '', `/problems/${problemId}`);
+    }
+  }, [rightTabValue]);
 
   const { data: submissionParsedFromUrlData } = useQuery(
     GET_SELECTED_SUBMISSION,
@@ -116,7 +137,7 @@ const ProblemHubPage = () => {
       setRightTabValue('8');
     }
   }, [submissionParsedFromUrl]);
-  const [submissionData, setSubmissionData] = useState<any>({
+  const initialSubmissionData = {
     code: '',
     proficiencyLevel: '',
     submittedAt: dtToLocalISO16(new Date()),
@@ -128,6 +149,9 @@ const ProblemHubPage = () => {
     problem: problemId,
     timeComplexity: '',
     spaceComplexity: '',
+  };
+  const [submissionData, setSubmissionData] = useState<any>({
+    ...initialSubmissionData,
   });
   const [createSubmission] = useMutation(CREATE_OR_UPDATE_SUBMISSION, {
     variables: {
@@ -156,6 +180,7 @@ const ProblemHubPage = () => {
         navigate(
           `/problems/${problemId}/submissions/${res.data.updateSubmission.submission.id}`
         );
+        setSubmissionData({ ...initialSubmissionData });
       })
       .catch((err) => console.error(err));
     setLeftTabValue('2');
@@ -172,7 +197,7 @@ const ProblemHubPage = () => {
       query: requestWrapper(submissionData.code),
     }).then(() => setChatLoading(false));
   };
-  const { loading, error, data } = useQuery(PROBLEM_BY_ID, {
+  const { loading, error, data, refetch } = useQuery(PROBLEM_BY_ID, {
     variables: { id: problemId ? +problemId : 0 },
   });
   useEffect(() => {
@@ -183,32 +208,21 @@ const ProblemHubPage = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    console.log('submissions', submissions);
-  }, submissions);
-
-  const [leftTabValue, setLeftTabValue] = useState('1');
-  const [rightTabValue, setRightTabValue] = useState('1');
   const handleLeftTabChange = (_e: React.SyntheticEvent, newValue: string) => {
     setLeftTabValue(newValue);
   };
   const handleRightTabChange = (_e: React.SyntheticEvent, newValue: string) => {
     setRightTabValue(newValue);
   };
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    console.log('ref', ref?.current);
-  }, [ref]);
 
   if (error) return <p>Error :( {error.message}</p>;
   if (loading) return <p>Loading...</p>;
   return (
     <div
-      className="overflow-y-auto mt-4 d-flex gap-1 justify-content-around"
-      style={{ height: '85vh' }}
+      className="overflow-y-auto d-flex justify-content-around ps-1 pe-1"
+      style={{ height: 'calc(100vh - 93px)', marginTop: '26px' }}
     >
-      <div className="border border-light bg-dark rounded overflow-y-auto w-50">
+      <div className="border border-light bg-dark overflow-y-auto w-50">
         <TabContext value={leftTabValue}>
           <AppBar position="sticky" sx={{ bgcolor: '#303030' }}>
             <Toolbar>
@@ -218,9 +232,13 @@ const ProblemHubPage = () => {
                 TabIndicatorProps={{ style: { background: '#fff' } }}
               >
                 <Tab label="Description" value="1" />
-                <Tab label="Submission Notes" value="2" />
+                {selectedSubmission && (
+                  <Tab label="Submission Notes" value="2" />
+                )}
                 <Tab label="Submissions" value="3" />
-                <Tab label="Submission Analysis" value="4" />
+                {rightTabValue === '7' && (
+                  <Tab label="Submission Analysis" value="4" />
+                )}
                 <Tab label="Problem Notes" value="5" />
               </TabList>
             </Toolbar>
@@ -240,11 +258,9 @@ const ProblemHubPage = () => {
             <SubmissionList
               submissions={submissions}
               simplified={true}
-              //NOTE: this part is a little bit tricky, we need to pass the callback function to the child component,
-              // and then the child component will call the callback function with the row data as the argument
+              //NOTE: this part is a little bit tricky
               rowClickCallback={(row: any) => {
                 setRightTabValue('8');
-                console.log('row', row);
                 navigate(`/problems/${problemId}/submissions/${row.id}`);
               }}
             />
@@ -268,7 +284,13 @@ const ProblemHubPage = () => {
         </TabContext>
       </div>
 
-      <div className="border border-light bg-dark rounded w-50">
+      <div
+        className="border-light bg-dark w-50"
+        style={{
+          border: '1px solid #303030',
+          borderLeft: 'none',
+        }}
+      >
         <TabContext value={rightTabValue}>
           <AppBar position="sticky" sx={{ bgcolor: '#303030' }}>
             <Toolbar>
@@ -304,14 +326,13 @@ const ProblemHubPage = () => {
               openner={Openner}
             />
           </TabPanel>
-          {selectedSubmission && (
-            <TabPanel value="8">
-              <SubmissionDetailPage
-                simplified={true}
-                selectedSubmission={selectedSubmission}
-              />
-            </TabPanel>
-          )}
+          <TabPanel value="8">
+            <SubmissionDetailPage
+              simplified={true}
+              selectedSubmission={selectedSubmission}
+              reloadSubmissions={refetch}
+            />
+          </TabPanel>
         </TabContext>
       </div>
     </div>

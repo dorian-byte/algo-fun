@@ -186,11 +186,11 @@ export default function SubmissionFormSettingPopper({
                   min
                 </div>
               </div>
-              {Object.keys(chipData).map((objKey: string) => {
+              {Object.keys(chipData).map((objKey: string, idx) => {
                 return (
                   <div
                     className="d-flex justify-content-center align-items-center ms-1"
-                    key={objKey}
+                    key={idx}
                   >
                     {renderChip({
                       labelPrefix: objKey,
@@ -262,10 +262,10 @@ const renderChip = ({
       >
         <ClickAwayListener onClickAway={() => setAnchor(null)}>
           <List sx={{ bgcolor: 'black', borderRadius: 2 }}>
-            {options.map((level: any) => {
+            {options.map((level: any, idx: number) => {
               return (
                 <ListItem
-                  key={level}
+                  key={idx}
                   sx={{ cursor: 'pointer' }}
                   onClick={() => {
                     setLabel(level);
@@ -287,6 +287,7 @@ const renderBadges = (arr: string[] | any[]) => {
   return arr.map(([label, value, setValue]) => {
     return (
       <div
+        key={label}
         className={`badge badge-outlined text-${
           value ? 'true' : 'false'
         } border border-${value ? 'true' : 'false'}`}

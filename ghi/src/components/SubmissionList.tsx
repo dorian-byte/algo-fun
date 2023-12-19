@@ -77,8 +77,8 @@ export interface Submission {
 }
 
 export const FlagRenderer = (props: any) => {
-  const { flag } = props.data;
-  const flagArr = flag
+  const { flags } = props.data;
+  const flagsArr = flags
     .split(',')
     .map((el: any) => el.trim())
     .sort((a: any, _: any) =>
@@ -86,7 +86,7 @@ export const FlagRenderer = (props: any) => {
     );
   return (
     <div className="d-flex align-items-center h-100">
-      {flagArr.map((el: any) => (
+      {flagsArr.map((el: any) => (
         <Tooltip title={el} placement="top" key={el}>
           <div className="me-2">
             {el === 'Solution' ? (
@@ -107,7 +107,7 @@ export const StatusRenderer = (props: any) => {
   const { passed } = props.data;
   return (
     <div className="d-flex align-items-center h-100">
-      {Math.random() > 0.5 ? (
+      {passed ? (
         <div className="text-success">
           <FontAwesomeIcon icon={faCheck} />
         </div>
@@ -223,11 +223,12 @@ const SubmissionList = ({
   useEffect(() => {
     if (submissions?.length === 0) return;
     setRowData((_: any) => {
+      console.log('submissions', submissions);
       return submissions?.map((el: any) => {
-        const flag = [];
-        if (el.isInterviewMode) flag.push('Interview');
-        if (el.isSolution) flag.push('Solution');
-        if (el.isWhiteboardMode) flag.push('Whiteboard');
+        const flags = [];
+        if (el.isInterviewMode) flags.push('Interview');
+        if (el.isSolution) flags.push('Solution');
+        if (el.isWhiteboardMode) flags.push('Whiteboard');
         return {
           ...el,
           submittedAt: dtStrToLocalShortStr(el.submittedAt),
@@ -237,7 +238,7 @@ const SubmissionList = ({
             el.timeComplexity == 'A_2N' ? '2N' : el.timeComplexity,
           spaceComplexity:
             el.spaceComplexity == 'A_2N' ? '2N' : el.spaceComplexity,
-          flag: flag.join(', '),
+          flags: flags.join(', '),
         };
       });
     });
@@ -249,10 +250,11 @@ const SubmissionList = ({
 
   const columnDefs = [
     {
-      field: 'flag',
-      headerName: 'Mode',
+      field: 'flags',
+      headerName: '',
       cellRenderer: FlagRenderer,
       filter: 'agSetColumnFilter',
+      minWidth: 76,
     },
     {
       field: 'problem',
@@ -277,7 +279,7 @@ const SubmissionList = ({
       field: 'duration',
       headerName: 'Mins',
       filter: 'agSetColumnFilter',
-      minWidth: 85,
+      minWidth: 83,
     },
     {
       field: 'proficiencyLevel',
@@ -291,7 +293,7 @@ const SubmissionList = ({
       cellRenderer: TimeComplexityCellRenderer,
       headerName: 'Time',
       filter: 'agSetColumnFilter',
-      minWidth: 85,
+      minWidth: 87,
     },
     {
       field: 'spaceComplexity',
@@ -358,7 +360,6 @@ const SubmissionList = ({
             paginationAutoPageSize={true}
             onGridReady={onGridReady}
             onRowDoubleClicked={(e: any) => {
-              console.log('row', submissions[e.rowIndex]);
               rowClickCallback
                 ? rowClickCallback(submissions[e.rowIndex])
                 : navigate(`/submissions/${e.data.id}`);

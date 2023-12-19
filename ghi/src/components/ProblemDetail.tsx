@@ -130,7 +130,8 @@ const ProblemDetail = ({
               : 'danger';
           return (
             <div
-              className={`badge badge-outlined bg-transparent text-${color} border border-${color}`}
+              key={p.id}
+              className={`badge badge-outlined bg-transparent text-${color} border border-${color} btn`}
               onClick={() => {
                 navigate(`/problems/${p.id}`);
               }}
