@@ -103,28 +103,28 @@ const ProblemHubPage = () => {
   const [rightTabValue, setRightTabValue] = useState('6');
 
   useEffect(() => {
+    if (pathname.endsWith('submissions/new')) {
+      setRightTabValue('7');
+      setLeftTabValue('1');
+    }
+  }, [pathname]);
+
+  useEffect(() => {
     if (rightTabValue === '7') {
       setSelectedSubmission(null);
-      setLeftTabValue('1');
-      history.pushState(null, '', `/problems/${problemId}/submissions/new`);
-    } else if (rightTabValue === '8') {
-      history.pushState(
-        null,
-        '',
-        `/problems/${problemId}/submissions/${submissionId}`
-      );
-    } else if (rightTabValue === '6') {
-      history.pushState(null, '', `/problems/${problemId}`);
+      navigate(`/problems/${problemId}/submissions/new`);
     }
   }, [rightTabValue]);
 
-  const { data: submissionParsedFromUrlData } = useQuery(
-    GET_SELECTED_SUBMISSION,
-    {
+  const { data: submissionParsedFromUrlData, refetch: refetchSubmission } =
+    useQuery(GET_SELECTED_SUBMISSION, {
       variables: { id: submissionId ? +submissionId : 0 },
       skip: !submissionId,
-    }
-  );
+    });
+  useEffect(() => {
+    refetchSubmission();
+  }, [submissionId]);
+
   useEffect(() => {
     if (submissionParsedFromUrlData) {
       setSubmissionParsedFromUrl(submissionParsedFromUrlData.submissionById);
@@ -134,9 +134,15 @@ const ProblemHubPage = () => {
   useEffect(() => {
     if (submissionParsedFromUrl) {
       setSelectedSubmission(submissionParsedFromUrl);
-      setRightTabValue('8');
     }
   }, [submissionParsedFromUrl]);
+
+  useEffect(() => {
+    if (selectedSubmission) {
+      if (leftTabValue !== '3') setLeftTabValue('2');
+      setRightTabValue('8');
+    }
+  }, [selectedSubmission]);
   const initialSubmissionData = {
     code: '',
     proficiencyLevel: '',
@@ -177,14 +183,13 @@ const ProblemHubPage = () => {
     createSubmission()
       .then((res) => {
         //swap content with newly created submission before switching to display the "submission detail" tab
+
         navigate(
           `/problems/${problemId}/submissions/${res.data.updateSubmission.submission.id}`
         );
         setSubmissionData({ ...initialSubmissionData });
       })
       .catch((err) => console.error(err));
-    setLeftTabValue('2');
-    setRightTabValue('8');
   };
   const handleAnalyze = (e: any) => {
     e.preventDefault();
@@ -199,10 +204,10 @@ const ProblemHubPage = () => {
   };
   const { loading, error, data, refetch } = useQuery(PROBLEM_BY_ID, {
     variables: { id: problemId ? +problemId : 0 },
+    skip: !problemId,
   });
   useEffect(() => {
     if (data) {
-      console.log(data);
       setProblem(data.problemById);
       setSubmissions(data.problemById.submissions);
     }
@@ -260,7 +265,6 @@ const ProblemHubPage = () => {
               simplified={true}
               //NOTE: this part is a little bit tricky
               rowClickCallback={(row: any) => {
-                setRightTabValue('8');
                 navigate(`/problems/${problemId}/submissions/${row.id}`);
               }}
             />
