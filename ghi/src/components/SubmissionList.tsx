@@ -16,6 +16,24 @@ import {
   faBook,
 } from '@fortawesome/free-solid-svg-icons';
 import { dtStrToLocalShortStr } from '../utils/timeUtils';
+import Switch from '@mui/material/Switch';
+
+const CustomHeader = ({
+  showSolutionOnly,
+  setShowSolutionOnly,
+}: {
+  showSolutionOnly: boolean;
+  setShowSolutionOnly: any;
+}) => {
+  return (
+    <div className="custom-header">
+      <Switch
+        checked={showSolutionOnly}
+        onChange={() => setShowSolutionOnly(!showSolutionOnly)}
+      />
+    </div>
+  );
+};
 
 export const BIG_O_COMPLEXITY_DISPLAY = {
   O1: 'O(1)',
@@ -208,6 +226,8 @@ export const NotesCellRenderer = (props: any) => {
 //   );
 // };
 
+// customer AGGrid header component
+
 const SubmissionList = ({
   submissions,
   simplified,
@@ -217,44 +237,52 @@ const SubmissionList = ({
   simplified?: boolean;
   rowClickCallback?: (_: any) => void;
 }) => {
-  const [rowData, setRowData] = useState([]);
+  const [rowData, setRowData] = useState<any[]>([]);
+  const [solutionOnlyRowData, setSolutionOnlyRowData] = useState<any[]>([]);
   const { problemId } = useParams();
+  const [showSolutionOnly, setShowSolutionOnly] = useState(false);
 
   useEffect(() => {
     if (submissions?.length === 0) return;
-    setRowData((_: any) => {
-      console.log('submissions', submissions);
-      return submissions?.map((el: any) => {
-        const flags = [];
-        if (el.isInterviewMode) flags.push('Interview');
-        if (el.isSolution) flags.push('Solution');
-        if (el.isWhiteboardMode) flags.push('Whiteboard');
-        return {
-          ...el,
-          submittedAt: dtStrToLocalShortStr(el.submittedAt),
-          duration: el.duration + 'm',
-          problem: el.problem?.title,
-          timeComplexity:
-            el.timeComplexity == 'A_2N' ? '2N' : el.timeComplexity,
-          spaceComplexity:
-            el.spaceComplexity == 'A_2N' ? '2N' : el.spaceComplexity,
-          flags: flags.join(', '),
-        };
-      });
-    });
+    const subs = submissions?.map((el: any) => {
+      const flags = [];
+      if (el.isInterviewMode) flags.push('Interview');
+      if (el.isSolution) flags.push('Solution');
+      if (el.isWhiteboardMode) flags.push('Whiteboard');
+      return {
+        ...el,
+        submittedAt: dtStrToLocalShortStr(el.submittedAt),
+        duration: el.duration + 'm',
+        problem: el.problem?.title,
+        timeComplexity: el.timeComplexity == 'A_2N' ? '2N' : el.timeComplexity,
+        spaceComplexity:
+          el.spaceComplexity == 'A_2N' ? '2N' : el.spaceComplexity,
+        flags: flags.join(', '),
+      };
+    }) as any[];
+    setRowData(subs);
+    setSolutionOnlyRowData(subs.filter((el: any) => el.isSolution));
   }, [submissions]);
 
   const containerStyle = { width: '95vw', height: '70vh' };
 
   const gridStyle = { height: '100%', width: '100%' };
 
+  // useEffect(() => {}, [showSolutionOnly]);
+
   const columnDefs = [
     {
       field: 'flags',
       headerName: '',
       cellRenderer: FlagRenderer,
-      filter: 'agSetColumnFilter',
-      minWidth: 76,
+      // filter: 'agSetColumnFilter',
+      headerComponent: (params) => (
+        <CustomHeader
+          showSolutionOnly={showSolutionOnly}
+          setShowSolutionOnly={setShowSolutionOnly}
+        />
+      ),
+      minWidth: 86,
     },
     {
       field: 'problem',
@@ -353,7 +381,7 @@ const SubmissionList = ({
       <div style={{ ...containerStyle, minHeight: '70vh' }}>
         <div style={gridStyle} className="ag-theme-alpine-dark">
           <AgGridReact
-            rowData={rowData}
+            rowData={showSolutionOnly ? solutionOnlyRowData : rowData}
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}
             pagination={true}
