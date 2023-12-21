@@ -10,7 +10,7 @@ type DebounceProps = {
 };
 
 export function DebounceTextArea(props: any) {
-  const { handleDebounce, debounceTimeout, ...rest } = props;
+  const { handleDebounce, debounceTimeout, inputRef, ...rest } = props;
   const timerRef = React.useRef<number>();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,6 +26,7 @@ export function DebounceTextArea(props: any) {
   return (
     <TextArea
       {...rest}
+      ref={inputRef}
       onChange={handleChange}
       variant="soft"
       id="debounce-input"
@@ -55,8 +56,8 @@ export function DebounceTextArea(props: any) {
   );
 }
 
-function DebounceInput(props: InputProps & DebounceProps) {
-  const { handleDebounce, debounceTimeout, ...rest } = props;
+function DebounceInput(props: any) {
+  const { handleDebounce, debounceTimeout, inputRef, ...rest } = props;
 
   const timerRef = React.useRef<number>();
 
@@ -73,6 +74,7 @@ function DebounceInput(props: InputProps & DebounceProps) {
   return (
     <Input
       {...rest}
+      ref={inputRef}
       onChange={handleChange}
       variant="plain"
       id="debounce-input"

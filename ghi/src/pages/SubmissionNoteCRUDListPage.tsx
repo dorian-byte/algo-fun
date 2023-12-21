@@ -36,10 +36,11 @@ const SubmissionNoteCRUDListPage = () => {
   const [submissionNotes, setSubmissionNotes] = useState<{
     [key: string]: Note[];
   }>({});
-  const { loading, error, data } = useQuery(SUBMISSION_NOTES, {
+  const { loading, error, data, refetch } = useQuery(SUBMISSION_NOTES, {
     // FIXME
     variables: { id: submissionId ? +submissionId : 0 },
     skip: !submissionId,
+    notifyOnNetworkStatusChange: true,
   });
   useEffect(() => {
     if (data) {
@@ -56,6 +57,7 @@ const SubmissionNoteCRUDListPage = () => {
       });
     }
   }, [data]);
+
   useEffect(() => {
     console.log('submissionNotes', submissionNotes);
   }, [submissionNotes]);
@@ -68,8 +70,16 @@ const SubmissionNoteCRUDListPage = () => {
         <NoteDetailCRUD
           expandedNoteType={expandedNoteType}
           setExpandedNoteType={setExpandedNoteType}
-          notes={submissionNotes[nt] as Note[]}
+          notes={
+            submissionNotes[nt].sort((a: Note, b: Note) => {
+              return (
+                new Date(b.updatedAt).getTime() -
+                new Date(a.updatedAt).getTime()
+              );
+            }) as Note[]
+          }
           noteColorType={nt}
+          reloadList={refetch}
         />
       ))}
     </div>

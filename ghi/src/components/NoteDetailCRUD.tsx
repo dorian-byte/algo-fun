@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import lodash, { debounce, set } from 'lodash';
 import {
   faStar as fasStar,
   faLink,
@@ -51,11 +50,13 @@ const NoteDetailCRUD = ({
   noteColorType,
   expandedNoteType,
   setExpandedNoteType,
+  reloadList,
 }: {
   notes: any[];
   noteColorType: string;
   expandedNoteType: string;
   setExpandedNoteType: any;
+  reloadList: any;
 }) => {
   const [currNoteIdxInType, setCurrNoteIdxInType] = useState(0);
   const [note, setNote] = useState(notes[currNoteIdxInType]);
@@ -68,9 +69,16 @@ const NoteDetailCRUD = ({
   const [currTag, setCurrTag] = useState('#');
   const [isFocusedNote, setIsFocusedNote] = useState(false);
   const [createOrUpateNote] = useMutation(CREATE_OR_UPDATE_NOTE);
+  const titleRef = React.useRef<any>(null);
+  const contentRef = React.useRef<any>(null);
 
   const { submissionId } = useParams();
   const [saveState, setSaveState] = useState('');
+
+  useEffect(() => {
+    setCurrNoteIdxInType(0);
+  }, [notes]);
+
   useEffect(() => {
     if (!submissionId) return;
     setNote({
@@ -113,6 +121,17 @@ const NoteDetailCRUD = ({
         console.log('saveRes', res);
         if (res.data.updateNote) {
           setSaveState('Saved');
+          if (
+            res.data.updateNote.note.noteType.toLowerCase() !==
+            notes[currNoteIdxInType]?.noteType.toLowerCase()
+          ) {
+            console.log('noteType', noteType, 'res.data.noteType', res.data);
+            setNoteTitle('');
+            setNoteContent('');
+            titleRef.current.querySelector('input').value = '';
+            contentRef.current.querySelector('textarea').value = '';
+            reloadList();
+          }
           setTimeout(() => {
             setSaveState('');
           }, 1000);
@@ -236,7 +255,7 @@ const NoteDetailCRUD = ({
               />
             ) : (
               <FontAwesomeIcon
-                icon={farStar}
+                icon={farStar as any}
                 className="ms-1 text-primary"
                 onClick={() => setIsStarred(true)}
               />
@@ -245,6 +264,7 @@ const NoteDetailCRUD = ({
               onfocus={() => setIsFocusedNote(true)}
               onblur={() => setIsFocusedNote(false)}
               placeholder="title"
+              inputRef={titleRef}
               defaultValue={noteTitle}
               debounceTimeout={1000}
               handleDebounce={(value: string) => {
@@ -269,6 +289,7 @@ const NoteDetailCRUD = ({
             }}
           />
           <DebounceTextArea
+            inputRef={contentRef}
             onfocus={() => setIsFocusedNote(true)}
             onblur={() => setIsFocusedNote(false)}
             placeholder="Add content here..."
@@ -324,7 +345,7 @@ const NoteDetailCRUD = ({
                 height: expandedNoteType === noteType ? 'auto' : '10%',
               }}
             >
-              {noteTags.map((tag) => (
+              {noteTags.map((tag: any) => (
                 <div
                   className="badge rounded-pill text-dark"
                   style={{
@@ -338,7 +359,9 @@ const NoteDetailCRUD = ({
                     className="ms-1"
                     style={{ cursor: 'pointer' }}
                     onClick={() => {
-                      setNoteTags(noteTags.filter((t) => t.name !== tag.name));
+                      setNoteTags(
+                        noteTags.filter((t: any) => t.name !== tag.name)
+                      );
                     }}
                   />
                 </div>
@@ -376,6 +399,9 @@ const NoteDetailCRUD = ({
                   }}
                   onClick={() => {
                     const nt = notes[idx];
+                    titleRef.current.querySelector('input').value = nt.title;
+                    contentRef.current.querySelector('textarea').value =
+                      nt.content;
                     setNoteTitle(nt.title);
                     setNoteContent(nt.content);
                     setNoteType(nt.noteType);
@@ -399,9 +425,6 @@ const NoteDetailCRUD = ({
           <div
             className="caption ms-auto"
             style={{ fontSize: '0.7rem', width: 25 }}
-            onClick={() => {
-              handleSave();
-            }}
           >
             {saveState}
           </div>

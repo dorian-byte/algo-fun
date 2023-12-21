@@ -76,6 +76,7 @@ export const CREATE_OR_UPDATE_NOTE = gql`
         id
         title
         content
+        noteType
       }
     }
   }
