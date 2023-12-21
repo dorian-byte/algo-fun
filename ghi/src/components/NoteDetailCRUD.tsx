@@ -1,31 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import lodash, { debounce, set } from 'lodash';
 import {
   faStar as fasStar,
   faLink,
-  faCross,
-  faCheck,
   faTimes,
   faExpand,
   faCompress,
   faPlusCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons';
+import DebounceInput, { DebounceTextArea } from './DebouncedInput';
 
-import {
-  Form,
-  Button,
-  DropdownButton,
-  Dropdown,
-  InputGroup,
-  FormControl,
-} from 'react-bootstrap';
-import { Star, Pin } from 'react-bootstrap-icons';
 import { Box } from '@mui/material';
-import zIndex from '@mui/material/styles/zIndex';
+import { CREATE_OR_UPDATE_NOTE } from '../graphql/noteQueries';
+import { useMutation } from '@apollo/client';
+import { useParams } from 'react-router-dom';
 
 export type Note = {
-  id: number;
+  id: number | string;
   title: string;
   content: string;
   noteType: string;
@@ -59,7 +52,7 @@ const NoteDetailCRUD = ({
   expandedNoteType,
   setExpandedNoteType,
 }: {
-  notes: Note[];
+  notes: any[];
   noteColorType: string;
   expandedNoteType: string;
   setExpandedNoteType: any;
@@ -74,14 +67,60 @@ const NoteDetailCRUD = ({
   const [hasResource, setHasResource] = useState(note?.hasResources || false);
   const [currTag, setCurrTag] = useState('#');
   const [isFocusedNote, setIsFocusedNote] = useState(false);
-  // const [isNoteExpanded, setIsNoteExpanded] = useState(false);
+  const [createOrUpateNote] = useMutation(CREATE_OR_UPDATE_NOTE);
+
+  const { submissionId } = useParams();
+  const [saveState, setSaveState] = useState('');
   useEffect(() => {
-    // debounce save
-    const timeout = setTimeout(() => {
-      console.log('save');
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, [currTag]);
+    if (!submissionId) return;
+    setNote({
+      ...note,
+      title: noteTitle,
+      submission: submissionId,
+      content: noteContent,
+      noteType: noteType,
+      isStarred: isStarred,
+    });
+  }, [noteTitle, noteContent, noteType, isStarred, submissionId]);
+
+  const handleSave = (valToSave: any) => {
+    if (!noteTitle || !noteContent) {
+      return;
+    }
+    if (!submissionId) return;
+    let noteData = {
+      title: note.title,
+      submission: submissionId,
+      content: note.content,
+      noteType: note.noteType.toLowerCase(),
+      isStarred: note.isStarred,
+      submittedAt: note.submittedAt || new Date().toISOString(),
+    } as any;
+
+    noteData = { ...noteData, ...valToSave };
+
+    if (notes[currNoteIdxInType]?.id) {
+      noteData['id'] = +notes[currNoteIdxInType]?.id;
+    }
+    console.log('noteData', noteData);
+
+    createOrUpateNote({
+      variables: {
+        input: noteData,
+      },
+    })
+      .then((res) => {
+        console.log('saveRes', res);
+        if (res.data.updateNote) {
+          setSaveState('Saved');
+          setTimeout(() => {
+            setSaveState('');
+          }, 1000);
+        }
+      })
+      .catch((err) => console.error(err));
+  };
+
   const extraCss = (exp: boolean) => {
     return exp
       ? {
@@ -105,13 +144,6 @@ const NoteDetailCRUD = ({
         };
   };
 
-  useEffect(() => {
-    // debounce save
-    const timeout = setTimeout(() => {
-      console.log('save');
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, [noteTitle, noteContent]);
   return (
     <div
       style={{
@@ -209,16 +241,26 @@ const NoteDetailCRUD = ({
                 onClick={() => setIsStarred(true)}
               />
             )}
-            {noteTitle && (
-              <input
-                className="no-border ms-2"
-                type="text"
-                value={noteTitle}
-                onChange={(e) => setNoteTitle(e.target.value)}
-                onFocus={() => setIsFocusedNote(true)}
-                onBlur={() => setIsFocusedNote(false)}
-              />
-            )}
+            <DebounceInput
+              onfocus={() => setIsFocusedNote(true)}
+              onblur={() => setIsFocusedNote(false)}
+              placeholder="title"
+              defaultValue={noteTitle}
+              debounceTimeout={1000}
+              handleDebounce={(value: string) => {
+                setNoteTitle(value);
+                handleSave({ title: value });
+              }}
+            />
+            {/* <input
+              className="no-border ms-2"
+              placeholder="title"
+              type="text"
+              value={noteTitle}
+              onChange={(e) => {}}
+              onFocus={() => setIsFocusedNote(true)}
+              onBlur={() => setIsFocusedNote(false)}
+            /> */}
           </div>
           <hr
             style={{
@@ -226,14 +268,29 @@ const NoteDetailCRUD = ({
                 NoteType[noteType]?.[1] || NoteType[noteColorType]?.[1],
             }}
           />
-          <textarea
-            className="form-control no-border"
+          <DebounceTextArea
+            onfocus={() => setIsFocusedNote(true)}
+            onblur={() => setIsFocusedNote(false)}
+            placeholder="Add content here..."
+            debounceTimeout={1000}
+            defaultValue={noteContent}
+            handleDebounce={(value: string) => {
+              handleSave({ content: value });
+            }}
+          />
+          {/* <textarea
+            className="no-border"
             rows={3}
             value={noteContent}
-            onChange={(e) => setNoteContent(e.target.value)}
+            placeholder="Add content here..."
+            onChange={(e) => {
+              setNoteContent(e.target.value);
+              console.log('setting content');
+              console.log('submissionId', submissionId);
+            }}
             onFocus={() => setIsFocusedNote(true)}
             onBlur={() => setIsFocusedNote(false)}
-          />
+          /> */}
 
           <div className="my-2">
             <div
@@ -310,7 +367,7 @@ const NoteDetailCRUD = ({
                     width: '10px',
                     backgroundColor:
                       idx === currNoteIdxInType
-                        ? NoteType[note.noteType][0]
+                        ? NoteType[noteColorType][0]
                         : 'rgba(0, 0, 0, 0.2)',
                     borderRadius: '50%',
                     display: 'inline-block',
@@ -342,8 +399,11 @@ const NoteDetailCRUD = ({
           <div
             className="caption ms-auto"
             style={{ fontSize: '0.7rem', width: 25 }}
+            onClick={() => {
+              handleSave();
+            }}
           >
-            saved
+            {saveState}
           </div>
         </div>
       </div>

@@ -792,3 +792,16 @@ a:hover {
 h2.MuiTypography-root.MuiTypography-h6.MuiDialogTitle-root.css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
   text-shadow: none;
 }
+#debounce-input,
+input {
+  border-width: 0px !important;
+  padding-left: 10px;
+  background-color: transparent !important;
+}
+
+#debounce-input,
+textarea {
+  border-width: 0px !important;
+  padding-left: 10px;
+  background-color: transparent !important;
+}

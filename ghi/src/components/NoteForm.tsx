@@ -6,7 +6,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
   FETCH_PROBLEM,
   FETCH_ALL_PROBLEMS,
-  CREATE_NOTE,
+  CREATE_OR_UPDATE_NOTE,
   FETCH_SUBMISSION,
 } from '../graphql/noteQueries';
 import { useQuery, useMutation } from '@apollo/client';
@@ -72,7 +72,7 @@ const NoteForm = () => {
   // if !submissionId && !problemId then select problem
   // otherwise, show problem title
 
-  const [createSubmissionNote] = useMutation(CREATE_NOTE, {
+  const [createSubmissionNote] = useMutation(CREATE_OR_UPDATE_NOTE, {
     variables: {
       input: {
         ...data,

@@ -16,7 +16,6 @@ import { requestWrapper } from '../components/ChatSubmissionAnalyzer';
 import SubmissionFormInTab from '../components/SubmissionFormInTab';
 import SubmissionDetailPage from './SubmissionDetailPage';
 import ProblemDetail from '../components/ProblemDetail';
-import ProblemNoteListTab from '../components/ProblemNoteListTab';
 import ProblemDashboard from '../components/ProblemDashboard';
 import SubmissionNoteCRUDListPage from './SubmissionNoteCRUDListPage';
 
@@ -98,6 +97,7 @@ const ProblemHubPage = () => {
   const [submissions, setSubmissions] = useState([] as any[]);
   const [selectedSubmission, setSelectedSubmission] = useState();
   const [submissionParsedFromUrl, setSubmissionParsedFromUrl] = useState();
+  const [hasAnalyzed, setHasAnalyzed] = useState(false);
 
   const [leftTabValue, setLeftTabValue] = useState<string>('1');
   const [rightTabValue, setRightTabValue] = useState('6');
@@ -193,6 +193,7 @@ const ProblemHubPage = () => {
   };
   const handleAnalyze = (e: any) => {
     e.preventDefault();
+    setHasAnalyzed(true);
     setLeftTabValue('4');
     if (!submissionData.code) return;
     setChatLoading(true);
@@ -241,10 +242,7 @@ const ProblemHubPage = () => {
                   <Tab label="Submission Notes" value="2" />
                 )}
                 <Tab label="Submissions" value="3" />
-                {rightTabValue === '7' && (
-                  <Tab label="Submission Analysis" value="4" />
-                )}
-                <Tab label="Problem Notes" value="5" />
+                {hasAnalyzed && <Tab label="Analysis" value="4" />}
               </TabList>
             </Toolbar>
           </AppBar>
@@ -268,22 +266,12 @@ const ProblemHubPage = () => {
                 navigate(`/problems/${problemId}/submissions/${row.id}`);
               }}
             />
-            {/* FIXME: toggle to show only solutions */}
-            {/* <button className="btn btn-primary btn-sm"> Solution </button> */}
           </TabPanel>
           <TabPanel value="4">
             <ChatSubmissionAnalyzer
               loading={chatloading}
               chatResponse={chatResponse}
             />
-          </TabPanel>
-          <TabPanel
-            value="5"
-            sx={{
-              padding: '0px',
-            }}
-          >
-            <ProblemNoteListTab />
           </TabPanel>
         </TabContext>
       </div>
@@ -303,7 +291,8 @@ const ProblemHubPage = () => {
                 textColor="inherit"
                 TabIndicatorProps={{ style: { background: '#fff' } }}
               >
-                <Tab label="Problem Dashboard" value="6" />
+                <Tab label="Dashboard" value="6" />
+                <Tab label="Problem Notes" value="5" />
                 <Tab label="New Submission" value="7" />
                 {selectedSubmission && (
                   <Tab
@@ -315,6 +304,14 @@ const ProblemHubPage = () => {
               </TabList>
             </Toolbar>
           </AppBar>
+          <TabPanel
+            value="5"
+            sx={{
+              padding: '0px',
+            }}
+          >
+            Problem Notes
+          </TabPanel>
           <TabPanel value="6">
             <div className="pt-3">
               <ProblemDashboard />

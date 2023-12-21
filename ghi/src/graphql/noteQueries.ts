@@ -69,6 +69,18 @@ export const CREATE_NOTE = gql`
   }
 `;
 
+export const CREATE_OR_UPDATE_NOTE = gql`
+  mutation CreateOrUpdateNote($input: NoteMutationInput!) {
+    updateNote(input: $input) {
+      note {
+        id
+        title
+        content
+      }
+    }
+  }
+`;
+
 export const FETCH_SUBMISSION = gql`
   query FetchSubmission($id: Int!) {
     submissionById(id: $id) {
