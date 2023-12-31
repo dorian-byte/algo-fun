@@ -41,7 +41,7 @@ const ProblemDashboard = ({ problem }: { problem: Problem }) => {
               problem?.submissions?.reduce((acc, sub) => {
                 const timeUsed = +sub?.duration || 0;
                 return acc + timeUsed;
-              }, 0) / problem?.submissions?.length || 1
+              }, 0) / problem?.submissions?.length || 0
             ).toFixed(0)}
           </span>{' '}
           mins
