@@ -92,14 +92,15 @@ const NoteDetailCRUD = ({
   }, [noteTitle, noteContent, noteType, isStarred, submissionId]);
 
   const handleSave = (valToSave: any) => {
-    if (!noteTitle || !noteContent) {
+    const { title, content } = valToSave;
+    if (!noteContent && !content) {
       return;
     }
     if (!submissionId) return;
     let noteData = {
-      title: note.title,
+      title: note.title || title,
       submission: submissionId,
-      content: note.content,
+      content: note.content || content,
       noteType: note.noteType.toLowerCase(),
       isStarred: note.isStarred,
       submittedAt: note.submittedAt || new Date().toISOString(),
@@ -110,7 +111,6 @@ const NoteDetailCRUD = ({
     if (notes[currNoteIdxInType]?.id) {
       noteData['id'] = +notes[currNoteIdxInType]?.id;
     }
-    console.log('noteData', noteData);
 
     createOrUpateNote({
       variables: {
@@ -261,8 +261,8 @@ const NoteDetailCRUD = ({
               />
             )}
             <DebounceInput
-              onfocus={() => setIsFocusedNote(true)}
-              onblur={() => setIsFocusedNote(false)}
+              onFocus={() => setIsFocusedNote(true)}
+              onBlur={() => setIsFocusedNote(false)}
               placeholder="title"
               inputRef={titleRef}
               defaultValue={noteTitle}
@@ -272,6 +272,7 @@ const NoteDetailCRUD = ({
                 handleSave({ title: value });
               }}
             />
+
             {/* <input
               className="no-border ms-2"
               placeholder="title"
@@ -290,12 +291,13 @@ const NoteDetailCRUD = ({
           />
           <DebounceTextArea
             inputRef={contentRef}
-            onfocus={() => setIsFocusedNote(true)}
-            onblur={() => setIsFocusedNote(false)}
+            onFocus={() => setIsFocusedNote(true)}
+            onBlur={() => setIsFocusedNote(false)}
             placeholder="Add content here..."
             debounceTimeout={1000}
             defaultValue={noteContent}
             handleDebounce={(value: string) => {
+              setNoteContent(value);
               handleSave({ content: value });
             }}
           />
@@ -435,3 +437,6 @@ const NoteDetailCRUD = ({
 };
 
 export default NoteDetailCRUD;
+
+{
+}

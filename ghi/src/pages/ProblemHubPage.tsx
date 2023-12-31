@@ -55,6 +55,8 @@ const PROBLEM_BY_ID = gql`
         url
         difficulty
       }
+      hasNotes
+      notesCount
       submissions {
         id
         code
@@ -67,6 +69,9 @@ const PROBLEM_BY_ID = gql`
         timeComplexity
         spaceComplexity
         passed
+        notes {
+          isStarred
+        }
       }
     }
   }
@@ -209,6 +214,7 @@ const ProblemHubPage = () => {
   });
   useEffect(() => {
     if (data) {
+      console.log('data', data);
       setProblem(data.problemById);
       setSubmissions(data.problemById.submissions);
     }
@@ -314,7 +320,7 @@ const ProblemHubPage = () => {
           </TabPanel>
           <TabPanel value="6">
             <div className="pt-3">
-              <ProblemDashboard />
+              <ProblemDashboard problem={problem} />
             </div>
           </TabPanel>
           <TabPanel value="7">

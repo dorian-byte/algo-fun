@@ -19,6 +19,8 @@ export interface Problem {
   askedByFaang: boolean;
   acceptanceRate: number;
   frequency: number;
+  hasNotes: boolean;
+  notesCount: number;
   similarProblems: {
     id: string;
     title: string;

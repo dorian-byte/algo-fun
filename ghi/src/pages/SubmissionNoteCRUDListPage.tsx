@@ -68,6 +68,7 @@ const SubmissionNoteCRUDListPage = () => {
     <div className="d-flex flex-wrap gap-2 justify-content-around align-items-around position-relative">
       {Object.keys(submissionNotes).map((nt: string) => (
         <NoteDetailCRUD
+          key={nt}
           expandedNoteType={expandedNoteType}
           setExpandedNoteType={setExpandedNoteType}
           notes={
