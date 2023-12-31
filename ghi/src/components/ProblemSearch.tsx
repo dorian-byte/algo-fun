@@ -29,7 +29,7 @@ const ProblemSearch: React.FC = () => {
   if (error) return <p>Error :( {error.message}</p>;
 
   return (
-    <div className="w-50 input-group">
+    <div className="input-group" style={{ width: 750, maxWidth: '90vw' }}>
       <Typeahead
         id="problem-search-typeahead"
         labelKey={(problem: any) =>

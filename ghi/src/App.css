@@ -89,13 +89,14 @@ nav hr {
   /* font-family: 'Montserrat', sans-serif !important; */
   /* font-family: 'EB Garamond', serif !important; */
   font-weight: 700 !important;
-  font-size: 64px !important;
+  font-size: 56px !important;
   line-height: 1.2 !important;
   color: #b0b0b0 !important;
 }
 
 .page-header {
   font-family: 'Pixel', serif !important;
+  /* font-family: 'Molde', serif !important; */
   /* font-family: 'Montserrat', sans-serif !important; */
   /* font-family: 'EB Garamond', serif !important; */
   font-size: 24px !important;
@@ -430,6 +431,11 @@ input[type='time']::-webkit-calendar-picker-indicator {
 .rbt-input-hint {
   /* border-radius: 100px !important; */
   background-color: transparent !important;
+}
+
+#problem-search-typeahead {
+  font-family: 'Pixel', serif !important;
+  font-size: 12px !important;
 }
 
 #problem-search-typeahead.rbt-menu.dropdown-menu.show {
