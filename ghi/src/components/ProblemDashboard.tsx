@@ -31,17 +31,18 @@ const ProblemDashboard = ({ problem }: { problem: Problem }) => {
         maxHeight: 'calc(100vh - 15rem)',
       }}
     >
-      <PerformanceOverTimeChart submissions={problem?.submissions || []} />
       <div
         className="hsl-transition-colors d-flex justify-content-center gap-5"
         style={{ fontSize: '1.5rem' }}
       >
         <div>
           <span style={{ fontSize: '3.5rem' }}>
-            {problem?.submissions?.reduce((acc, sub) => {
-              const timeUsed = +sub?.duration || 0;
-              return acc + timeUsed;
-            }, 0) / problem?.submissions?.length || 1}
+            {(
+              problem?.submissions?.reduce((acc, sub) => {
+                const timeUsed = +sub?.duration || 0;
+                return acc + timeUsed;
+              }, 0) / problem?.submissions?.length || 1
+            ).toFixed(0)}
           </span>{' '}
           mins
           <p>avg time spent</p>
@@ -59,12 +60,14 @@ const ProblemDashboard = ({ problem }: { problem: Problem }) => {
           </p>
         </div>
         <div>
-          <span style={{ fontSize: '3.5rem' }}>{recency}</span>
-          &nbsp; days
+          <span style={{ fontSize: '3.5rem' }}>{recency}</span> days
           <p>since last submission</p>
         </div>
       </div>
       <DonutChart submissions={problem?.submissions || []} />
+      <div>
+        <PerformanceOverTimeChart submissions={problem?.submissions || []} />
+      </div>
     </div>
   );
 };

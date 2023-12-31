@@ -172,9 +172,7 @@ const PerformanceOverTimeChart: React.FC<PerformanceOverTimeChartProps> = ({
     }
   }, [submissions]);
 
-  return (
-    <svg className="d3-component" width={600} height={450} ref={d3Container} />
-  );
+  return <svg width={600} height={450} ref={d3Container} />;
 };
 
 export default PerformanceOverTimeChart;
