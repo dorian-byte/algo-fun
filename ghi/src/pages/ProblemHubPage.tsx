@@ -105,7 +105,14 @@ const ProblemHubPage = () => {
   const [hasAnalyzed, setHasAnalyzed] = useState(false);
 
   const [leftTabValue, setLeftTabValue] = useState<string>('1');
-  const [rightTabValue, setRightTabValue] = useState('6');
+  const [rightTabValue, setRightTabValue] =
+    submissions.length > 0 ? useState('6') : useState('7');
+
+  useEffect(() => {
+    if (submissions.length > 0) {
+      setRightTabValue('6');
+    }
+  }, [submissions]);
 
   useEffect(() => {
     if (pathname.endsWith('submissions/new')) {
@@ -297,7 +304,7 @@ const ProblemHubPage = () => {
                 textColor="inherit"
                 TabIndicatorProps={{ style: { background: '#fff' } }}
               >
-                <Tab label="Dashboard" value="6" />
+                {submissions.length && <Tab label="Dashboard" value="6" />}
                 <Tab label="Problem Notes" value="5" />
                 <Tab label="New Submission" value="7" />
                 {selectedSubmission && (

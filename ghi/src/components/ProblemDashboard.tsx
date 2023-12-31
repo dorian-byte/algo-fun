@@ -13,7 +13,7 @@ const ProblemDashboard = ({ problem }: { problem: Problem }) => {
           (a: any, b: any) =>
             new Date(b.submittedAt as string).getTime() -
             new Date(a.submittedAt as string).getTime()
-        )[0].submittedAt
+        )[0]?.submittedAt
       );
       const currentDate = new Date();
       const rccy = Math.floor(
