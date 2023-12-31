@@ -83,7 +83,7 @@ const ProblemDetail = ({
       <div className="d-flex align-items-center justify-content-between">
         <h4 className="page-header mb-2">
           <b>
-            {problem.leetcodeNumber}. {problem.title}
+            {problem.leetcodeNumber}.{problem.title}
           </b>
         </h4>
         <div className="d-flex gap-2">

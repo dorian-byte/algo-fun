@@ -7,7 +7,7 @@ const Breadcrumb = () => {
   const { pathname } = useLocation();
 
   const defaultCrumbs = {
-    home: { label: 'Home', path: '/' },
+    home: { label: 'Algo Journal', path: '/' },
     problems: { label: 'Problems', path: '/problems' },
     problemesNew: { label: 'New Problem', path: '/problems/new' },
     submissions: { label: 'Submissions', path: '/submissions' },

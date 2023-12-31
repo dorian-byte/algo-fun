@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import Logo from '../../public/journal-bookmark-icon-c9701d.svg';
+// import Logo from '../../public/journal-bookmark-icon-c9701d.svg';
+import Logo from '../assets/images/logo2.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPuzzlePiece,
@@ -15,7 +16,7 @@ const Navigation = () => {
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="d-flex">
         <Link to="/" className="navbar-brand">
-          <img src={Logo} width="30" height="30" alt="Logo" />
+          <img src={Logo} width="50" height="50" alt="Logo" />
         </Link>
         {/* for collapsing
       <button
