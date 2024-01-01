@@ -92,8 +92,7 @@ const ProblemDetail = ({
             className="btn btn-outline-primary btn-sm"
             onClick={handleClickOnNotes}
           >
-            <FontAwesomeIcon icon={faStar} className="me-1" />
-            Starred Notes
+            Notes
           </button>
         </div>
       </div>

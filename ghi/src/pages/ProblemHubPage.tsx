@@ -10,7 +10,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { AppBar, Toolbar } from '@mui/material';
+import { AppBar, Switch, Toolbar } from '@mui/material';
 import { getChatResponse } from '../utils/queryChat';
 import { requestWrapper } from '../components/ChatSubmissionAnalyzer';
 import SubmissionFormInTab from '../components/SubmissionFormInTab';
@@ -19,6 +19,8 @@ import ProblemDetail from '../components/ProblemDetail';
 import ProblemDashboard from '../components/ProblemDashboard';
 import SubmissionNoteCRUDListPage from './SubmissionNoteCRUDListPage';
 import NoteListPage from './NoteListPage';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 const PROBLEM_BY_ID = gql`
   query ProblemById($id: Int!) {
@@ -227,7 +229,8 @@ const ProblemHubPage = () => {
   };
   const [chatloading, setChatLoading] = useState(false);
   const [chatResponse, setChatResponse] = useState('');
-  const [starredNotes, setStarredNotes] = useState<any[]>([]);
+  const [notes, setNotes] = useState([] as any[]);
+  const [starredOnly, setStarredOnly] = useState(true);
   const handleSubmit = (e: any) => {
     e.preventDefault();
     createSubmission()
@@ -258,11 +261,10 @@ const ProblemHubPage = () => {
     if (data) {
       setProblem(data.problemById);
       setSubmissions(data.problemById.submissions);
-      setStarredNotes(() => {
+      setNotes(() => {
         const starredNotes = data.problemById.submissions
           .map((submission: any) => submission.notes)
-          .flat()
-          .filter((note: any) => note.isStarred);
+          .flat();
         return starredNotes;
       });
     }
@@ -352,7 +354,19 @@ const ProblemHubPage = () => {
                 TabIndicatorProps={{ style: { background: '#fff' } }}
               >
                 {submissions.length && <Tab label="Dashboard" value="6" />}
-                <Tab label="Starred Notes" value="5" />
+                <Tab
+                  label={
+                    starredOnly ? (
+                      <div>
+                        <FontAwesomeIcon icon={faStar} className="me-2" />
+                        Problem Notes
+                      </div>
+                    ) : (
+                      <div>Problem Notes</div>
+                    )
+                  }
+                  value="5"
+                />
                 <Tab label="New Submission" value="7" />
                 {selectedSubmission && (
                   <Tab
@@ -372,7 +386,31 @@ const ProblemHubPage = () => {
               padding: 2,
             }}
           >
-            <NoteListPage notes={starredNotes} simplified={true} />
+            <div className="d-flex align-items-center gap-2 justify-content-end">
+              <div className={'text-orange'}>
+                {starredOnly
+                  ? 'switch to all notes'
+                  : 'switch to starred notes'}
+                <Switch
+                  sx={{
+                    '& .MuiSwitch-switchBase.Mui-checked': {
+                      color: 'orange',
+                    },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                      backgroundColor: 'orange',
+                    },
+                  }}
+                  checked={starredOnly}
+                  onChange={() => {
+                    setStarredOnly(!starredOnly);
+                  }}
+                />
+              </div>
+            </div>
+            <NoteListPage
+              notes={starredOnly ? notes.filter((n) => n.isStarred) : notes}
+              simplified={true}
+            />
           </TabPanel>
           {submissions.length > 0 && (
             <TabPanel value="6">

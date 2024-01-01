@@ -39,7 +39,7 @@ const Timer: React.FC = () => {
   return (
     <div
       className="d-flex flex-row align-items-center"
-      style={{ marginTop: '-1rem', marginRight: '-0.5rem' }}
+      style={{ marginTop: '4px', marginRight: '-0.5rem' }}
     >
       <div
         className="btn"
