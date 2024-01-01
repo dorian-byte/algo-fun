@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { Submission } from '../../types';
 
 interface PerformanceOverTimeChartProps {
-  submissions: Submission[];
+  submissions: any[];
 }
 
 const PerformanceOverTimeChart: React.FC<PerformanceOverTimeChartProps> = ({
@@ -38,7 +37,7 @@ const PerformanceOverTimeChart: React.FC<PerformanceOverTimeChartProps> = ({
       // const xAxis = d3.axisBottom(x).tickFormat(d3.timeFormat('%Y-%m-%d'));
       const xAxis = d3
         .axisBottom(x)
-        .tickFormat((d) => {
+        .tickFormat((d: any) => {
           const monthFormat = d3.timeFormat('%b');
           const monthWithYearFormat = d3.timeFormat("%b '%y");
           return new Date(d).getMonth() === 0 || new Date(d).getMonth() === 11
@@ -55,15 +54,13 @@ const PerformanceOverTimeChart: React.FC<PerformanceOverTimeChartProps> = ({
         4: 'unsteady pass',
         5: 'smooth pass',
         6: 'smooth optimal pass',
-      };
+      } as { [key: number]: string };
 
       // const yAxisLeft = d3.axisLeft(y0);
       // const yAxisLeft = d3.axisLeft(y0).tickFormat(d3.format('d'));
       const yAxisLeft = d3
         .axisLeft(y0)
-        .tickFormat((d) => readableProficiencyLevelMapping[d] || '');
-
-      const yAxisRight = d3.axisRight(y1);
+        .tickFormat((d: any) => readableProficiencyLevelMapping[d] || '');
 
       const proficiencyLevelMapping = {
         NO_UNDERSTANDING: 0,
@@ -87,7 +84,6 @@ const PerformanceOverTimeChart: React.FC<PerformanceOverTimeChartProps> = ({
           proficiencyLevelMapping[d.proficiencyLevel] || 0;
 
         data.duration = d.duration || 0; // Convert to numeric if needed
-        console.log('proficiencyLevel', d.proficiencyLevel);
         return data;
       });
 
@@ -106,18 +102,8 @@ const PerformanceOverTimeChart: React.FC<PerformanceOverTimeChartProps> = ({
       const radiusScale = d3
         .scalePow()
         .exponent(1) // change this to adjust the contrast scale
-        .domain([0, d3.max(subs, (d) => d.duration)])
+        .domain([0, d3.max(subs, (d: any) => d.duration)])
         .range([2, 20]);
-
-      // Proficiency level line
-      const proficiencyLine = d3
-        .line<Submission>()
-        .x((d: any) => x(d.week))
-        .y((d: any) => y0(d.proficiencyLevel));
-      const durationLine = d3
-        .line<Submission>()
-        .x((d: any) => x(d.week))
-        .y((d: any) => y1(d.duration));
 
       // Draw scatter plot
       const circles = g
@@ -125,9 +111,9 @@ const PerformanceOverTimeChart: React.FC<PerformanceOverTimeChartProps> = ({
         .data(subs)
         .enter()
         .append('circle')
-        .attr('cx', (d) => x(d.week))
-        .attr('cy', (d) => y0(d.proficiencyLevel))
-        .attr('r', (d) => radiusScale(d.duration))
+        .attr('cx', (d: any) => x(d.week))
+        .attr('cy', (d: any) => y0(d.proficiencyLevel))
+        .attr('r', (d: any) => radiusScale(d.duration))
         .attr('fill', 'orange');
 
       // Function for continuous transition

@@ -5,7 +5,13 @@ import { FETCH_ALL_NOTES } from '../graphql/noteQueries';
 import { useLocation } from 'react-router-dom';
 import { yellowToOrangeContainerStyle } from '../components/ProblemList';
 
-const NoteListPage = () => {
+const NoteListPage = ({
+  notes = [],
+  simplified,
+}: {
+  notes?: any[];
+  simplified?: boolean;
+}) => {
   const [allNotes, setAllNotes] = useState<any[]>([]);
   const [allOpen, setAllOpen] = useState(true);
   const {
@@ -13,7 +19,9 @@ const NoteListPage = () => {
     loading: allNotesLoading,
     error: allNotesError,
     refetch: refetchAllNotes,
-  } = useQuery(FETCH_ALL_NOTES);
+  } = useQuery(FETCH_ALL_NOTES, {
+    skip: simplified,
+  });
   useEffect(() => {
     if (allNotesData?.allNotes) {
       setAllNotes([...allNotesData.allNotes]);
@@ -27,9 +35,44 @@ const NoteListPage = () => {
   }, [pathname]);
 
   const [toggleButtonColor, setToggleButtonColor] = useState('');
+  const AllNotes = ({ allNotes }: { allNotes: any }) => {
+    return (
+      <>
+        {allNotes
+          .sort((a: any, b: any) => {
+            const dateA = new Date(b.submittedAt as any).getTime();
+            const dateB = new Date(a.submittedAt as any).getTime();
+            return dateB - dateA;
+          })
+          .map((note: any) => (
+            <NoteDetailAccordion
+              key={note?.id}
+              note={note}
+              allOpen={allOpen}
+              parentId={
+                note?.__typename === 'ProblemNoteType'
+                  ? note?.problem?.id
+                  : note?.submission?.id
+              }
+              noteLevel={
+                note?.__typename === 'ProblemNoteType'
+                  ? 'problem'
+                  : 'submission'
+              }
+              refresh={() => {
+                refetchAllNotes();
+              }}
+            />
+          ))}
+      </>
+    );
+  };
 
   if (allNotesError) {
     return <div>Error!</div>;
+  }
+  if (simplified) {
+    return <AllNotes allNotes={notes} />;
   }
 
   return (
@@ -66,32 +109,7 @@ const NoteListPage = () => {
         }}
       >
         <div className="bg-dark p-3">
-          {allNotes
-            .sort((a, b) => {
-              const dateA = new Date(b.submittedAt as any).getTime();
-              const dateB = new Date(a.submittedAt as any).getTime();
-              return dateB - dateA;
-            })
-            .map((note) => (
-              <NoteDetailAccordion
-                key={note?.id}
-                note={note}
-                allOpen={allOpen}
-                parentId={
-                  note?.__typename === 'ProblemNoteType'
-                    ? note?.problem?.id
-                    : note?.submission?.id
-                }
-                noteLevel={
-                  note?.__typename === 'ProblemNoteType'
-                    ? 'problem'
-                    : 'submission'
-                }
-                refresh={() => {
-                  refetchAllNotes();
-                }}
-              />
-            ))}
+          <AllNotes allNotes={allNotes} />
         </div>
       </div>
     </div>

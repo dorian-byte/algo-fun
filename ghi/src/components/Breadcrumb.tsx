@@ -51,9 +51,9 @@ const Breadcrumb = () => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
-  useEffect(() => {
-    console.log('problemNameData', problemNameData);
-  }, [problemNameData]);
+  // useEffect(() => {
+  //   console.log('problemNameData', problemNameData);
+  // }, [problemNameData]);
 
   useEffect(() => {
     const c = [defaultCrumbs.home];

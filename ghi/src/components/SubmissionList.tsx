@@ -277,7 +277,7 @@ const SubmissionList = ({
       headerName: '',
       cellRenderer: FlagRenderer,
       // filter: 'agSetColumnFilter',
-      headerComponent: (params) => (
+      headerComponent: (params: any) => (
         <CustomHeader
           showSolutionOnly={showSolutionOnly}
           setShowSolutionOnly={setShowSolutionOnly}

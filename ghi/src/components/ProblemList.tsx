@@ -237,7 +237,6 @@ const ProblemList = ({
   useEffect(() => {
     if (gridApi && !loading) gridApi?.hideOverlay();
   }, [loading, gridApi]);
-  console.log('rowData', rowData);
   return (
     <div className="d-flex justify-content-center align-items-center mt-4">
       <div style={yellowToOrangeContainerStyle}>

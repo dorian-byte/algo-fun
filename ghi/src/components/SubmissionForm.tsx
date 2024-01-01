@@ -64,14 +64,12 @@ const SubmissionForm = ({
   const handleConfirmDelete = () => {
     deleteSubmission().then((res) => {
       if (res.data.deleteSubmission.ok) {
-        console.log('deleted');
         if (problemId && submissionId) {
           navigate(`/problems/${problemId}`);
           reloadSubmissions && reloadSubmissions();
         } else if (problemId) navigate(`/problems/${problemId}/submissions`);
         else if (submissionId) navigate(`/submissions`);
       } else {
-        console.log('error');
         alert('error deleting submission: ' + submissionId);
       }
     });
@@ -175,12 +173,10 @@ const SubmissionForm = ({
     if (data?.id || submissionId) {
       input['id'] = data?.id || submissionId;
     }
-    console.log('input', input);
     createOrUpdateSubmission({
       variables: { input },
     })
-      .then((res) => {
-        console.log('res', res);
+      .then(() => {
         showFixedProblemTitleInSelection
           ? navigate(`/problems/${problemId || localProblemId}/submissions`)
           : navigate(`/submissions`);
@@ -192,7 +188,6 @@ const SubmissionForm = ({
     const [currentDate, currentTime] = data?.submittedAt?.split('T');
     const newDateTime =
       type === 'date' ? `${value}T${currentTime}` : `${currentDate}T${value}`;
-    console.log('newDateTime', newDateTime);
     setData((prev: any) => ({ ...prev, submittedAt: newDateTime }));
   };
 
@@ -202,13 +197,12 @@ const SubmissionForm = ({
   const [options, setOptions] = useState<any[]>([]);
   useEffect(() => {
     if (parentRef?.current?.clientHeight) {
-      console.log('parentRef height', parentRef?.current?.clientHeight);
       setCodeBlockHeight(parentRef?.current?.clientHeight);
     }
   }, [parentRef]);
   const handleSelectionChange = useCallback((selectedProblem: any) => {
     const selectedId = selectedProblem[0] ? selectedProblem[0].id : null;
-    console.log('selectedId', selectedId);
+    // console.log('selectedId', selectedId);
     setData((prev: any) => ({
       ...prev,
       problem: selectedProblem[0],
@@ -224,10 +218,8 @@ const SubmissionForm = ({
           : [problemData?.problemById]
       );
       if (allProblemsData?.allProblems?.length > 0) {
-        console.log('no....');
         setOptions(allProblemsData?.allProblems);
       } else {
-        console.log('nonono.....');
         setOptions([problemData?.problemById]);
       }
     } else if (allProblemsData?.allProblems) {

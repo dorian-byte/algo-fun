@@ -118,14 +118,14 @@ const NoteDetailCRUD = ({
       },
     })
       .then((res) => {
-        console.log('saveRes', res);
+        // console.log('saveRes', res);
         if (res.data.updateNote) {
           setSaveState('Saved');
           if (
             res.data.updateNote.note.noteType.toLowerCase() !==
             notes[currNoteIdxInType]?.noteType.toLowerCase()
           ) {
-            console.log('noteType', noteType, 'res.data.noteType', res.data);
+            // console.log('noteType', noteType, 'res.data.noteType', res.data);
             setNoteTitle('');
             setNoteContent('');
             titleRef.current.querySelector('input').value = '';

@@ -39,8 +39,6 @@ const ProblemSubmissionListPage = () => {
 
   useEffect(() => {
     if (data?.problemById) {
-      console.log('pid', problemId);
-      console.log('dta', data);
       setSubmissions(data.problemById.submissions);
     }
   }, [data, problemId]);

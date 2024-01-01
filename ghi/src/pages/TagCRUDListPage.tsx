@@ -77,9 +77,9 @@ const ThreeTabView = ({
     setNotes(nts as any[]);
   }, [selectedTags]);
 
-  useEffect(() => {
-    console.log('selected tags', selectedTags);
-  }, [selectedTags]);
+  // useEffect(() => {
+  //   console.log('selected tags', selectedTags);
+  // }, [selectedTags]);
 
   return (
     <div

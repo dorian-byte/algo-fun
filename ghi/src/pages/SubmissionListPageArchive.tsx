@@ -34,7 +34,6 @@ const SubmissionListPage = () => {
 
   useEffect(() => {
     if (data) {
-      console.log('*** data ***', data);
       setSubmissions(data.allSubmissions);
     }
   }, [data]);
@@ -45,7 +44,7 @@ const SubmissionListPage = () => {
   return (
     <div className="container mt-5 overflow-y-auto">
       <h2 className="page-header">Submissions</h2>
-      <SubmissionList submissions={submissions} showProblem={true} />
+      <SubmissionList submissions={submissions} />
     </div>
   );
 };

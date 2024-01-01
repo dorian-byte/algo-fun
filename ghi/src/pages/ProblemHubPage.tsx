@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
 import { dtToLocalISO16 } from '../utils/timeUtils';
@@ -18,6 +18,7 @@ import SubmissionDetailPage from './SubmissionDetailPage';
 import ProblemDetail from '../components/ProblemDetail';
 import ProblemDashboard from '../components/ProblemDashboard';
 import SubmissionNoteCRUDListPage from './SubmissionNoteCRUDListPage';
+import NoteListPage from './NoteListPage';
 
 const PROBLEM_BY_ID = gql`
   query ProblemById($id: Int!) {
@@ -70,7 +71,29 @@ const PROBLEM_BY_ID = gql`
         spaceComplexity
         passed
         notes {
+          submission {
+            id
+            problem {
+              id
+              title
+              leetcodeNumber
+            }
+          }
+          id
+          title
+          content
+          createdAt
+          updatedAt
+          submittedAt
           isStarred
+          startLineNumber
+          endLineNumber
+          resources {
+            id
+            title
+            url
+            resourceType
+          }
         }
       }
     }
@@ -105,25 +128,39 @@ const ProblemHubPage = () => {
   const [hasAnalyzed, setHasAnalyzed] = useState(false);
 
   const [leftTabValue, setLeftTabValue] = useState<string>('1');
-  const [rightTabValue, setRightTabValue] =
-    submissions.length > 0 ? useState('6') : useState('7');
-
+  const [rightTabValue, setRightTabValue] = useState<string>('6');
+  const { loading, error, data, refetch } = useQuery(PROBLEM_BY_ID, {
+    variables: { id: problemId ? +problemId : 0 },
+    skip: !problemId,
+  });
   useEffect(() => {
-    if (submissions.length > 0) {
-      setRightTabValue('6');
-    }
-  }, [submissions]);
-
-  useEffect(() => {
+    // console.log('looping?');
+    // Hacky fix: possible to exceed maximum rerenders if pathname is changed, but it's not here
     if (pathname.endsWith('submissions/new')) {
       setRightTabValue('7');
       setLeftTabValue('1');
     }
+    if (pathname.endsWith('notes')) {
+      setRightTabValue('5');
+      setLeftTabValue('1');
+    }
+    if (pathname.endsWith('submissions')) {
+      setRightTabValue('6');
+      setLeftTabValue('3');
+    }
   }, [pathname]);
 
   useEffect(() => {
+    if (!data?.problemById) return;
+    if (rightTabValue === '6' && data?.problemById?.submissions.length == 0) {
+      setRightTabValue('7');
+    }
+  }, [rightTabValue, data]);
+
+  useEffect(() => {
+    // console.log('looping?');
     if (rightTabValue === '7') {
-      setSelectedSubmission(null);
+      setSelectedSubmission(undefined);
       navigate(`/problems/${problemId}/submissions/new`);
     }
   }, [rightTabValue]);
@@ -190,6 +227,7 @@ const ProblemHubPage = () => {
   };
   const [chatloading, setChatLoading] = useState(false);
   const [chatResponse, setChatResponse] = useState('');
+  const [starredNotes, setStarredNotes] = useState<any[]>([]);
   const handleSubmit = (e: any) => {
     e.preventDefault();
     createSubmission()
@@ -215,15 +253,18 @@ const ProblemHubPage = () => {
       query: requestWrapper(submissionData.code),
     }).then(() => setChatLoading(false));
   };
-  const { loading, error, data, refetch } = useQuery(PROBLEM_BY_ID, {
-    variables: { id: problemId ? +problemId : 0 },
-    skip: !problemId,
-  });
+
   useEffect(() => {
     if (data) {
-      console.log('data', data);
       setProblem(data.problemById);
       setSubmissions(data.problemById.submissions);
+      setStarredNotes(() => {
+        const starredNotes = data.problemById.submissions
+          .map((submission: any) => submission.notes)
+          .flat()
+          .filter((note: any) => note.isStarred);
+        return starredNotes;
+      });
     }
   }, [data]);
 
@@ -270,8 +311,6 @@ const ProblemHubPage = () => {
           <TabPanel value="1">
             <ProblemDetail
               problem={problem}
-              simplified={true}
-              setLeftTabValue={setLeftTabValue}
               setRightTabValue={setRightTabValue}
             />
           </TabPanel>
@@ -313,7 +352,7 @@ const ProblemHubPage = () => {
                 TabIndicatorProps={{ style: { background: '#fff' } }}
               >
                 {submissions.length && <Tab label="Dashboard" value="6" />}
-                <Tab label="Problem Notes" value="5" />
+                <Tab label="Starred Notes" value="5" />
                 <Tab label="New Submission" value="7" />
                 {selectedSubmission && (
                   <Tab
@@ -328,16 +367,20 @@ const ProblemHubPage = () => {
           <TabPanel
             value="5"
             sx={{
-              padding: '0px',
+              height: 'calc(100vh - 170px)',
+              overflowY: 'auto',
+              padding: 2,
             }}
           >
-            Problem Notes
+            <NoteListPage notes={starredNotes} simplified={true} />
           </TabPanel>
-          <TabPanel value="6">
-            <div className="pt-3">
-              <ProblemDashboard problem={problem} />
-            </div>
-          </TabPanel>
+          {submissions.length > 0 && (
+            <TabPanel value="6">
+              <div className="pt-3">
+                <ProblemDashboard problem={problem} />
+              </div>
+            </TabPanel>
+          )}
           <TabPanel value="7">
             <SubmissionFormInTab
               submissionData={submissionData}

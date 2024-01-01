@@ -88,20 +88,20 @@ const NoteForm = () => {
     e.preventDefault();
 
     if (problemId) {
-      console.log('has problemId');
-      console.error('problem notes no longer exist');
+      // console.log('has problemId');
+      // console.error('problem notes no longer exist');
     } else if (submissionId) {
-      console.log('has submissionId');
-      console.log('data', data);
+      // console.log('has submissionId');
+      // console.log('data', data);
       createSubmissionNote().then((_) =>
         navigate(`/submissions/${submissionId}/notes`)
       );
     } else if (data?.problem) {
-      console.log('has data.problem');
-      console.log('data', data);
-      console.log('create problem note function no longer available');
+      // console.log('has data.problem');
+      // console.log('data', data);
+      // console.log('create problem note function no longer available');
     } else {
-      console.log('no problem selected');
+      // console.log('no problem selected');
     }
   };
 

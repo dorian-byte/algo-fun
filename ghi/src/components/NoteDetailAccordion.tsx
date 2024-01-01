@@ -11,8 +11,8 @@ import { DELETE_NOTE, EDIT_NOTE } from '../graphql/noteQueries';
 interface NoteDetailAccordionProps {
   note: Note;
   allOpen: boolean;
-  noteLevel: 'submission' | 'problem';
-  parentId: number | string;
+  noteLevel?: 'submission' | 'problem';
+  parentId?: number | string;
   refresh?: () => void;
 }
 
@@ -36,7 +36,7 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
   const handleConfirmDelete = () => {
     deleteNote().then((res) => {
       if (res.data.deleteNote?.ok) {
-        console.log('res', res);
+        // console.log('res', res);
         setIsDeleteDialogOpen(false);
         // window.location.reload();
         refresh && refresh();
@@ -65,9 +65,9 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
           input,
         },
       }).then((res) => {
-        console.log('returned results', res);
+        // console.log('returned results', res);
         const returnedNote = res?.data?.updateNote?.submissionNote;
-        console.log('returnedNote', returnedNote);
+        // console.log('returnedNote', returnedNote);
         setNote({
           ...returnedNote,
           submission: returnedNote?.submission?.id as number,

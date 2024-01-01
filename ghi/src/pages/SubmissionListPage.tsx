@@ -40,7 +40,6 @@ const SubmissionListPage = () => {
 
   useEffect(() => {
     refetch().then((res) => {
-      console.log('refetching', res);
       if (res.data) setSubmissions(res.data.allSubmissions);
     });
   }, []);

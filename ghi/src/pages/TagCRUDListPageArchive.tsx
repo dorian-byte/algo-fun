@@ -47,7 +47,7 @@ const TagCRUDListPage = () => {
   const [editingTagId, setEditingTagId] = useState('');
   const itemsPerPage = 8;
 
-  const filteredTags = data?.allTags?.filter((tag) =>
+  const filteredTags = data?.allTags?.filter((tag: any) =>
     tag.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -62,7 +62,6 @@ const TagCRUDListPage = () => {
         id: id,
       },
     }).then((res) => {
-      console.log('res', res);
       if (res.data?.deleteTag?.ok) {
         refetch();
         setToastMessage('Tag deleted successfully!');

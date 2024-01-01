@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { Submission } from './SubmissionList';
 import CodeEditor from './CodeEditor';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 export interface Problem {
   id: string;
@@ -57,22 +59,15 @@ const FrequencyBar = ({ frequency }: { frequency: number }) => {
 
 const ProblemDetail = ({
   problem,
-  simplified,
-  setLeftTabValue,
   setRightTabValue,
 }: {
   problem: Problem;
-  simplified: boolean;
-  setLeftTabValue: React.Dispatch<React.SetStateAction<string>>;
   setRightTabValue: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const navigate = useNavigate();
 
   const handleClickOnNotes = () => {
-    if (!simplified) {
-      navigate(`/problems/${problem.id}/notes`);
-    }
-    setLeftTabValue('5');
+    setRightTabValue('5');
   };
   const handleClickOnAddNote = () => {
     setRightTabValue('8');
@@ -97,13 +92,8 @@ const ProblemDetail = ({
             className="btn btn-outline-primary btn-sm"
             onClick={handleClickOnNotes}
           >
-            Notes
-          </button>
-          <button
-            className="btn btn-outline-primary btn-sm"
-            onClick={handleClickOnAddNote}
-          >
-            +
+            <FontAwesomeIcon icon={faStar} className="me-1" />
+            Starred Notes
           </button>
         </div>
       </div>

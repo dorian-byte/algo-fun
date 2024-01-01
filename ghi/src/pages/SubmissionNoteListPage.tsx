@@ -33,7 +33,6 @@ const SubmissionNoteListPage = () => {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
       setSubmissionNotes(data.submissionById.notes);
     }
   }, [data]);

@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { Submission } from '../../types';
 
 interface DonutChartProps {
-  submissions: Submission[];
+  submissions: any[];
 }
 
 const DonutChart: React.FC<DonutChartProps> = ({ submissions }) => {

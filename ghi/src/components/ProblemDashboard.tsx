@@ -28,7 +28,7 @@ const ProblemDashboard = ({ problem }: { problem: Problem }) => {
     <div
       className="d-flex flex-column align-items-center gap-5 overflow-y-auto scrollbar-hidden"
       style={{
-        maxHeight: 'calc(100vh - 15rem)',
+        maxHeight: 'calc(100vh - 225px)',
       }}
     >
       <div
@@ -54,7 +54,9 @@ const ProblemDashboard = ({ problem }: { problem: Problem }) => {
           notes
           <p>
             {problem?.submissions?.reduce((acc, curr: any) => {
-              return acc + curr?.notes?.filter((n) => n.isStarred).length || 0;
+              return (
+                acc + curr?.notes?.filter((n: any) => n.isStarred).length || 0
+              );
             }, 0)}
             &nbsp;starred
           </p>

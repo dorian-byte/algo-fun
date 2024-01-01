@@ -94,7 +94,7 @@ const ChatMethodGenerator = ({
           acc[item.name] = parseInt(item.id);
           return acc;
         }, {});
-        console.log('topicsHash', topicsHash);
+        // console.log('topicsHash', topicsHash);
         setMethodsArr(res);
         setData({
           ...data,

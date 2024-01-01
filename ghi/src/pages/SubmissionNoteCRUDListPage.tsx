@@ -58,9 +58,9 @@ const SubmissionNoteCRUDListPage = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    console.log('submissionNotes', submissionNotes);
-  }, [submissionNotes]);
+  // useEffect(() => {
+  //   console.log('submissionNotes', submissionNotes);
+  // }, [submissionNotes]);
   const [expandedNoteType, setExpandedNoteType] = useState('');
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
