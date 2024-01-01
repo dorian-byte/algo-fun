@@ -17,6 +17,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { dtStrToLocalShortStr } from '../utils/timeUtils';
 import Switch from '@mui/material/Switch';
+import { yellowToOrangeContainerStyle } from './ProblemList';
 
 const CustomHeader = ({
   showSolutionOnly,
@@ -373,12 +374,17 @@ const SubmissionList = ({
 
   return (
     <div
-      className={`d-flex justify-content-center align-items-center opacity-75 ${
+      className={`d-flex justify-content-center align-items-center ${
         simplified ? '' : 'mt-4'
       }`}
       style={{ borderRadius: '12px !important' }}
     >
-      <div style={{ ...containerStyle, minHeight: '70vh' }}>
+      <div
+        style={{
+          ...yellowToOrangeContainerStyle,
+          height: 'calc(100vh - 160px)',
+        }}
+      >
         <div style={gridStyle} className="ag-theme-alpine-dark">
           <AgGridReact
             rowData={showSolutionOnly ? solutionOnlyRowData : rowData}

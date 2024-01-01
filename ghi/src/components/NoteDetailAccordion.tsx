@@ -104,13 +104,20 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
         className="card-header accordion-header"
         onClick={() => setOpen(!open)}
       >
-        <div className="d-flex">
+        <div className="d-flex align-items-baseline">
           <FontAwesomeIcon
             icon={faStar}
-            className="me-2 mt-1"
+            className="me-2"
             color={note?.isStarred ? 'darkorange' : 'gray'}
           />
-          <h5>{note?.title || note?.content?.split('\n')[0]}</h5>
+          <h5
+            style={{
+              fontFamily: 'Cera-Pro',
+              fontSize: '1.5rem',
+            }}
+          >
+            {note?.title || note?.content?.split('\n')[0]}
+          </h5>
         </div>
         <span className="text-gray">
           <small>{dtStrToLocalShortStr(note?.submittedAt as string)}</small>
@@ -120,7 +127,7 @@ const NoteDetailAccordion: React.FC<NoteDetailAccordionProps> = ({
       </div>
       {open && (
         <div className="card-body pt-2 pb-2">
-          <div className="border border-orange p-2 rounded-2 m-2 position-relative">
+          <div className="p-2 rounded-2 m-2 position-relative bg-black">
             {editable && (
               <button
                 className="btn btn-primary position-absolute"

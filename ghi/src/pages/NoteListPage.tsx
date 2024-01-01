@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import NoteDetailAccordion from '../components/NoteDetailAccordion';
 import { FETCH_ALL_NOTES } from '../graphql/noteQueries';
 import { useLocation } from 'react-router-dom';
+import { yellowToOrangeContainerStyle } from '../components/ProblemList';
 
 const NoteListPage = () => {
   const [allNotes, setAllNotes] = useState<any[]>([]);
@@ -32,52 +33,66 @@ const NoteListPage = () => {
   }
 
   return (
-    <div>
-      <div className="d-flex justify-content-center">
-        <h1 className="page-header mt-5 mb-2">All Notes</h1>
-      </div>
-      <div className="container overflow-auto scrollbar-hidden position-relative">
-        <div
-          className="position-absolute"
+    <div className="d-flex flex-column align-items-center">
+      <div className="d-flex justify-content-end me-5 align-items-center position-relative mt-5 mb-4 w-100 pe-4">
+        <h2
+          className="page-header text-center"
           style={{
-            right: 15,
-            top: 10,
+            position: 'absolute',
+            left: '50%',
+            top: 0,
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          All Notes
+        </h2>
+        <button
+          className="btn btn-outline-primary"
+          style={{
             color: toggleButtonColor,
             cursor: 'pointer',
             fontSize: '0.9rem',
+            width: 'fit-content',
           }}
           onClick={() => setAllOpen((prevState) => !prevState)}
-          onMouseEnter={() => setToggleButtonColor('orange')}
-          onMouseLeave={() => setToggleButtonColor('')}
         >
           {allOpen ? 'Collapse All' : 'Expand All'}
+        </button>
+      </div>
+      <div
+        className="overflow-auto scrollbar-hidden position-relative"
+        style={{
+          ...yellowToOrangeContainerStyle,
+        }}
+      >
+        <div className="bg-dark p-3">
+          {allNotes
+            .sort((a, b) => {
+              const dateA = new Date(b.submittedAt as any).getTime();
+              const dateB = new Date(a.submittedAt as any).getTime();
+              return dateB - dateA;
+            })
+            .map((note) => (
+              <NoteDetailAccordion
+                key={note?.id}
+                note={note}
+                allOpen={allOpen}
+                parentId={
+                  note?.__typename === 'ProblemNoteType'
+                    ? note?.problem?.id
+                    : note?.submission?.id
+                }
+                noteLevel={
+                  note?.__typename === 'ProblemNoteType'
+                    ? 'problem'
+                    : 'submission'
+                }
+                refresh={() => {
+                  refetchAllNotes();
+                }}
+              />
+            ))}
         </div>
-        {allNotes
-          .sort((a, b) => {
-            const dateA = new Date(b.submittedAt as any).getTime();
-            const dateB = new Date(a.submittedAt as any).getTime();
-            return dateB - dateA;
-          })
-          .map((note) => (
-            <NoteDetailAccordion
-              key={note?.id}
-              note={note}
-              allOpen={allOpen}
-              parentId={
-                note?.__typename === 'ProblemNoteType'
-                  ? note?.problem?.id
-                  : note?.submission?.id
-              }
-              noteLevel={
-                note?.__typename === 'ProblemNoteType'
-                  ? 'problem'
-                  : 'submission'
-              }
-              refresh={() => {
-                refetchAllNotes();
-              }}
-            />
-          ))}
       </div>
     </div>
   );

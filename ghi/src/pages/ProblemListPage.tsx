@@ -126,119 +126,125 @@ const ProblemListPage = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center">
-        <h2 className="page-header">Problems</h2>
-        <div className="d-flex align-items-center gap-3">
-          <div className="dropdown">
-            <button
-              className="btn btn-outline-primary dropdown-toggle"
-              id="dropdownMenuButton1"
-              data-bs-toggle="dropdown"
-            >
-              Tags
-            </button>
-            <div className="dropdown-menu">
-              <input
-                className="dropdown-item"
-                type="text"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <div className="d-flex dropdown-item nav-tabs">
-                <div
-                  className={`dropdown-item nav-item text-light ${
-                    activeTab === 'Topics' ? 'active' : ''
-                  }`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveTab('Topics');
-                  }}
-                >
-                  Topics
-                </div>
-                <div
-                  className={`dropdown-item nav-item text-light ${
-                    activeTab === 'Companies' ? 'active' : ''
-                  }`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveTab('Companies');
-                  }}
-                >
-                  Companies
-                </div>
-              </div>
-              {activeTab === 'Topics'
-                ? itemsToShow(
-                    topics.filter((t: any) => t.name.includes(searchTerm))
-                  ).map((topic: any) => (
-                    <span
-                      className="badge bg-secondary"
-                      key={topic.id}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleTag(topic.name);
-                      }}
-                    >
-                      {tagFilters.includes(topic.name) ? (
-                        <strong className="text-primary">{topic.name}</strong>
-                      ) : (
-                        <span className="text-light">{topic.name}</span>
-                      )}
-                    </span>
-                  ))
-                : itemsToShow(
-                    companies.filter((c: any) => c.name.includes(searchTerm))
-                  ).map((company: any) => (
-                    <span
-                      className="badge bg-secondary"
-                      key={company.id}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleTag(company.name);
-                      }}
-                    >
-                      {tagFilters.includes(company.name) ? (
-                        <strong className="text-primary">{company.name}</strong>
-                      ) : (
-                        <span className="text-light">{company.name}</span>
-                      )}
-                    </span>
-                  ))}
-              <button
-                className="btn btn-primary btn-sm"
+      <div className="d-flex justify-content-end me-5 align-items-center gap-3 position-relative mt-5 mb-4">
+        <h2
+          className="page-header text-center"
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: 0,
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          All Problems
+        </h2>
+        <div className="dropdown">
+          <button
+            className="btn btn-outline-primary dropdown-toggle"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+          >
+            Tags
+          </button>
+          <div className="dropdown-menu">
+            <input
+              className="dropdown-item"
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <div className="d-flex dropdown-item nav-tabs">
+              <div
+                className={`dropdown-item nav-item text-light ${
+                  activeTab === 'Topics' ? 'active' : ''
+                }`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setIsExpanded(!isExpanded);
+                  setActiveTab('Topics');
                 }}
               >
-                {isExpanded ? 'Collapse' : 'Expand'}
-              </button>
+                Topics
+              </div>
+              <div
+                className={`dropdown-item nav-item text-light ${
+                  activeTab === 'Companies' ? 'active' : ''
+                }`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveTab('Companies');
+                }}
+              >
+                Companies
+              </div>
             </div>
+            {activeTab === 'Topics'
+              ? itemsToShow(
+                  topics.filter((t: any) => t.name.includes(searchTerm))
+                ).map((topic: any) => (
+                  <span
+                    className="badge bg-secondary"
+                    key={topic.id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleTag(topic.name);
+                    }}
+                  >
+                    {tagFilters.includes(topic.name) ? (
+                      <strong className="text-primary">{topic.name}</strong>
+                    ) : (
+                      <span className="text-light">{topic.name}</span>
+                    )}
+                  </span>
+                ))
+              : itemsToShow(
+                  companies.filter((c: any) => c.name.includes(searchTerm))
+                ).map((company: any) => (
+                  <span
+                    className="badge bg-secondary"
+                    key={company.id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleTag(company.name);
+                    }}
+                  >
+                    {tagFilters.includes(company.name) ? (
+                      <strong className="text-primary">{company.name}</strong>
+                    ) : (
+                      <span className="text-light">{company.name}</span>
+                    )}
+                  </span>
+                ))}
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsExpanded(!isExpanded);
+              }}
+            >
+              {isExpanded ? 'Collapse' : 'Expand'}
+            </button>
           </div>
-          <select
-            value={difficultyFilter || ''}
-            onChange={(e) => setDifficultyFilter(e.target.value || null)}
-            className="btn btn-outline-primary"
-          >
-            <option value="">Difficulty</option>
-            <option value="EASY">Easy</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="HARD">Hard</option>
-          </select>
-          <button
-            className="btn btn-outline-primary btn-sm"
-            style={{ height: 30, width: 30 }}
-            onClick={() => navigate('/problems/new')}
-          >
-            +
-          </button>
         </div>
+        <select
+          value={difficultyFilter || ''}
+          onChange={(e) => setDifficultyFilter(e.target.value || null)}
+          className="btn btn-outline-primary"
+        >
+          <option value="">Difficulty</option>
+          <option value="EASY">Easy</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HARD">Hard</option>
+        </select>
+        <button
+          className="btn btn-outline-primary btn-sm"
+          style={{ height: 30, width: 30 }}
+          onClick={() => navigate('/problems/new')}
+        >
+          +
+        </button>
       </div>
-      <div className="main container">
-        <ProblemList problems={filteredProblems} loading={loading} />
-      </div>
+      <ProblemList problems={filteredProblems} loading={loading} />
     </div>
   );
 };

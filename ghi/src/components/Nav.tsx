@@ -18,18 +18,20 @@ const Navigation = () => {
         <Link to="/" className="navbar-brand">
           <img src={Logo} width="50" height="50" alt="Logo" />
         </Link>
-        {/* for collapsing
+        <Breadcrumb />
+      </div>
       <button
         className="navbar-toggler"
         type="button"
-        data-toggle="collapse"
-        data-target="#navbarNav"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
       >
         <span className="navbar-toggler-icon"></span>
-      </button> */}
-        <Breadcrumb />
-      </div>
-      <div className="collapse navbar-collapse" id="navbarNav">
+      </button>
+      <div className="collapse navbar-collapse" id="navbarNavDropdown">
         <ul className="navbar-nav ms-auto">
           <li className="nav-item">
             <Link to="/problems" className="nav-link">

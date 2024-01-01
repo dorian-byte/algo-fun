@@ -3,6 +3,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { gql, useQuery } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
+import { Search } from 'react-bootstrap-icons';
 
 const ALL_PROBLEMS = gql`
   query AllProblems {
@@ -29,7 +30,22 @@ const ProblemSearch: React.FC = () => {
   if (error) return <p>Error :( {error.message}</p>;
 
   return (
-    <div className="input-group" style={{ width: 750, maxWidth: '90vw' }}>
+    <div
+      className="input-group"
+      id="search-problem-input"
+      style={{ position: 'relative' }}
+    >
+      <Search
+        style={{
+          width: 25,
+          height: 25,
+          position: 'absolute',
+          right: 15,
+          zIndex: 99,
+          top: '50%',
+          transform: 'translateY(-50%)',
+        }}
+      />
       <Typeahead
         id="problem-search-typeahead"
         labelKey={(problem: any) =>

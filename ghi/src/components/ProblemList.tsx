@@ -12,7 +12,6 @@ import {
   faTimes,
   faPaperPlane,
   faBook,
-  faLink,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const StatusCellRenderer = (props: any) => {
@@ -66,6 +65,15 @@ export const SubmissionsCellRenderer = (props: any) => {
       </button>
     </div>
   );
+};
+export const yellowToOrangeContainerStyle = {
+  width: '95vw',
+  height: 'calc(100vh - 200px)',
+  border: '2px solid',
+  borderRadius: '10px',
+  color: 'transparent',
+  backgroundImage:
+    'linear-gradient( -90deg, rgb(255, 89, 0) 0%, #f38960 30%, rgb(240, 240, 118) 60%, darkorange 100%)',
 };
 
 export const NotesCellRenderer = (props: any) => {
@@ -137,8 +145,6 @@ const ProblemList = ({
   }, [problems]);
 
   // console.log('problems', problems);
-
-  const containerStyle = { width: '95vw', height: '72vh' };
 
   const gridStyle = { height: '100%', width: '100%' };
 
@@ -234,7 +240,7 @@ const ProblemList = ({
   console.log('rowData', rowData);
   return (
     <div className="d-flex justify-content-center align-items-center mt-4">
-      <div style={containerStyle}>
+      <div style={yellowToOrangeContainerStyle}>
         <div style={gridStyle} className="ag-theme-alpine-dark">
           <AgGridReact
             rowData={rowData}
