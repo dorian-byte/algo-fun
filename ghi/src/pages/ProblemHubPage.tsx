@@ -238,10 +238,18 @@ const ProblemHubPage = () => {
   if (loading) return <p>Loading...</p>;
   return (
     <div
-      className="overflow-y-auto d-flex justify-content-around ps-1 pe-1"
-      style={{ height: 'calc(100vh - 93px)', marginTop: '26px' }}
+      className="overflow-y-auto d-flex justify-content-around"
+      style={{
+        height: 'calc(100vh - 93px)',
+        marginTop: '26px',
+        border: '2px solid',
+        borderRadius: '10px',
+        color: 'transparent',
+        backgroundImage:
+          'linear-gradient( -90deg, rgb(255, 89, 0) 0%, #f38960 30%, rgb(240, 240, 118) 60%, darkorange 100%)',
+      }}
     >
-      <div className="border border-light bg-dark overflow-y-auto w-50">
+      <div className="bg-dark overflow-y-auto w-50 text-white">
         <TabContext value={leftTabValue}>
           <AppBar position="sticky" sx={{ bgcolor: '#303030' }}>
             <Toolbar>
@@ -290,10 +298,10 @@ const ProblemHubPage = () => {
       </div>
 
       <div
-        className="border-light bg-dark w-50"
+        className="bg-dark w-50"
         style={{
-          border: '1px solid #303030',
-          borderLeft: 'none',
+          color: 'white',
+          borderLeft: '2px solid darkorange',
         }}
       >
         <TabContext value={rightTabValue}>

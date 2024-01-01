@@ -315,7 +315,7 @@ const SubmissionList = ({
       headerName: 'Proficientcy Level',
       filter: 'agSetColumnFilter',
       cellRenderer: (props: any) => PROFICIENCY_LEVEL_DISPLAY[props.value],
-      minWidth: 210,
+      minWidth: 180,
     },
     {
       field: 'timeComplexity',
@@ -371,6 +371,17 @@ const SubmissionList = ({
     // filter: true,
   };
   const navigate = useNavigate();
+  const [heightAdjustment, setHeightAdjustment] = useState({} as any);
+  useEffect(() => {
+    if (simplified) {
+      setHeightAdjustment({
+        height: 'calc(100vh - 220px)',
+        backgroundImage: 'none',
+      });
+    } else {
+      setHeightAdjustment({ height: 'calc(100vh - 170px)' });
+    }
+  }, [simplified]);
 
   return (
     <div
@@ -382,7 +393,7 @@ const SubmissionList = ({
       <div
         style={{
           ...yellowToOrangeContainerStyle,
-          height: 'calc(100vh - 160px)',
+          ...heightAdjustment,
         }}
       >
         <div style={gridStyle} className="ag-theme-alpine-dark">

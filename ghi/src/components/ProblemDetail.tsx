@@ -120,7 +120,15 @@ const ProblemDetail = ({
         theme="vs-dark"
         readOnly={true}
       />
-      <h5 className="mt-5 mb-3">Similar Questions</h5>
+      <h5
+        className="mt-5 mb-3"
+        style={{
+          fontFamily: 'Pixel',
+          fontSize: '0.9rem',
+        }}
+      >
+        Similar Problems
+      </h5>
       <div className="d-flex gap-3 flex-wrap">
         {problem?.similarProblems?.map((p: any) => {
           const difficulty = p.difficulty.toLowerCase();
