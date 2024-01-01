@@ -81,7 +81,13 @@ const ProblemDetail = ({
   return (
     <div>
       <div className="d-flex align-items-center justify-content-between">
-        <h4 className="page-header mb-2">
+        <h4
+          className="page-header mb-2"
+          style={{
+            color: '#ccc',
+            fontSize: '1rem',
+          }}
+        >
           <b>
             {problem.leetcodeNumber}.{problem.title}
           </b>
@@ -125,6 +131,7 @@ const ProblemDetail = ({
         style={{
           fontFamily: 'Pixel',
           fontSize: '0.9rem',
+          color: '#ccc',
         }}
       >
         Similar Problems
