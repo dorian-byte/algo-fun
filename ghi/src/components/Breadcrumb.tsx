@@ -129,7 +129,7 @@ const Breadcrumb = () => {
   }, [pathname, problemNameData, problemNameLoading]);
 
   return (
-    <div className="me-auto">
+    <div className="me-auto" style={{ fontFamily: 'Molde', fontSize: '24px' }}>
       <ol className="breadcrumb mt-3 ms-3">
         {crumbs.map((crumb, idx) => {
           const isLast = idx === crumbs.length - 1;

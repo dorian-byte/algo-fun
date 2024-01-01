@@ -34,7 +34,7 @@ const NoteListPage = () => {
 
   return (
     <div className="d-flex flex-column align-items-center">
-      <div className="d-flex justify-content-end me-5 align-items-center position-relative mt-5 mb-4 w-100 pe-4">
+      <div className="d-flex justify-content-end me-5 align-items-center position-relative mt-5 mb-4 w-100 pe-5">
         <h2
           className="page-header text-center"
           style={{

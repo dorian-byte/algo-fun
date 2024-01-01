@@ -10,6 +10,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { yellowToOrangeContainerStyle } from '../components/ProblemList';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -81,48 +82,55 @@ const ThreeTabView = ({
   }, [selectedTags]);
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs
-          textColor="inherit"
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-          TabIndicatorProps={{ style: { background: '#fff' } }}
-        >
-          <Tab label="Problems" {...a11yProps(0)} />
-          <Tab label="Submissions" {...a11yProps(1)} />
-          <Tab label="Notes" {...a11yProps(2)} />
-        </Tabs>
+    <div
+      className="bg-dark h-100"
+      style={{
+        color: 'white',
+      }}
+    >
+      <Box sx={{ width: '100%' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs
+            textColor="inherit"
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+            TabIndicatorProps={{ style: { background: '#fff' } }}
+          >
+            <Tab label="Problems" {...a11yProps(0)} />
+            <Tab label="Submissions" {...a11yProps(1)} />
+            <Tab label="Notes" {...a11yProps(2)} />
+          </Tabs>
+        </Box>
+        <CustomTabPanel value={value} index={0}>
+          Problems with this tag{' '}
+          {problems.map((problem: any) => (
+            <ul>
+              <li>{problem.title}</li>
+              <li>{problem.description}</li>
+            </ul>
+          ))}
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+          Submissions with this tag
+          {notes.map((note: any) => (
+            <ul>
+              <li>{note.submission?.id}</li>
+              <li>{note.submission?.code}</li>
+            </ul>
+          ))}
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          Notes with this tag
+          {notes.map((note: any) => (
+            <ul>
+              <li>{note.title}</li>
+              <li>{note.content}</li>
+            </ul>
+          ))}
+        </CustomTabPanel>
       </Box>
-      <CustomTabPanel value={value} index={0}>
-        Problems with this tag{' '}
-        {problems.map((problem: any) => (
-          <ul>
-            <li>{problem.title}</li>
-            <li>{problem.description}</li>
-          </ul>
-        ))}
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        Submissions with this tag
-        {notes.map((note: any) => (
-          <ul>
-            <li>{note.submission?.id}</li>
-            <li>{note.submission?.code}</li>
-          </ul>
-        ))}
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Notes with this tag
-        {notes.map((note: any) => (
-          <ul>
-            <li>{note.title}</li>
-            <li>{note.content}</li>
-          </ul>
-        ))}
-      </CustomTabPanel>
-    </Box>
+    </div>
   );
 };
 
@@ -238,7 +246,7 @@ const TagAgGrid = ({
   };
 
   return (
-    <div style={containerStyle}>
+    <div style={{ ...yellowToOrangeContainerStyle, flex: 1 }}>
       <div style={gridStyle} className="ag-theme-alpine-dark">
         <AgGridReact
           getContextMenuItems={(params: any) => {
@@ -361,11 +369,9 @@ const TagCRUDListPage = () => {
           setSearchTerm('');
         }
       }}
-      className="d-flex ps-5 pe-5 flex-column"
-      style={{ overflow: 'hidden', height: 'calc(100vh - 100px)' }}
+      className="d-flex flex-column px-5"
     >
-      <div className="d-flex align-items-center justify-content-start mt-5 gap-2">
-        <h1>Tags</h1>
+      <div className="d-flex align-items-center justify-content-start mt-5 mb-4 gap-2 position-relative">
         <FontAwesomeIcon
           className="ms-4 me-2 text-primary"
           icon={faPlusCircle}
@@ -430,11 +436,16 @@ const TagCRUDListPage = () => {
             transition: 'width 0.5s ease',
           }}
         />
+        <h2
+          className="page-header text-center position-absolute"
+          style={{ left: '50%', top: 0, transform: 'translate(-50%, -50%)' }}
+        >
+          All Tags
+        </h2>
       </div>
       <div
         className="d-flex"
         style={{
-          height: 'calc(100vh - 220px)',
           gap: 10,
         }}
       >
@@ -447,13 +458,10 @@ const TagCRUDListPage = () => {
           setSelectedTags={setSelectedTags}
         />
         <div
-          className="bg-dark overflow-y-auto p-2"
+          className="bg-dark overflow-y-auto"
           style={{
-            height: 'calc(100vh - 220px)',
             flex: 3,
-            backgroundColor: '#f5f5f5',
-            border: '0.3px solid #999',
-            borderRadius: 10,
+            ...yellowToOrangeContainerStyle,
           }}
         >
           <ThreeTabView selectedTags={selectedTags} allTags={data?.allTags} />

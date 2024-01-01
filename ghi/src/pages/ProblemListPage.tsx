@@ -128,9 +128,8 @@ const ProblemListPage = () => {
     <div>
       <div className="d-flex justify-content-end me-5 align-items-center gap-3 position-relative mt-5 mb-4">
         <h2
-          className="page-header text-center"
+          className="page-header text-center position-absolute"
           style={{
-            position: 'absolute',
             left: '50%',
             top: 0,
             transform: 'translate(-50%, -50%)',
